@@ -1,11 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
 import {
   Container, Typography, Table, Button, TableBody, TableCell,
-  Select, MenuItem, TableContainer, TableHead, TableRow, Paper, Box, TextField,
+  Select, MenuItem, TableContainer, TableHead, TableRow, Paper, Box, TextField, IconButton
 } from '@mui/material';
 import { StudentsContext, WardsContext } from '../../components/dataContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import EditIcon from "@mui/icons-material/Edit";
+
 
 export const ViewAllStudentsData = () => {
   const { studentsData, loading, setStudentsData } = useContext(StudentsContext);
@@ -96,6 +98,10 @@ console.log(buildQueryString());
       ...prevFilters,
       [name]: value,
     }));
+  };
+
+  const handleEdit = (student) => {
+    navigate(`/admin-dashboard/update-student/${student._id}`, {state: student})
   };
 
   // Handle form submission
@@ -272,6 +278,7 @@ console.log(uniqueSchools);
               <TableCell>State of Origin</TableCell>
               <TableCell>LGA</TableCell>
               <TableCell>Ward</TableCell>
+              <TableCell>Edit</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -283,6 +290,9 @@ console.log(uniqueSchools);
                   <TableCell>{student.stateOfOrigin}</TableCell>
                   <TableCell>{student.lga}</TableCell>
                   <TableCell>{student.ward.name}</TableCell>
+                  <TableCell><IconButton onClick={() => handleEdit(student)} color="primary">
+                    <EditIcon />
+                  </IconButton></TableCell>
                 </TableRow>
               ))
             ) : (

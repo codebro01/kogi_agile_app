@@ -37,6 +37,7 @@ export const CreateStudent = () => {
     surname: "",
     otherNames: "",
     dob: "",
+    phone: "",
     nationality: "Nigeria",
     stateOfOrigin: "",
     lga: "",

@@ -23,7 +23,11 @@ const Dashboard = () => {
   const colors = tokens(theme.palette.mode);
   const { userPermissions } = useAuth();
   const { studentsData, error, loading } = useContext(StudentsContext);
-  const storedUser = JSON.parse(localStorage.getItem('userData'))
+  const storedUser = JSON.parse(localStorage.getItem('userData'));
+
+
+
+
 
   useEffect(() => {
     if (!loading && studentsData === null) {
@@ -31,6 +35,9 @@ const Dashboard = () => {
     }
   }, [studentsData, navigate]);
 
+// if(studentsData === null) {
+//     return <Typography>....StudentsData Loading</Typography>
+// }
   if (loading) {
     return <div>Loading...</div>;
   }

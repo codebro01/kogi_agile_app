@@ -23,6 +23,7 @@ import {ViewAllStudentsData} from './scenes/manage-accounts/viewAllStudentsData'
 import { CreateStudent } from "./scenes/manage-accounts/createStudent";
 import { CreateAdmin } from "./scenes/manage-accounts/createAdmin";
 import { SchoolsContext } from './components/dataContext.jsx';
+import {UpdateStudent} from './scenes/manage-accounts/updateStudent';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -52,6 +53,7 @@ function App() {
               <Route path="/admin-dashboard/create-accounts/register-admin" element={< CreateAdmin />} />
               <Route path="/admin-dashboard/create-accounts/register-enumerator" element={<CreateEnumerator />} />
               <Route path="/admin-dashboard/create-accounts/register-student" element={<CreateStudent />} />
+              <Route path="/admin-dashboard/update-student/:id" element={<UpdateStudent />} />
               <Route path="/register" element={<BrandingSignUpPage />} />
               <Route path="/dashboard/sign-in" element={<SignInForm />} />
               <Route path="/sign-in" element={<EnumeratorSignInForm />} />
