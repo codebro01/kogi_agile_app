@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap");
+
+html,
+body,
+#root,
+.app,
+.content {
+  height: 100%;
+  width: 100%;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.app {
+  display: flex;
+  position: relative;
+
+}
+
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px;
+  /* Full width when expanded */
+  background-color: #2e2e2e;
+  /* Example background */
+  color: white;
+  z-index: 1000;
+  transition: width 0.3s ease-in-out;
+  /* Smooth collapse animation */
+}
+
+/* Main content */
+.content {
+  /* margin-left: 250px; */
+  /* Match the expanded width of the sidebar */
+  flex-grow: 1;
+  overflow-y: auto;
+  /* Allows scrolling */
+  transition: margin-left 0.3s ease-in-out;
+  /* Smooth adjustment when sidebar collapses */
+}
+
+.content.collapsed {
+  margin-left: 80px;
+  /* Adjust when the sidebar is collapsed */
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
