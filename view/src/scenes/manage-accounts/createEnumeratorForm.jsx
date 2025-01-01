@@ -26,7 +26,7 @@ export const CreateEnumerator = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [validationError, setValidationError] = useState('');
     const [errors, setErrors] = useState({});
-    const [success, setSuccess] =useState('');
+    const [success, setSuccess] = useState('');
     const API_URL = 'http://localhost:3100/api/v1';
 
     const handleClickShowPassword = () => setShowPassword(!showPassword);
@@ -64,10 +64,10 @@ export const CreateEnumerator = () => {
                     console.log(formData)
 
                     const token = localStorage.getItem('token');
-                    
+
                     const response = await axios.post(`${API_URL}/admin-enumerator/register`, formData, {
                         headers: {
-                            Authorization: `Bearer ${token}`, 
+                            Authorization: `Bearer ${token}`,
                             "Content-Type": "multipart/form-data",
                         },
                         withCredentials: true,
@@ -76,7 +76,7 @@ export const CreateEnumerator = () => {
                     setSuccess('Enumerator Created Successfully');
                 } catch (err) {
                     console.log(err)
-                    if(err.response.status === 401)return  navigate('/sign-in')
+                    if (err.response.status === 401) return navigate('/sign-in')
                     setValidationError(err.response?.data?.message || 'An error occurred');
                     setTimeout(() => setValidationError(''), 3000);
                 }
@@ -87,7 +87,7 @@ export const CreateEnumerator = () => {
     return (
         <Container maxWidth="sm" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', paddingTop: '16px', paddingBottom: '16px', marginTop: '32px', marginBottom: '50px' }}>
             <Box sx={{ p: 4, borderRadius: 2, boxShadow: 3, backgroundColor: 'white', width: '100%' }}>
-                <Typography variant="h4" gutterBottom align="center" textTransform= "uppercase" fontWeight = "bolder" marginBottom = "20px">
+                <Typography variant="h4" gutterBottom align="center" textTransform="uppercase" fontWeight="bolder" marginBottom="20px">
                     Create Enumerator
                 </Typography>
                 <form onSubmit={handleSubmit}>
@@ -231,12 +231,12 @@ export const CreateEnumerator = () => {
                                 {validationError && <Typography color="error" align="center">
                                     {validationError}
                                 </Typography>}
-                                
+
                             </Grid>
                         )}
                         {success && <Typography color="success" align="center">
-                                    {success}
-                                </Typography>}
+                            {success}
+                        </Typography>}
                     </Grid>
                 </form>
             </Box>

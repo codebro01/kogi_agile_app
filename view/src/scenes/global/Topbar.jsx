@@ -10,7 +10,7 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 
-const Topbar = ({setIsSidebar}) => {
+const Topbar = ({ setIsSidebar }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -35,7 +35,7 @@ const Topbar = ({setIsSidebar}) => {
           src="site-logo-dark.png"
           alt="Logo"
           sx={{
-            width: { xs: 60, sm: 100, md: 120 },
+            width: { xs: 100, sm: 160, md: 220 },
             height: "auto", // Maintain the natural aspect ratio
             objectFit: "contain",
           }}
@@ -43,46 +43,48 @@ const Topbar = ({setIsSidebar}) => {
       </Box>
 
       {/* ICONS */}
-      <Box display="flex">
-        <IconButton onClick={colorMode.toggleColorMode}>
+      <Box sx = {{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        {/* <IconButton onClick={colorMode.toggleColorMode}>
           {theme.palette.mode === "dark" ? (
             <DarkModeOutlinedIcon />
           ) : (
             <LightModeOutlinedIcon />
           )}
-        </IconButton>
-        <IconButton>
-          <NotificationsOutlinedIcon />
-        </IconButton>
-        <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton>
-        <Tooltip
-          title={
-            <Button
-              onClick={handleLogout}
-              variant="text"
-              sx={{
-                color: "red",
-                textTransform: "none",
-                fontSize: "14px",
-              }}
-            >
-              Logout
-            </Button>
-          }
-          arrow
-          placement="bottom"
+        </IconButton> */}
+        <Box
           sx={{
-            backgroundColor: "white",  // Set the background color of the tooltip
-            border: "1px solid #ddd",  // Optional: Add a light border
-            padding: "4px",  // Optional: Add padding for better spacing
+            position: 'relative',
           }}
         >
-          <IconButton>
-            <PersonOutlinedIcon />
-          </IconButton>
-        </Tooltip>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{
+              borderRadius: '20px', // Rounded corners
+              padding: '8px 16px', // Padding inside the button
+              fontSize: '14px', // Font size
+              textTransform: 'none', // No uppercase transformation
+              boxShadow: 'none', // No box shadow
+              border: '1px solid #f44336', // Border color
+              backgroundColor: '#f44336', // Hover background color
+                color: 'white', // Text color on hover
+
+              '&:hover': {
+                backgroundColor: 'transparent', // Hover background color
+                color: "grey"
+              },
+            }}
+
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        </Box>
+
       </Box>
     </Box>
   );

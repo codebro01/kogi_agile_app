@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, IconButton, Typography, useTheme, Switch } from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
@@ -20,6 +20,11 @@ import {useAuth} from '../auth/authContext.jsx';
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
+
+
   return (
     <MenuItem
       active={selected === title}
@@ -35,15 +40,15 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
-
-
 const Sidebar = ({isSidebar}) => {
     const { userPermissions } = useAuth();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [selected, setSelected] = useState("Dashboard");
   const storedUser = JSON.parse(localStorage.getItem('userData'))
+  const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
 console.log(storedUser);
   return (
     <Box className={`sidebark ${isSidebar ? "" : "collapsed"}`}
@@ -58,38 +63,45 @@ console.log(storedUser);
           padding: "5px 35px 5px 20px !important",
         },
         "& .pro-inner-item:hover": {
-          color: "#868dfb !important",
+          color: `${colors.main['darkGreen']} !important`,
+
+ 
         },
         "& .pro-menu-item.active": {
-          color: "#6870fa !important",
+          color: `${colors.main["darkGreen"]} !important `
         },
       
       }}
     >
-      <ProSidebar collapsed={isCollapsed}>
-        <Menu iconShape="square">
+      <ProSidebar collapsed={isCollapsed} sx = {{
+         display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center'
+      }}>
+        <Menu sx = {{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
           {/* LOGO AND MENU ICON */}
-          <MenuItem
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
-            style={{
-              margin: "10px 0 20px 0",
-              color: colors.grey[100],
-            }}
-          >
+        <Box sx = {{
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center'
+        }}>
+            <Switch {...label} onClick={() => setIsCollapsed(!isCollapsed)} />
+
+        </Box>
+         
             {!isCollapsed && (
               <Box
-                display="flex"
+                display="none"
                 justifyContent="space-between"
                 alignItems="center"
                 ml="15px"
               >
-                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
-                  <MenuOutlinedIcon />
-                </IconButton>
               </Box>
             )}
-          </MenuItem>
 
           {!isCollapsed && (
             <Box mb="25px">
@@ -132,8 +144,9 @@ console.log(storedUser);
             </Box>
           )}
 
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "10%"} marginTop={5}>
                  <Item
+              
               title="Dashboard"
               to={userPermissions.includes('handle_registrars') ? '/admin-dashboard' : '/enumerator-dashboard' }
               icon={<HomeOutlinedIcon />}

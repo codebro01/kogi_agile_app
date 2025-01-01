@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useAuth } from '../auth/authContext.jsx';
 import { SchoolsContext } from "../../components/dataContext.jsx"; // Import context
+import { SpinnerLoader } from "../../components/spinnerLoader.jsx";
 
 const RegistrationSelector = ({ schools }) => {
     const { setSelectedSchool, loading, selectedSchool } = useContext(SchoolsContext); // Access context
@@ -71,7 +72,9 @@ const RegistrationSelector = ({ schools }) => {
             alert('Please select a school.');
             return;
         }
-        navigate('/admin-dashboard/create-accounts/register-student'); // Navigate to the next page
+        sessionStorage.setItem('selectedSchool', JSON.stringify(selectedSchool));  
+        window.location.href = '/admin-dashboard/create-accounts/register-student' // Reload the page after navigation
+
     };
 
     const handleChange = (event) => {
@@ -92,9 +95,23 @@ const RegistrationSelector = ({ schools }) => {
     };
 
     // Loading state while the schools are being fetched
-    if (loading) {
-        return <h3>.......school is loading</h3>;
-    }
+    if (loading)
+        return (
+            <Box
+                sx={{
+                    display: "flex", // Corrected from 'dispflex'
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "80vh",
+                    width: "90vw",
+                    position: "relative",
+                }}
+            >
+                <SpinnerLoader />
+            </Box>
+        );
+
 
     return (
         <Box
@@ -153,9 +170,19 @@ const RegistrationSelector = ({ schools }) => {
                             No schools available
                         </Typography>
                     )}
-                    <Button variant="contained" color="primary" onClick={handleSchoolSubmit} sx={{ textTransform: 'none', marginTop: 2 }}>
-                        Next
-                    </Button>
+                        <Button
+                            variant="contained"
+                            onClick={handleSchoolSubmit}
+                            sx={{
+                                backgroundColor: "#546e13",
+                                color: "#ffffff",
+                                "&:hover": {
+                                    backgroundColor: "#40550f", // Slightly darker green on hover
+                                },
+                            }}
+                        >
+                            Next
+                        </Button>
                 </>
             )}
         </Box>

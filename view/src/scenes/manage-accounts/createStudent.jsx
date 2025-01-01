@@ -1,18 +1,36 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { TextField, Button, Grid, Container, Autocomplete, Typography, Box, IconButton, InputAdornment, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 // import { useTheme } from '@mui/material/styles';
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { GifBox, Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
 import { getNigeriaStates } from 'geo-ng';
 import { SchoolsContext, WardsContext } from "../../components/dataContext.jsx";
+import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
 
 
 axios.defaults.withCredentials = true;
 
 export const CreateStudent = () => {
   // const theme = useTheme();
-  const { selectedSchool, loading } = useContext(SchoolsContext);
+  const {  loading } = useContext(SchoolsContext);
+
+  // const location = useLocation()
+  // const selectedSchool = location.state.selectedSchool;
+  // console.log(selectedSchool)
+ 
+
+
+
+
+
+  // useEffect(() => {
+  //   // Check if state was passed to this page
+  //   if (location.state?.selectedSchool) {
+  //     console.log(location.state.selectedSchool);
+  //   }
+  // }, [location.state]);
+  
 
   const { wardsData } = useContext(WardsContext)
 
@@ -23,6 +41,10 @@ export const CreateStudent = () => {
     'Union Bank', 'United Bank for Africa (UBA)', 'Wema Bank', 'Zenith Bank'
   ]);
 
+  const [occupations, setOccupation] = useState([
+    'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser', 'Others'
+  ])
+
 
 
   const navigate = useNavigate();
@@ -30,15 +52,14 @@ export const CreateStudent = () => {
     { value: 'Nigeria', label: 'Nigeria' },
     { value: 'Others', label: 'Others' }
   ];
-  const schoolId = selectedSchool._id;
+
   const [formData, setFormData] = useState({
     ward: "",
     schoolId: "",
     surname: "",
     otherNames: "",
+    studentNin: "",
     dob: "",
-    phone: "",
-    nationality: "Nigeria",
     stateOfOrigin: "",
     lga: "",
     gender: "",
@@ -47,6 +68,10 @@ export const CreateStudent = () => {
     presentClass: "",
     yearAdmitted: "",
     classAtAdmission: "",
+    guardianPhone: "",
+    guardianName: "",
+    guardianNin: "",
+    nationality: "Nigeria",
     guardianContact: "",
     guardianOccupation: "",
     bankName: "",
@@ -62,28 +87,34 @@ export const CreateStudent = () => {
   const [states, setStates] = useState([]);
   const [lgas, setLgas] = useState([]);
   const [wardValue, setWardValue] = useState(null)
+  const [formSubmissionLoading, setFormSubmissionLoading ] = useState(false);
+  const [storedSchool, setStoredSchool ] = useState(null);
 
-
-
-
-
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value,
-    });
-
-  };
 
   useEffect(() => {
-    if (selectedSchool) {
+    const retrievedSchool = sessionStorage.getItem('selectedSchool');
+    setStoredSchool(JSON.parse(retrievedSchool));  // Store the retrieved value in state
+  }, []);
+
+  console.log(storedSchool)
+
+
+  const handleChange = useCallback((e) => {
+    const { name, value, files } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: files ? files[0] : value,
+    }));
+  }, []);
+
+  useEffect(() => {
+    if (storedSchool) {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        schoolId: selectedSchool._id, // Set the school ID
+        schoolId: storedSchool._id, // Set the school ID
       }));
     }
-  }, [selectedSchool]);
+  }, [storedSchool]);
 
   const getLGAs = (stateName) => {
     const state = getNigeriaStates().find((s) => s.name === stateName);
@@ -144,23 +175,41 @@ export const CreateStudent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const accountNumberRegEx = /^\d{10}$/
+    const phoneNumberRegex = /^\d{11}$/
+    const ninRegex = /^\d{11}$/
     const newErrors = {
       surname: !formData.surname,
-      lastname: !formData.lastname,
+      otherNames: !formData.otherNames,
       gender: !formData.gender,
-      phone: !formData.phone,
-      email: !formData.email || !/\S+@\S+\.\S+/.test(formData.email),
+      dob: !formData.dob,
+      schoolId: !formData.schoolId,
+      nationality: !formData.nationality,
+      studentNin: !formData.studentNin,
+      guardianPhone: !formData.guardianPhone,
+      guardianName: !formData.guardianName,
+      guardianNin: !formData.guardianNin || !ninRegex.test(formData.guardianNin),
+      guardianOccupation: !formData.guardianOccupation,
+      // email: !formData.email || !/\S+@\S+\.\S+/.test(formData.email),
+      presentClass: !formData.presentClass,
+      classAtAdmission: !formData.classAtAdmission,
+      yearAdmitted: !formData.yearAdmitted,
       password: !formData.password,
-      address: !formData.address,
-      bank: !formData.bankName,
-      accountNumber: !formData.accountNumber,
+      residentialAddress: !formData.residentialAddress,
+      communityName: !formData.communityName,
+      communityName: !formData.communityName,
+      bankName: !formData.bankName,
+      accountNumber: !formData.accountNumber || !(new RegExp()),
       image: !formData.image,
     };
     setErrors(newErrors);
 
+    if (error) return;
+
     (async () => {
       try {
-        console.log(formData)
+        setFormSubmissionLoading(true)
         const token = localStorage.getItem('token');
         const response = await axios.post(`${API_URL}/student`, formData, {
           headers: {
@@ -171,9 +220,11 @@ export const CreateStudent = () => {
         });
         console.log(response)
         setSuccess(true);
+        setFormSubmissionLoading(false)
       } catch (err) {
-        console.log(err)
-        if(err.response.status === 401)return  navigate('/sign-in')
+        console.log(err);
+        setFormSubmissionLoading(false)
+        if (err.response?.data?.status === 401) return navigate('/sign-in')
         setError(true)
         setValidationError(err.response?.data?.message || 'An error occurred');
         setTimeout(() => setValidationError(''), 3000);
@@ -185,9 +236,22 @@ export const CreateStudent = () => {
     }
   };
 
-  if (loading) return (
-    <h4>Loading schools and wards ..............</h4>
-  )
+  if (loading)
+    return (
+      <Box
+        sx={{
+          display: "flex", // Corrected from 'dispflex'
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "80vh",
+          width: "90vw",
+          position: "relative",
+        }}
+      >
+        <SpinnerLoader />
+      </Box>
+    );
 
   setTimeout(() => {
     setError('')
@@ -206,7 +270,8 @@ export const CreateStudent = () => {
             <Grid container spacing={2}>
               {[{ label: 'Surname', name: 'surname' },
               { label: 'Other Names', name: 'otherNames' },
-              { label: 'Phone', name: 'phone' }].map(({ label, name }) => (
+              { label: 'Student Nin', name: 'studentNin' }
+              ].map(({ label, name }) => (
                 <Grid item xs={12} key={name}>
                   <TextField
                     label={label}
@@ -216,8 +281,9 @@ export const CreateStudent = () => {
                     value={formData[name]}
                     onChange={handleChange}
                     error={errors[name]}
-                    helperText={errors[name] && `${label} is required`}
+                    
                     required
+                    helperText={errors[name] && `${label} is required`}
                   />
                 </Grid>
               ))}
@@ -232,9 +298,10 @@ export const CreateStudent = () => {
                   value={formData.dob}
                   onChange={handleChange}
                   error={errors.dob}
+                  
+                  required
                   helperText={errors.dob && 'Date of Birth is required'}
                   InputLabelProps={{ shrink: true }}
-                  required
                 />
               </Grid>
 
@@ -244,11 +311,11 @@ export const CreateStudent = () => {
                   name="schoolId"
                   variant="outlined"
                   fullWidth
-                  value={selectedSchool.schoolName}
+                  value={storedSchool.schoolName}
                   error={errors.school}
+                  required
                   helperText={errors.school && 'School name is required'}
                   InputLabelProps={{ shrink: true }}
-                  required
                   InputProps={{
                     readOnly: true, // Make it readonly
                   }}
@@ -265,8 +332,9 @@ export const CreateStudent = () => {
                   value={formData.gender}
                   onChange={handleChange}
                   error={errors.gender}
-                  helperText={errors.gender && 'Gender is required'}
+                  
                   required
+                  helperText={errors.gender && 'Gender is required'}
                 >
                   <MenuItem value="Female">Female</MenuItem>
                 </TextField>
@@ -281,7 +349,11 @@ export const CreateStudent = () => {
                   fullWidth
                   value={formData.nationality}
                   onChange={(e) => handleSelectChange(e, { name: 'nationality' })}
+                  error={errors['Nationality']}
+                  
                   required
+                  helperText={errors['Nationality'] && `${'Nationality'} is required`}
+
                 >
                   <MenuItem value="Nigeria">Nigeria</MenuItem>
                   <MenuItem value="Other">Other</MenuItem>
@@ -301,8 +373,9 @@ export const CreateStudent = () => {
                     value={formData.stateOfOrigin || ''}
                     onChange={(e) => handleStateChange(e.target.value)}
                     error={formData.stateOfOrigin === ''} // For example, you can pass `true` or `false` here
-                    helperText={formData.stateOfOrigin === '' ? 'State of Origin is required' : ''}
+                    
                     required
+                    helperText={formData.stateOfOrigin === '' ? 'State of Origin is required' : ''}
                   >
                     {states.map((state) => (
                       <MenuItem key={state} value={state}>
@@ -324,7 +397,11 @@ export const CreateStudent = () => {
                     fullWidth
                     value={formData.lga || ''}
                     onChange={(e) => handleSelectChange(e, { name: 'lga' })}
+                    error={errors['LGA']}
+                    
                     required
+                    helperText={errors['LGA'] && `${'LGA'} is required`}
+
                   >
                     {lgas.map((lga) => (
                       <MenuItem key={lga} value={lga}>
@@ -343,7 +420,7 @@ export const CreateStudent = () => {
                     fullWidth
                     value={formData.customNationality}
                     onChange={handleChange}
-                    required
+
                   />
                 </Grid>
               )}
@@ -372,7 +449,7 @@ export const CreateStudent = () => {
                 /> */}
 
               </Grid>
-              {wardsData.length > 1 && (
+              {formData.nationality === 'Nigeria' && wardsData.length > 1 && (
                 <Grid item xs={12}>
                   <TextField
                     label="Wards"
@@ -383,8 +460,10 @@ export const CreateStudent = () => {
                     value={formData.ward || ''} // Using ward ID
                     onChange={(e) => handleWardChange(e.target.value)} // Updating the form data with the ward ID
                     error={formData.ward === ''} // Error if the ward is not selected
-                    helperText={formData.ward === '' ? 'Ward is required' : ''}
+                    
                     required
+                    helperText={formData.ward === '' ? 'Ward is required' : ''}
+
                   >
                     {wardsData.map((ward) => (
                       <MenuItem key={ward._id} value={ward._id}> {/* Use ward._id as the value */}
@@ -407,8 +486,10 @@ export const CreateStudent = () => {
                     value={formData[name]}
                     onChange={handleChange}
                     error={errors[name]}
-                    helperText={errors[name] && `${label} is required`}
+                    
                     required
+                    helperText={errors[name] && `${label} is required`}
+
                   />
                 </Grid>
               ))}
@@ -421,7 +502,10 @@ export const CreateStudent = () => {
                     value={formData.presentClass}
                     onChange={handleChange}
                     label="Present Class"
-                    error={errors.presentClass}
+                    error={errors['Present Class']}
+                    
+                    required
+                    helperText={errors['Present Class'] && `${'Present Class'} is required`}
                   >
                     <MenuItem value="Primary 6">Primary 6</MenuItem>
                     <MenuItem value="JSS 1">JSS 1</MenuItem>
@@ -439,7 +523,10 @@ export const CreateStudent = () => {
                     value={formData.classAtAdmission}
                     onChange={handleChange}
                     label="Class at Admission"
-                    error={errors.classAtAdmission}
+                    error={errors['Class at Admission']}
+                    
+                    required
+                    helperText={errors['Class at Admission'] && `${'Class at Admission'} is required`}
                   >
                     <MenuItem value="Primary 6">Primary 6</MenuItem>
                     <MenuItem value="JSS 1">JSS 1</MenuItem>
@@ -458,20 +545,25 @@ export const CreateStudent = () => {
                     value={formData.yearAdmitted}
                     onChange={handleChange}
                     label="Year Admitted"
-                    error={errors.yearAdmitted}
-                  >
+                    error={errors['Year Admitted']}
+                    helperText={errors['Year Admitted'] && `${'Year Admitted'} is required`}
+                    required                >
                     <MenuItem value="2020">2020</MenuItem>
                     <MenuItem value="2021">2021</MenuItem>
                     <MenuItem value="2022">2022</MenuItem>
                     <MenuItem value="2023">2023</MenuItem>
                     <MenuItem value="2024">2024</MenuItem>
                     <MenuItem value="2025">2025</MenuItem>
+
                   </Select>
                 </FormControl>
               </Grid>
 
-              {[{ label: 'Guardian Contact', name: 'guardianContact' },
-              { label: 'Guardian Occupation', name: 'guardianOccupation' }].map(({ label, name }) => (
+
+              {[{ label: 'Guardian Name', name: 'guardianName' },
+              { label: 'Guardian Nin', name: 'guardianNin' },
+              { label: 'Guardian Mobile  No.', name: 'guardianPhone' }
+              ].map(({ label, name }) => (
                 <Grid item xs={12} key={name}>
                   <TextField
                     label={label}
@@ -481,11 +573,52 @@ export const CreateStudent = () => {
                     value={formData[name]}
                     onChange={handleChange}
                     error={errors[name]}
-                    helperText={errors[name] && `${label} is required`}
+                    
                     required
+                    helperText={errors[name] && `${label} is required`}
                   />
                 </Grid>
               ))}
+
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel>Parent/Caregiver Occupation</InputLabel>
+                  <Select
+                    name="guardianOccupation"
+                    value={formData.guardianOccupation}
+                    onChange={handleChange}
+                    label="Occupation"
+                    error={errors['Guardian Occupation']}
+                    
+                    required
+                    helperText={errors['Guardian Occupation'] && `${'Guardian Occupation'} is required`}                  >
+
+                    {occupations.map((occupation, index) => {
+                      return <MenuItem key={index} value={occupation}>{occupation}</MenuItem>
+
+                    })}
+
+                    <MenuItem value="2020">2020</MenuItem>
+
+
+                  </Select>
+                </FormControl>
+              </Grid>
+
+
+              {formData.guardianOccupation === 'Others' && (
+                <Grid item xs={12}>
+                  <TextField
+                    label="Occupation (Specify)"
+                    name="nationality"
+                    variant="outlined"
+                    fullWidth
+                    value={formData.customNationality}
+                    onChange={handleChange}
+
+                  />
+                </Grid>
+              )}
 
               <Grid item xs={12}>
                 <FormControl fullWidth>
@@ -529,6 +662,8 @@ export const CreateStudent = () => {
                   value={formData.accountNumber}
                   onChange={handleChange}
                   error={errors.accountNumber}
+                  
+                  required
                   helperText={errors.accountNumber && 'Account Number is required'}
                 />
               </Grid>
@@ -537,6 +672,13 @@ export const CreateStudent = () => {
                   variant="contained"
                   component="label"
                   fullWidth
+                  sx={{
+                    backgroundColor: "#546e13",
+                    color: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#40550f", // Slightly darker green for hover
+                    },
+                  }}
                   error={errors.image}
                   helperText={errors.image && 'image is required'}
                 >
@@ -551,13 +693,25 @@ export const CreateStudent = () => {
                 </Button>
               </Grid>
 
-              <Grid item xs={12} marginTop="20px">
-                <Button type="submit" variant="contained" color="primary" fullWidth>
+              {!formSubmissionLoading && <Grid item xs={12} marginTop="20px">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    backgroundColor: "#546e13",
+                    color: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#40550f", // Slightly darker green for hover
+                    },
+                  }}
+                >
                   Submit
                 </Button>
-              </Grid>
+              </Grid>}
+
             </Grid>
-            <Typography
+            <Box
               variant="body2"
               style={{
                 marginTop: '8px',
@@ -565,9 +719,35 @@ export const CreateStudent = () => {
                 textAlign: 'center', // Center align the text
               }}
             >
-              {success && <Typography variant = 'h5' color = "green">Student Registered Successfully</Typography>}
-              {error && <Typography variant = 'h5' color = "red">{validationError}</Typography>}
-            </Typography>
+              {formSubmissionLoading && <Grid sx={{
+                display: "flex", 
+                width: "100%", 
+                justifyContent: "center", 
+                alignItems:"center"
+              }}><SpinnerLoader/></Grid>}
+              {success && (
+                <Typography
+                  variant="h5"
+                  fontWeight={600}
+                  color="green"
+                  sx={{ textAlign: "center", marginTop: "20px" }}
+                >
+                  Registration of student is Successfully!!!
+                </Typography>
+              )}
+
+              {error && (
+                <Typography
+                  variant="h5"
+                  fontWeight={600}
+                  color="red"
+                  sx={{ textAlign: "center", marginTop: "20px" }}
+                >
+                  Oops! {validationError}
+                </Typography>
+              )}
+
+            </Box>
           </form>
         </Box>
       </Container>

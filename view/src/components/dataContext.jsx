@@ -9,13 +9,13 @@ export const WardsContext = createContext();
 
 // Create the provider component
 export const DataProvider = ({ children }) => {
-  const [studentsData, setStudentsData] = useState(null);
-  const [schoolsData, setSchoolsData] = useState(null);
-  const [wardsData, setWardsData] = useState(null);
+  const [studentsData, setStudentsData] = useState([]);
+  const [schoolsData, setSchoolsData] = useState([]);
+  const [wardsData, setWardsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSchool, setSelectedSchool] = useState(null);
-  
+
 
   const API_URL = 'http://localhost:3100/api/v1';
   const token = localStorage.getItem('token') || ''; // Get token from localStorage

@@ -8,6 +8,7 @@ body,
   height: 100%;
   width: 100%;
   font-family: "Source Sans Pro", sans-serif;
+  
 }
 
 .app {
@@ -45,6 +46,7 @@ body,
 
 .content.collapsed {
   margin-left: 80px;
+    overflow-x: hidden;
   /* Adjust when the sidebar is collapsed */
 }
 

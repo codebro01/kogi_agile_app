@@ -25,6 +25,10 @@ export const UpdateStudent = React.memo(() => {
         'Union Bank', 'United Bank for Africa (UBA)', 'Wema Bank', 'Zenith Bank'
     ]);
 
+    const [occupations, setOccupation] = useState([
+        'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser', 'Others'
+    ])
+
 
 
 
@@ -36,11 +40,11 @@ export const UpdateStudent = React.memo(() => {
     ];
 
     const [formData, setFormData] = useState({
-        schoolId: '',
+        schoolId: student.schoolId._id,
         ward: student.ward._id,
         surname: student.surname,
         otherNames: student.otherNames,
-        phone: student.phone,
+        studentNin: student.studentNin,
         dob: student.dob,
         nationality: student.nationality,
         stateOfOrigin: student.stateOfOrigin,
@@ -51,6 +55,9 @@ export const UpdateStudent = React.memo(() => {
         presentClass: student.presentClass,
         yearAdmitted: student.yearAdmitted,
         classAtAdmission: student.classAtAdmission,
+        guardianName: student.guardianName,
+        guardianPhone: student.guardianPhone,
+        guardianNin: student.guardianNin,
         guardianContact: student.guardianContact,
         guardianOccupation: student.guardianOccupation,
         bankName: student.bankName,
@@ -155,23 +162,11 @@ export const UpdateStudent = React.memo(() => {
     }, [student.schoolId.schoolName, schoolOptions]);
 
 
+    console.log(formData)
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newErrors = {
-            surname: !formData.surname,
-            lastname: !formData.lastname,
-            gender: !formData.gender,
-            phone: !formData.phone,
-            email: !formData.email || !/\S+@\S+\.\S+/.test(formData.email),
-            password: !formData.password,
-            address: !formData.address,
-            bank: !formData.bankName,
-            accountNumber: !formData.accountNumber,
-            image: !formData.image,
-        };
-        setErrors(newErrors);
 
         (async () => {
             try {
@@ -194,10 +189,6 @@ export const UpdateStudent = React.memo(() => {
                 setTimeout(() => setValidationError(''), 3000);
             }
         })();
-
-        if (!Object.values(newErrors).includes(true)) {
-
-        }
     }
 
 
@@ -269,7 +260,7 @@ export const UpdateStudent = React.memo(() => {
                         <Grid container spacing={2}>
                             {[{ label: 'Surname', name: 'surname' },
                             { label: 'Other Names', name: 'otherNames' },
-                            { label: 'Phone', name: 'phone' }].map(({ label, name }) => (
+                            { label: 'Studdent Nin', name: 'studentNin' }].map(({ label, name }) => (
                                 <Grid item xs={12} key={name}>
                                     <TextField
                                         label={label}
@@ -308,8 +299,9 @@ export const UpdateStudent = React.memo(() => {
                                         value={selectedSchool} // Controlled value
                                         onChange={(event, newValue) => {
                                             if (newValue) {
+                                                console.log(newValue)
                                                 setSelectedSchool(newValue);
-                                                setFormData({ ...formData, schoolId: newValue._id }); // Set schoolId in formData
+                                                setFormData({ ...formData, ['schoolId']: newValue._id }); // Set schoolId in formData
                                             }
                                         }}
                                         options={schoolOptions}
@@ -327,7 +319,7 @@ export const UpdateStudent = React.memo(() => {
                                         renderInput={(params) => <TextField {...params} label="School" fullWidth />}
                                         loading={loadingSchools}
                                         noOptionsText="No schools found"
-                                    />  
+                                    />
 
                                 ) : (
                                     <Typography variant="body1" color="textSecondary">
@@ -548,8 +540,11 @@ export const UpdateStudent = React.memo(() => {
                                 </FormControl>
                             </Grid>
 
-                            {[{ label: 'Guardian Contact', name: 'guardianContact' },
-                            { label: 'Guardian Occupation', name: 'guardianOccupation' }].map(({ label, name }) => (
+
+                            {[{ label: 'Guardian Name', name: 'guardianName' },
+                            { label: 'Guardian Nin', name: 'guardianNin' },
+                            { label: 'Guardian Mobile  No.', name: 'guardianPhone' }
+                            ].map(({ label, name }) => (
                                 <Grid item xs={12} key={name}>
                                     <TextField
                                         label={label}
@@ -563,6 +558,45 @@ export const UpdateStudent = React.memo(() => {
                                     />
                                 </Grid>
                             ))}
+
+                            <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                    <InputLabel>Parent/Caregiver Occupation</InputLabel>
+                                    <Select
+                                        name="guardianOccupation"
+                                        value={formData.guardianOccupation}
+                                        onChange={handleChange}
+                                        label="Occupation"
+                                        error={errors['Guardian Occupation']}
+                                        helperText={errors['Guardian Occupation'] && `${'Guardian Occupation'} is required`}                  >
+
+                                        {occupations.map((occupation, index) => {
+                                            return <MenuItem key={index} value={occupation}>{occupation}</MenuItem>
+
+                                        })}
+
+                                        <MenuItem value="2020">2020</MenuItem>
+
+
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+
+
+                            {formData.guardianOccupation === 'Others' && (
+                                <Grid item xs={12}>
+                                    <TextField
+                                        label="Occupation (Specify)"
+                                        name="nationality"
+                                        variant="outlined"
+                                        fullWidth
+                                        value={formData.customNationality}
+                                        onChange={handleChange}
+
+                                    />
+                                </Grid>
+                            )}
+
 
                             <Grid item xs={12}>
                                 <FormControl fullWidth>
