@@ -175,7 +175,7 @@ export const CreateStudent = () => {
         console.log(err)
         if(err.response.status === 401)return  navigate('/sign-in')
         setError(true)
-        setValidationError(err.response?.message || 'An error occurred');
+        setValidationError(err.response?.data?.message || 'An error occurred');
         setTimeout(() => setValidationError(''), 3000);
       }
     })();
@@ -566,7 +566,7 @@ export const CreateStudent = () => {
               }}
             >
               {success && <Typography variant = 'h5' color = "green">Student Registered Successfully</Typography>}
-              {error && <Typography variant = 'h5' color = "green">{validationError}</Typography>}
+              {error && <Typography variant = 'h5' color = "red">{validationError}</Typography>}
             </Typography>
           </form>
         </Box>

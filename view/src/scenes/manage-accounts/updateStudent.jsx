@@ -1,24 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { TextField, Button, Grid, Container, Autocomplete, Typography, Box, IconButton, InputAdornment, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 // import { useTheme } from '@mui/material/styles';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
 import { getNigeriaStates } from 'geo-ng';
-import { SchoolsContext, WardsContext } from "../../components/dataContext.jsx";
+import { SchoolsContext, StudentsContext, WardsContext } from "../../components/dataContext.jsx";
 
 
 
 axios.defaults.withCredentials = true;
 
-export const UpdateStudent = () => {
+export const UpdateStudent = React.memo(() => {
     // const theme = useTheme();
-    const {  loading, schoolsData } = useContext(SchoolsContext);
+    const { loading, schoolsData } = useContext(SchoolsContext);
     const { wardsData } = useContext(WardsContext);
-
     const location = useLocation()
     const student = location.state;
-    console.log(student);
 
     const [bankList, setBankList] = useState([
         'Access Bank', 'Citibank Nigeria', 'Diamond Bank', 'Ecobank Nigeria', 'Fidelity Bank',
@@ -29,13 +27,16 @@ export const UpdateStudent = () => {
 
 
 
+
+
     const navigate = useNavigate();
     const nationalityOptions = [
         { value: 'Nigeria', label: 'Nigeria' },
         { value: 'Others', label: 'Others' }
     ];
+
     const [formData, setFormData] = useState({
-        schoolId:student.schoolId._id,
+        schoolId: '',
         ward: student.ward._id,
         surname: student.surname,
         otherNames: student.otherNames,
@@ -49,7 +50,7 @@ export const UpdateStudent = () => {
         residentialAddress: student.residentialAddress,
         presentClass: student.presentClass,
         yearAdmitted: student.yearAdmitted,
-        classAtAdmission:student.classAtAdmission,
+        classAtAdmission: student.classAtAdmission,
         guardianContact: student.guardianContact,
         guardianOccupation: student.guardianOccupation,
         bankName: student.bankName,
@@ -65,30 +66,34 @@ export const UpdateStudent = () => {
     const [states, setStates] = useState([]);
     const [lgas, setLgas] = useState([]);
     const [wardValue, setWardValue] = useState(null)
-     const [schoolOptions, setSchoolOptions] = useState([]); // Start with an empty array
-        const [hasMore, setHasMore] = useState(true); // To check if more data is available
-        const [loadingSchools, setLoadingSchools] = useState(false); // Loading state for schools
-        const [page, setPage] = useState(1);
+    const [schoolOptions, setSchoolOptions] = useState([]); // Start with an empty array
+    const [hasMore, setHasMore] = useState(true); // To check if more data is available
+    const [loadingSchools, setLoadingSchools] = useState(false); // Loading state for schools
+    const [page, setPage] = useState(1);
+    const [selectedSchool, setSelectedSchool] = useState(
+        schoolOptions.find((school) => school.schoolName === student.schoolId.schoolName) || null
+    );
 
 
 
 
 
-    const handleChange = (e) => {
+    useEffect(() => {
+        if (schoolsData && schoolsData.length > 0) {
+            setSchoolOptions(schoolsData); // Set schoolsData if available
+        }
+    }, [schoolsData]);
+
+
+
+    const handleChange = useCallback((e) => {
         const { name, value, files } = e.target;
         setFormData({
             ...formData,
             [name]: files ? files[0] : value,
         });
 
-    };
-
-     const handleAutocompleteChange = (event, newValue) => {
-    setFormData((prev) => ({
-      ...prev,
-      schoolId: newValue ? newValue.id : null, // Update with the selected school's ID
-    }));
-  };
+    });
 
 
 
@@ -117,35 +122,38 @@ export const UpdateStudent = () => {
         }
     }, [formData.stateOfOrigin, formData.nationality]);
 
-    const handleSelectChange = (e, { name }) => {
+    const handleSelectChange = useCallback((e, { name }) => {
         setFormData((prevData) => ({
             ...prevData,
             [name]: e.target.value, // Update the correct field based on `name`
         }));
-    };
+    })
 
-    const handleStateChange = (selectedState) => {
+    const handleStateChange = useCallback((selectedState) => {
         setFormData({
             ...formData,
             stateOfOrigin: selectedState,
             lga: '' // Reset LGA when state changes
         });
-    };
-    const handleWardChange = (selectedWard) => {
+    });
+    const handleWardChange = useCallback((selectedWard) => {
         setFormData({
             ...formData,
             ward: selectedWard,
             // Reset LGA when state changes
         });
-    };
+    })
 
-    const handleSearch = (e) => {
-        const searchQuery = e.target.value.toLowerCase();
-        const filteredBanks = bankList.filter(bank =>
-            bank.toLowerCase().includes(searchQuery)
+    useEffect(() => {
+        // Update selectedSchool if student.schoolId.schoolName or schoolOptions changes
+        const matchedSchool = schoolOptions.find(
+            (school) => school.schoolName === student.schoolId.schoolName
         );
-        setBankList(filteredBanks);
-    }
+        if (matchedSchool) {
+            setSelectedSchool(matchedSchool);
+        }
+    }, [student.schoolId.schoolName, schoolOptions]);
+
 
 
 
@@ -167,7 +175,6 @@ export const UpdateStudent = () => {
 
         (async () => {
             try {
-                console.log(formData)
                 const token = localStorage.getItem('token');
                 const response = await axios.patch(`${API_URL}/student/${student._id}`, formData, {
                     headers: {
@@ -183,7 +190,7 @@ export const UpdateStudent = () => {
                 console.log(err)
                 if (err.response.status === 401) return navigate('/sign-in')
                 setError(true)
-                setValidationError(err.response?.message || 'An error occurred');
+                setValidationError(err.response?.data?.message || 'An error occurred');
                 setTimeout(() => setValidationError(''), 3000);
             }
         })();
@@ -191,10 +198,10 @@ export const UpdateStudent = () => {
         if (!Object.values(newErrors).includes(true)) {
 
         }
-    };
+    }
 
 
- const loadMoreSchools = async () => {
+    const loadMoreSchools = useCallback(async () => {
         if (loadingSchools || !hasMore) return;
 
         setLoadingSchools(true);
@@ -210,7 +217,7 @@ export const UpdateStudent = () => {
         }
 
         setLoadingSchools(false);
-    };
+    })
 
     // Mock function to simulate fetching more schools from a backend
     const fetchMoreSchools = async (page) => {
@@ -223,6 +230,15 @@ export const UpdateStudent = () => {
         });
     };
 
+
+    useEffect(() => {
+        if (student.schoolId.schoolName) {
+            const foundSchool = schoolOptions.find(
+                (school) => school.schoolName === student.schoolId.schoolName
+            );
+            setSelectedSchool(foundSchool);
+        }
+    }, [student.schoolId.schoolName, schoolOptions]);
 
 
 
@@ -240,7 +256,8 @@ export const UpdateStudent = () => {
         setSuccess('')
     }, 10000)
 
-    const wards = wardsData.map(ward => ward.name.toString());
+    console.log(selectedSchool)
+
     return (
         <>
             <Container maxWidth="sm" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', paddingTop: '16px', paddingBottom: '16px', marginTop: '32px', marginBottom: '50px' }}>
@@ -263,7 +280,7 @@ export const UpdateStudent = () => {
                                         onChange={handleChange}
                                         error={errors[name]}
                                         helperText={errors[name] && `${label} is required`}
-                                        
+
                                     />
                                 </Grid>
                             ))}
@@ -283,41 +300,45 @@ export const UpdateStudent = () => {
                                 />
                             </Grid>
 
-                           <Grid item xs = {12}>
-                        
+                            <Grid item xs={12}>
+
                                 {schoolOptions.length > 0 ? (
                                     <Autocomplete
                                         id="school-select"
-                                        value={formData.schoolId} // Now using the whole school object
-                                        onChange={handleChange}
-                                        options={schoolOptions} // Ensure it's always an array
-                                        getOptionLabel={(option) => option?.schoolName || ''} // Safely access the name
-                                        isOptionEqualToValue={(option, value) => option?._id === value?._id} // Safely compare objects
-                                        onScroll={(event) => {
-                                            const bottom = event.target.scrollHeight === event.target.scrollTop + event.target.clientHeight;
-                                            if (bottom && hasMore) {
-                                                loadMoreSchools(); // Load more schools when the user scrolls to the bottom
+                                        value={selectedSchool} // Controlled value
+                                        onChange={(event, newValue) => {
+                                            if (newValue) {
+                                                setSelectedSchool(newValue);
+                                                setFormData({ ...formData, schoolId: newValue._id }); // Set schoolId in formData
                                             }
                                         }}
-                                        renderInput={(params) => <TextField {...params} label="School"
-                                            sx={{ width: 400 }} // Change the width here
+                                        options={schoolOptions}
+                                        getOptionLabel={(option) => option?.schoolName || ""}
+                                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                                        getOptionKey={(option) => option?._id} // Use a unique key for each option
 
-                                        />}
+                                        onScroll={(event) => {
+                                            const bottom =
+                                                event.target.scrollHeight === event.target.scrollTop + event.target.clientHeight;
+                                            if (bottom && hasMore) {
+                                                loadMoreSchools();
+                                            }
+                                        }}
+                                        renderInput={(params) => <TextField {...params} label="School" fullWidth />}
                                         loading={loadingSchools}
                                         noOptionsText="No schools found"
-                                        // Use a unique key for each option to prevent key collision warning
-                                        getOptionKey={(option) => option?._id} // Unique key for each option
-                                    />
+                                    />  
+
                                 ) : (
                                     <Typography variant="body1" color="textSecondary">
                                         No schools available
                                     </Typography>
                                 )}
-                             
-                            
 
 
-                           </Grid>
+
+
+                            </Grid>
 
                             <Grid item xs={12}>
                                 <TextField
@@ -622,12 +643,11 @@ export const UpdateStudent = () => {
                             }}
                         >
                             {success && <Typography variant='h5' color="green">Student Updated Successfully</Typography>}
-                            {error && <Typography variant='h5' color="green">{validationError}</Typography>}
+                            {error && <Typography variant='h5' color="red">{validationError}</Typography>}
                         </Typography>
                     </form>
                 </Box>
             </Container>
         </>
-    );
-
-};
+    )
+})
