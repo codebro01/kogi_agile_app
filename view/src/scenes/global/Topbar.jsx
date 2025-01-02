@@ -32,7 +32,7 @@ const Topbar = ({ setIsSidebar }) => {
       >
         <Box
           component="img"
-          src="site-logo-dark.png"
+          src="/site-logo-dark.png"
           alt="Logo"
           sx={{
             width: { xs: 100, sm: 160, md: 220 },

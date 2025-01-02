@@ -15,8 +15,9 @@ import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { ChangePasswordForm } from "../../components/changePasswordPopup.jsx";
 // import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-import {useAuth} from '../auth/authContext.jsx';
+import { useAuth } from '../auth/authContext.jsx';
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -40,16 +41,20 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
-const Sidebar = ({isSidebar}) => {
-    const { userPermissions } = useAuth();
+const Sidebar = ({ isSidebar }) => {
+  const { userPermissions } = useAuth();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [selected, setSelected] = useState("Dashboard");
   const storedUser = JSON.parse(localStorage.getItem('userData'))
   const label = { inputProps: { 'aria-label': 'Switch demo' } };
+  const [open, setOpen] = useState(false);
 
-console.log(storedUser);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  console.log(storedUser);
   return (
     <Box className={`sidebark ${isSidebar ? "" : "collapsed"}`}
       sx={{
@@ -65,43 +70,62 @@ console.log(storedUser);
         "& .pro-inner-item:hover": {
           color: `${colors.main['darkGreen']} !important`,
 
- 
+
         },
         "& .pro-menu-item.active": {
           color: `${colors.main["darkGreen"]} !important `
         },
-      
+
       }}
     >
-      <ProSidebar collapsed={isCollapsed} sx = {{
-         display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center'
+      <ProSidebar collapsed={isCollapsed} sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        maxWidth: "200px !important"
+
       }}>
-        <Menu sx = {{
+        <Menu sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+
         }}>
           {/* LOGO AND MENU ICON */}
-        <Box sx = {{
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center'
-        }}>
-            <Switch {...label} onClick={() => setIsCollapsed(!isCollapsed)} />
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Switch
+              checked={isCollapsed}
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              sx={{
+                '& .MuiSwitch-switchBase.Mui-checked': {
+                  color: '#546e13',  // Color of the switch when checked
+                },
+                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                  backgroundColor: '#546e13',  // Color of the track when checked
+                },
+                '& .MuiSwitch-switchBase': {
+                  color: '#546e13',  // Color of the switch when unchecked
+                },
+                '& .MuiSwitch-switchBase + .MuiSwitch-track': {
+                  backgroundColor: '#546e13',  // Color of the track when unchecked
+                },
+              }}
+            />
+          </Box>
 
-        </Box>
-         
-            {!isCollapsed && (
-              <Box
-                display="none"
-                justifyContent="space-between"
-                alignItems="center"
-                ml="15px"
-              >
-              </Box>
-            )}
+          {!isCollapsed && (
+            <Box
+              display="none"
+              justifyContent="space-between"
+              alignItems="center"
+              ml="15px"
+            >
+            </Box>
+          )}
 
           {!isCollapsed && (
             <Box mb="25px">
@@ -115,13 +139,17 @@ console.log(storedUser);
                 />
               </Box>
               <Box textAlign="center">
+
+                <Box sx={{ marginTop: "20px", marginBottom: "20px", }}>
+                  <ChangePasswordForm open={open} handleOpen={handleOpen} handleClose={handleClose} />
+                </Box>
                 <Typography
-                  variant="h4"
+                  variant="h6"
                   color={colors.grey[100]}
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                 Welcome {userPermissions.length > 0 && storedUser.firstname}
+                  Email:  {userPermissions.length > 0 && storedUser.email}
                 </Typography>
                 <Typography
                   variant="h6"
@@ -129,26 +157,18 @@ console.log(storedUser);
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                 Email:  {userPermissions.length > 0 && storedUser.email}
+                  user ID:  {userPermissions.length > 0 ? storedUser?.randomId : 'no random id'}
                 </Typography>
-                <Typography
-                  variant="h6"
-                  color={colors.grey[100]}
-                  fontWeight="bold"
-                  sx={{ m: "10px 0 0 0" }}
-                >
-                 user ID:  {userPermissions.length > 0 ? storedUser?.randomId : 'no random id'}
-                </Typography>
-    
+
               </Box>
             </Box>
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"} marginTop={5}>
-                 <Item
-              
+            <Item
+
               title="Dashboard"
-              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard' : '/enumerator-dashboard' }
+              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard' : '/enumerator-dashboard'}
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -163,12 +183,12 @@ console.log(storedUser);
             </Typography>
             <Item
               title="create Accounts"
-              to={'/create-accounts' }
+              to={'/create-accounts'}
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-          <Item
+            <Item
               title="Manage Students"
               to={userPermissions.includes('handle_registrars') ? '' : 'enumerator-dashboard/view-all-students-data'}
               icon={<ContactsOutlinedIcon />}
@@ -176,81 +196,81 @@ console.log(storedUser);
               setSelected={setSelected}
             />
 
-            
 
 
-            {userPermissions.includes('handle_registrars') && 
-            
-            <>
 
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Insertions
-            </Typography>
-            <Item
-              title="Upload attendance"
-              to="/form"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Manage School"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Upload Payment"
-              to="/faq"
-              icon={<HelpOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            </>
+            {userPermissions.includes('handle_registrars') &&
+
+              <>
+
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  Insertions
+                </Typography>
+                <Item
+                  title="Upload attendance"
+                  to="/form"
+                  icon={<PersonOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Manage School"
+                  to="/calendar"
+                  icon={<CalendarTodayOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Upload Payment"
+                  to="/faq"
+                  icon={<HelpOutlineOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
             }
 
 
 
 
 
-                        {userPermissions.includes('handle_registrars') && 
-                        <>
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Statistics
-            </Typography>
-            <Item
-              title="Bar Chart"
-              to="/bar"
-              icon={<BarChartOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Pie Chart"
-              to="/pie"
-              icon={<PieChartOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Line Chart"
-              to="/line"
-              icon={<TimelineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-                        </>
-                        
-                        }
+            {userPermissions.includes('handle_registrars') &&
+              <>
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: "15px 0 5px 20px" }}
+                >
+                  Statistics
+                </Typography>
+                <Item
+                  title="Bar Chart"
+                  to="/bar"
+                  icon={<BarChartOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Pie Chart"
+                  to="/pie"
+                  icon={<PieChartOutlineOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Line Chart"
+                  to="/line"
+                  icon={<TimelineOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
+
+            }
 
 
 

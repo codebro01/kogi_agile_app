@@ -596,11 +596,7 @@ export const CreateStudent = () => {
                     {occupations.map((occupation, index) => {
                       return <MenuItem key={index} value={occupation}>{occupation}</MenuItem>
 
-                    })}
-
-                    <MenuItem value="2020">2020</MenuItem>
-
-
+                    })} 
                   </Select>
                 </FormControl>
               </Grid>

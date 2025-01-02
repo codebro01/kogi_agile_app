@@ -147,7 +147,7 @@ const Dashboard = () => {
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header sx={{ textTransform: 'capitalize', color: "#546e13" }} title={`${greetingMessage} ${capitalize(storedUser.firstname)}`} />
+        <Header sx={{ textTransform: 'capitalize', color: "#546e13" }} title={`${greetingMessage} ${capitalize(storedUser.fullName.split(' ')[0])}`} />
 
 
         {/* <Box>
@@ -170,8 +170,6 @@ const Dashboard = () => {
 
       {/* GRID & CHARTS */}
       <Box
-
-
         sx={{
           display: {
             xs: 'flex',  // flex layout for extra-small screens
@@ -181,14 +179,14 @@ const Dashboard = () => {
           gridAutoRows: '140px', // Set the row height for the grid
           gap: '20px', // Spacing between grid items
           gridTemplateColumns: {
-            sm: 'repeat(6, 1fr)', // 6 columns for small screens
-            md: 'repeat(12, 1fr)', // 12 columns for medium screens
-            lg: 'repeat(12, 1fr)', // 12 columns for large screens
+            xs: 'repeat(1, 1fr)', // 1 column for extra-small screens
+            sm: 'repeat(6, 1fr)', // 6 columns for small screens and up
+            md: 'repeat(12, 1fr)', // 12 columns for medium screens and up
+            lg: 'repeat(12, 1fr)', // 12 columns for large screens and up
           },
           flexDirection: {
             xs: 'column', // Flex direction as column for xs (flex)
           },
-
           '& > *': {
             color: "#fff",
             borderRadius: '5px', // Apply border-radius to all direct children
@@ -196,207 +194,191 @@ const Dashboard = () => {
         }}
       >
         {/* ROW 1 */}
-        <Box className="statBoxContainer"
-          gridColumn="span 4"
-          backgroundColor={colors.main["darkGreen"]}
-          display="flex"
-          flexBasis="50%"
-          alignItems="center"
-          justifyContent="center"
-          borderRadius="5px"
+        <Box
+          className="statBoxContainer"
           sx={{
             gridColumn: {
-              md: "span 4",
-              sm: "span 6",
-              xs: "span 12",
-            }
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.main["darkGreen"],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '5px',
           }}
-
         >
           <StatBox
             title={studentsData?.length || 0}
             subtitle="Total Number of Students Enrolled"
             progress="0.75"
             borderRadius="5px"
-
-            icon={
-              <EmailIcon
-                sx={{ color: colors.main["darkGreen"], fontSize: "26px" }}
-              />
-            }
+            icon={<EmailIcon sx={{ color: colors.main["darkGreen"], fontSize: "26px" }} />}
           />
         </Box>
-        <Box className="statBoxContainer"
-          gridColumn="span 4"
-          backgroundColor={colors.dashboardStatBox["red"]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexBasis="50%"
-          borderRadius="5px"
 
+        <Box
+          className="statBoxContainer"
           sx={{
             gridColumn: {
-              md: "span 4",
-              sm: "span 6",
-            }
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.dashboardStatBox["red"],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '5px',
           }}
-
         >
           <StatBox
             title={primary6Students?.length}
             subtitle="Total Basic 6 Enrolled"
             progress="0.75"
             borderRadius="5px"
-
-            icon={
-              <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
+            icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
           />
         </Box>
+
         <Box
           className="statBoxContainer"
-          gridColumn="span 4"
-          backgroundColor={colors.dashboardStatBox["yellow"]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexBasis="50%"
-          borderRadius="5px"
-
           sx={{
             gridColumn: {
-              md: "span 4",
-              sm: "span 6",
-            }
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.dashboardStatBox["yellow"],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '5px',
           }}
-
         >
           <StatBox
             title={jss1Students?.length}
             subtitle="Total JSS 1 Enrolled"
             progress="0.75"
             borderRadius="5px"
-
-            icon={
-              <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
+            icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
           />
         </Box>
+
         <Box
           className="statBoxContainer"
-          gridColumn="span 4"
-          backgroundColor={colors.dashboardStatBox["gold"]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexBasis="50%"
-          borderRadius="5px"
-
           sx={{
             gridColumn: {
-              md: "span 4",
-              sm: "span 6",
-            }
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.dashboardStatBox["gold"],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '5px',
           }}
-
         >
           <StatBox
             title={jss3Students?.length}
             subtitle="Total JSS 3 Enrolled"
             progress="0.75"
             borderRadius="5px"
-
-            icon={
-              <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
+            icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
           />
         </Box>
+
         <Box
           className="statBoxContainer"
-          gridColumn="span 4"
-          backgroundColor={colors.blueAccent[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexBasis="50%"
-          borderRadius="5px"
-
+          sx={{
+            gridColumn: {
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.blueAccent[400],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '5px',
+          }}
         >
           <StatBox
             title={ss1Students?.length}
             subtitle="Total SS 1 Enrolled"
             progress="0.75"
             borderRadius="5px"
-
-            icon={
-              <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
+            icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
           />
         </Box>
+
         <Box
           className="statBoxContainer"
-          gridColumn="span 4"
-          backgroundColor={colors.dashboardStatBox["grey"]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexBasis="50%"
+          sx={{
+            gridColumn: {
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.dashboardStatBox["grey"],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
           <StatBox
             title={getNumberOfDistinctSchools(studentsData)}
             subtitle="Total School Enrolled"
             progress="0.50"
-            icon={
-              <PointOfSaleIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
+            icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
           />
         </Box>
+
         <Box
           className="statBoxContainer"
-          gridColumn="span 12"
-          gridRow="span 3"
-          display="flex"
-          alignItems="center"
-          flexDirection="column"
-          justifyContent="center"
+          sx={{
+            gridColumn: 'span 12', // Full width for the last box
+            gridRow: 'span 3', // Take up more vertical space
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
         >
-          {userPermissions.length === 1 &&
-
-
+          {userPermissions.length === 1 && (
             <>
               <Typography
                 variant="h3"
                 gutterBottom
                 sx={{
-                  color: colors.main["deepGreen"],
+                  color: colors.main["darkGreen"],
+                  background: "rgba(224, 224, 224, 1)",
                   fontWeight: 'bold',
                   letterSpacing: '0.5px',
-                  textAlign: 'center',  // Center align the heading
-                  padding: '20px 0',  // Add top and bottom padding for spacing
+                  textAlign: 'center',
+                  padding: '20px 0',
+                  marginTop: "100px",
+                  padding: "15px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
                 }}
               >
                 Information of Last 5 Registered Students
               </Typography>
 
-              <TableContainer component={Paper} sx={{
-                maxWidth: '100%',
-                overflowX: 'auto',
-                boxShadow: 3, // Add subtle shadow for depth
-                borderRadius: '8px', // Rounded corners for table container
-                marginBottom: '20px', // Margin at the bottom for spacing
-                minHeight: "320px"
-              }}>
+              <TableContainer
+                component={Paper}
+                sx={{
+                  maxWidth: '100%',
+                  overflowX: 'auto',
+                  boxShadow: 3,
+                  borderRadius: '8px',
+                  marginBottom: '20px',
+                  minHeight: "320px",
+                }}
+              >
                 <Table sx={{ minWidth: 650 }}>
                   <TableHead>
                     <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
@@ -410,8 +392,8 @@ const Dashboard = () => {
                   <TableBody>
                     {last5Students().map((student, index) => (
                       <TableRow key={index} sx={{
-                        '&:hover': { backgroundColor: '#f9f9f9' },  // Hover effect
-                        borderBottom: '1px solid #ddd',  // Add borders to rows
+                        '&:hover': { backgroundColor: '#f9f9f9' },
+                        borderBottom: '1px solid #ddd',
                       }}>
                         <TableCell>{student.surname}</TableCell>
                         <TableCell>{student.presentClass}</TableCell>
@@ -427,32 +409,29 @@ const Dashboard = () => {
               <Button
                 component={Link}
                 to="/enumerator-dashboard/view-all-students-data"
-                variant="contained"  // Change to 'contained' for a more prominent button
+                variant="contained"
                 size="large"
                 color="primary"
                 sx={{
                   textTransform: 'none',
                   fontSize: '1rem',
-                  marginTop: '30px',
                   padding: '12px 24px',
-                  borderRadius: '8px', // Rounded corners for button
-                  boxShadow: 2, // Add a subtle shadow for a lifted effect
-                  marginBottom: '40px',
+                  borderRadius: '8px',
+                  boxShadow: 2,
+                  marginBottom: '100px',
                   '&:hover': {
-                    backgroundColor: '#0D47A1', // Darker shade for hover effect
+                    backgroundColor: '#0D47A1',
                     boxShadow: 3,
                   },
                 }}
               >
                 Click to View All Students Information
               </Button>
-
             </>
-
-
-          }
+          )}
         </Box>
       </Box>
+
     </Box>
   );
 };

@@ -8,8 +8,8 @@ const styles = {
     loader: {
         width: "40px",
         height: "40px",
-        border: "4px solid #546e13",
-        borderTop: "4px solid transparent",
+        border: "1px solid #546e13",
+        borderTop: "1px solid transparent",
         borderRadius: "50%",
     },
     animation: "spin 1s linear infinite",

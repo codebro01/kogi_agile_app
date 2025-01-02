@@ -6,7 +6,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
 import { getNigeriaStates } from 'geo-ng';
 import { SchoolsContext, StudentsContext, WardsContext } from "../../components/dataContext.jsx";
-
+import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
 
 
 axios.defaults.withCredentials = true;
@@ -80,6 +80,7 @@ export const UpdateStudent = React.memo(() => {
     const [selectedSchool, setSelectedSchool] = useState(
         schoolOptions.find((school) => school.schoolName === student.schoolId.schoolName) || null
     );
+    const [isLoading, setIsLoading] = useState(false)
 
 
 
@@ -166,6 +167,7 @@ export const UpdateStudent = React.memo(() => {
 
 
     const handleSubmit = (e) => {
+        setIsLoading(true)
         e.preventDefault();
 
         (async () => {
@@ -179,14 +181,21 @@ export const UpdateStudent = React.memo(() => {
                     withCredentials: true,
                 });
                 console.log(response);
-                navigate('/enumerator-dashboard/view-all-students-data')
+                setIsLoading(false)
                 setSuccess(true);
+                setTimeout(() => {
+                    navigate('/enumerator-dashboard/view-all-students-data')
+                }, 5000)
             } catch (err) {
+                setIsLoading(false)
                 console.log(err)
                 if (err.response.status === 401) return navigate('/sign-in')
                 setError(true)
                 setValidationError(err.response?.data?.message || 'An error occurred');
-                setTimeout(() => setValidationError(''), 3000);
+                setTimeout(() => setValidationError(''), 5000);
+            }
+            finally {
+                setIsLoading(false)
             }
         })();
     }
@@ -239,8 +248,20 @@ export const UpdateStudent = React.memo(() => {
 
 
     if (loading) return (
-        <h4>Loading schools and wards ..............</h4>
-    )
+        <Box
+            sx={{
+                display: "flex", // Corrected from 'dispflex'
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "80vh",
+                width: "90vw",
+                position: "relative",
+            }}
+        >
+            <SpinnerLoader />
+        </Box>
+    );
 
     setTimeout(() => {
         setError('')
@@ -650,6 +671,10 @@ export const UpdateStudent = React.memo(() => {
                                     fullWidth
                                     error={errors.image}
                                     helperText={errors.image && 'image is required'}
+                                    style={{
+                                        backgroundColor: '#546e13',
+                                        color: '#fff', 
+                                    }}
                                 >
                                     Upload Passport
                                     <input
@@ -663,22 +688,39 @@ export const UpdateStudent = React.memo(() => {
                             </Grid>
 
                             <Grid item xs={12} marginTop="20px">
-                                <Button type="submit" variant="contained" color="primary" fullWidth>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    style={{
+                                        backgroundColor: '#546e13',
+                                        color: '#fff', // Optional: To make the text readable on the green background
+                                    }}
+                                >
                                     Submit
                                 </Button>
                             </Grid>
+
                         </Grid>
-                        <Typography
-                            variant="body2"
-                            style={{
-                                marginTop: '8px',
-                                fontWeight: 'bold',
-                                textAlign: 'center', // Center align the text
-                            }}
-                        >
-                            {success && <Typography variant='h5' color="green">Student Updated Successfully</Typography>}
-                            {error && <Typography variant='h5' color="red">{validationError}</Typography>}
-                        </Typography>
+                        <Grid xs = {12} sx = {{
+                            display: "flex", 
+                            justifyContent:"center", 
+                            alignItems: "center", 
+                            marginTop:"6px"
+                        }}>
+                            {isLoading ? <SpinnerLoader /> :  (<Typography
+                                variant="body2"
+                                style={{
+                                    marginTop: '8px',
+                                    fontWeight: 'bold',
+                                    textAlign: 'center', // Center align the text
+                                }}
+                            >
+                                {success && <Typography variant='h5' color="green">Student Updated Successfully</Typography>}
+                                {error && <Typography variant='h5' color="red">{validationError}</Typography>}
+                            </Typography>)}
+                        </Grid>
                     </form>
                 </Box>
             </Container>

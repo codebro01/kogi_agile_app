@@ -14,7 +14,7 @@ body,
 .app {
   display: flex;
   position: relative;
-
+  overflow-x: hidden;
 }
 
 
@@ -41,6 +41,7 @@ body,
   overflow-y: auto;
   /* Allows scrolling */
   transition: margin-left 0.3s ease-in-out;
+  min-width: 300px;
   /* Smooth adjustment when sidebar collapses */
 }
 
