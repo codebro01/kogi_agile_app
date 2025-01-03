@@ -13,12 +13,12 @@ axios.defaults.withCredentials = true;
 
 export const CreateStudent = () => {
   // const theme = useTheme();
-  const {  loading } = useContext(SchoolsContext);
+  const { loading } = useContext(SchoolsContext);
 
   // const location = useLocation()
   // const selectedSchool = location.state.selectedSchool;
   // console.log(selectedSchool)
- 
+
 
 
 
@@ -30,7 +30,7 @@ export const CreateStudent = () => {
   //     console.log(location.state.selectedSchool);
   //   }
   // }, [location.state]);
-  
+
 
   const { wardsData } = useContext(WardsContext)
 
@@ -87,8 +87,8 @@ export const CreateStudent = () => {
   const [states, setStates] = useState([]);
   const [lgas, setLgas] = useState([]);
   const [wardValue, setWardValue] = useState(null)
-  const [formSubmissionLoading, setFormSubmissionLoading ] = useState(false);
-  const [storedSchool, setStoredSchool ] = useState(null);
+  const [formSubmissionLoading, setFormSubmissionLoading] = useState(false);
+  const [storedSchool, setStoredSchool] = useState(null);
 
 
   useEffect(() => {
@@ -140,6 +140,15 @@ export const CreateStudent = () => {
       setLgas([]);
     }
   }, [formData.stateOfOrigin, formData.nationality]);
+  
+  const handleStateChange = (selectedState) => {
+    setFormData({
+      ...formData,
+      stateOfOrigin: selectedState,
+      lga: '' // Reset LGA when state changes
+    });
+  };
+
 
   const handleSelectChange = (e, { name }) => {
     setFormData((prevData) => ({
@@ -148,13 +157,7 @@ export const CreateStudent = () => {
     }));
   };
 
-  const handleStateChange = (selectedState) => {
-    setFormData({
-      ...formData,
-      stateOfOrigin: selectedState,
-      lga: '' // Reset LGA when state changes
-    });
-  };
+
   const handleWardChange = (selectedWard) => {
     setFormData({
       ...formData,
@@ -281,7 +284,7 @@ export const CreateStudent = () => {
                     value={formData[name]}
                     onChange={handleChange}
                     error={errors[name]}
-                    
+
                     required
                     helperText={errors[name] && `${label} is required`}
                   />
@@ -298,7 +301,7 @@ export const CreateStudent = () => {
                   value={formData.dob}
                   onChange={handleChange}
                   error={errors.dob}
-                  
+
                   required
                   helperText={errors.dob && 'Date of Birth is required'}
                   InputLabelProps={{ shrink: true }}
@@ -332,7 +335,7 @@ export const CreateStudent = () => {
                   value={formData.gender}
                   onChange={handleChange}
                   error={errors.gender}
-                  
+
                   required
                   helperText={errors.gender && 'Gender is required'}
                 >
@@ -350,7 +353,7 @@ export const CreateStudent = () => {
                   value={formData.nationality}
                   onChange={(e) => handleSelectChange(e, { name: 'nationality' })}
                   error={errors['Nationality']}
-                  
+
                   required
                   helperText={errors['Nationality'] && `${'Nationality'} is required`}
 
@@ -373,7 +376,7 @@ export const CreateStudent = () => {
                     value={formData.stateOfOrigin || ''}
                     onChange={(e) => handleStateChange(e.target.value)}
                     error={formData.stateOfOrigin === ''} // For example, you can pass `true` or `false` here
-                    
+
                     required
                     helperText={formData.stateOfOrigin === '' ? 'State of Origin is required' : ''}
                   >
@@ -398,7 +401,7 @@ export const CreateStudent = () => {
                     value={formData.lga || ''}
                     onChange={(e) => handleSelectChange(e, { name: 'lga' })}
                     error={errors['LGA']}
-                    
+
                     required
                     helperText={errors['LGA'] && `${'LGA'} is required`}
 
@@ -460,7 +463,7 @@ export const CreateStudent = () => {
                     value={formData.ward || ''} // Using ward ID
                     onChange={(e) => handleWardChange(e.target.value)} // Updating the form data with the ward ID
                     error={formData.ward === ''} // Error if the ward is not selected
-                    
+
                     required
                     helperText={formData.ward === '' ? 'Ward is required' : ''}
 
@@ -486,7 +489,7 @@ export const CreateStudent = () => {
                     value={formData[name]}
                     onChange={handleChange}
                     error={errors[name]}
-                    
+
                     required
                     helperText={errors[name] && `${label} is required`}
 
@@ -503,7 +506,7 @@ export const CreateStudent = () => {
                     onChange={handleChange}
                     label="Present Class"
                     error={errors['Present Class']}
-                    
+
                     required
                     helperText={errors['Present Class'] && `${'Present Class'} is required`}
                   >
@@ -524,7 +527,7 @@ export const CreateStudent = () => {
                     onChange={handleChange}
                     label="Class at Admission"
                     error={errors['Class at Admission']}
-                    
+
                     required
                     helperText={errors['Class at Admission'] && `${'Class at Admission'} is required`}
                   >
@@ -573,7 +576,7 @@ export const CreateStudent = () => {
                     value={formData[name]}
                     onChange={handleChange}
                     error={errors[name]}
-                    
+
                     required
                     helperText={errors[name] && `${label} is required`}
                   />
@@ -589,14 +592,14 @@ export const CreateStudent = () => {
                     onChange={handleChange}
                     label="Occupation"
                     error={errors['Guardian Occupation']}
-                    
+
                     required
                     helperText={errors['Guardian Occupation'] && `${'Guardian Occupation'} is required`}                  >
 
                     {occupations.map((occupation, index) => {
                       return <MenuItem key={index} value={occupation}>{occupation}</MenuItem>
 
-                    })} 
+                    })}
                   </Select>
                 </FormControl>
               </Grid>
@@ -658,7 +661,7 @@ export const CreateStudent = () => {
                   value={formData.accountNumber}
                   onChange={handleChange}
                   error={errors.accountNumber}
-                  
+
                   required
                   helperText={errors.accountNumber && 'Account Number is required'}
                 />
@@ -716,11 +719,11 @@ export const CreateStudent = () => {
               }}
             >
               {formSubmissionLoading && <Grid sx={{
-                display: "flex", 
-                width: "100%", 
-                justifyContent: "center", 
-                alignItems:"center"
-              }}><SpinnerLoader/></Grid>}
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center"
+              }}><SpinnerLoader /></Grid>}
               {success && (
                 <Typography
                   variant="h5"

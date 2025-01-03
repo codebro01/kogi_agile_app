@@ -6,12 +6,8 @@ import Dashboard from "./scenes/dashboard";
 import Team from "./scenes/team";
 import Invoices from "./scenes/invoices";
 import Contacts from "./scenes/contacts";
-import Bar from "./scenes/bar";
 import Form from "./scenes/form";
-import Line from "./scenes/line";
-import Pie from "./scenes/pie";
 import FAQ from "./scenes/faq";
-import Geography from "./scenes/geography";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
@@ -24,6 +20,8 @@ import { CreateStudent } from "./scenes/manage-accounts/createStudent";
 import { CreateAdmin } from "./scenes/manage-accounts/createAdmin";
 import { UpdateStudent } from './scenes/manage-accounts/updateStudent';
 import { DataProvider } from './components/dataContext.jsx';
+import { RoleSelector } from "./components/roleSelector.jsx";
+import { AdminViewAllStudentsData } from "./scenes/manage-accounts/adminViewAllStudentsData.jsx";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -51,7 +49,9 @@ function App() {
                       <Route path="/admin-dashboard" element={<Dashboard />} />
                       <Route path="/enumerator-dashboard" element={<Dashboard />} />
                       <Route path="/enumerator-dashboard/view-all-students-data" element={<ViewAllStudentsData />} />
-                      <Route path="/create-accounts" element={<RegistrationSelector />} />
+                      <Route path="/admin-dashboard/view-all-students-data" element={<AdminViewAllStudentsData />} />
+                      <Route path="/admin-dashboard/create-student-school-selector" element={<RegistrationSelector />} />
+                      <Route path="/admin-dashboard/role-selector" element={<RoleSelector />} />
                       <Route path="/admin-dashboard/create-accounts/register-admin" element={<CreateAdmin />} />
                       <Route path="/admin-dashboard/create-accounts/register-enumerator" element={<CreateEnumerator />} />
                       <Route path="/admin-dashboard/create-accounts/register-student" element={<CreateStudent />} />
@@ -61,12 +61,8 @@ function App() {
                       <Route path="/contacts" element={<Contacts />} />
                       <Route path="/invoices" element={<Invoices />} />
                       <Route path="/form" element={<Form />} />
-                      <Route path="/bar" element={<Bar />} />
-                      <Route path="/pie" element={<Pie />} />
-                      <Route path="/line" element={<Line />} />
                       <Route path="/faq" element={<FAQ />} />
                       <Route path="/calendar" element={<Calendar />} />
-                      <Route path="/geography" element={<Geography />} />
                     </Routes>
                   </DataProvider>
                 }

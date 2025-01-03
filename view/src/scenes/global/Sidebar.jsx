@@ -183,14 +183,14 @@ const Sidebar = ({ isSidebar }) => {
             </Typography>
             <Item
               title="create Accounts"
-              to={'/create-accounts'}
+              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/role-selector' : '/admin-dashboard/create-student-school-selector'}              
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Manage Students"
-              to={userPermissions.includes('handle_registrars') ? '' : 'enumerator-dashboard/view-all-students-data'}
+              to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : 'enumerator-dashboard/view-all-students-data'}
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -208,24 +208,24 @@ const Sidebar = ({ isSidebar }) => {
                   color={colors.grey[300]}
                   sx={{ m: "15px 0 5px 20px" }}
                 >
-                  Insertions
+                  Manage Enumerators
                 </Typography>
                 <Item
-                  title="Upload attendance"
+                  title="Enumerators Info"
                   to="/form"
                   icon={<PersonOutlinedIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
                 <Item
-                  title="Manage School"
+                  title="Create Enumerator"
                   to="/calendar"
                   icon={<CalendarTodayOutlinedIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
                 <Item
-                  title="Upload Payment"
+                  title="Enumerators Activites"
                   to="/faq"
                   icon={<HelpOutlineOutlinedIcon />}
                   selected={selected}

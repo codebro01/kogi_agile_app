@@ -5,7 +5,8 @@ import {
     Button,
     Typography,
     Autocomplete,
-    TextField, Grid
+    TextField, Grid, FormControl, MenuItem, InputLabel, Select,
+    colors
 } from "@mui/material";
 import { useAuth } from '../auth/authContext.jsx';
 import { SchoolsContext } from "../../components/dataContext.jsx"; // Import context
@@ -15,7 +16,6 @@ import { SpinnerLoader } from "../../components/spinnerLoader.jsx";
 const RegistrationSelector = () => {
     const { setSelectedSchool, loading, selectedSchool, schoolsData } = useContext(SchoolsContext); // Access context
     const schools = schoolsData;
-    const [role, setRole] = useState("");
     const { userPermissions } = useAuth();
     const [selectedSchoolState, setSelectedSchoolState] = useState(null); // State to hold the selected school object
     const [schoolOptions, setSchoolOptions] = useState([]); // Start with an empty array
@@ -79,22 +79,9 @@ const RegistrationSelector = () => {
 
     };
 
-    const handleChange = (event) => {
-        setRole(event.target.value); // Update role state
-    };
+ 
 
-    const handleSubmit = () => {
-        if (!role) {
-            alert("Please select a role to register.");
-            return;
-        }
 
-        // Navigate based on the selected role
-        if (role === "admin") navigate("/admin-dashboard/create-accounts/register-admin");
-        if (role === "enumerator") navigate("/admin-dashboard/create-accounts/register-enumerator");
-        if (role === "student") navigate("/admin-dashboard/create-accounts/register-student");
-        if (role === "school") navigate("/select-school"); // Added for the second condition
-    };
 
     // Loading state while the schools are being fetched
     if (loading)
@@ -130,128 +117,117 @@ const RegistrationSelector = () => {
                 backgroundPosition: "center"
             }}
         >
-            {userPermissions.includes('handle_registrar') ? (
-                <>
-                    <Typography variant="h4" gutterBottom>
-                        Select Role to Register
+            <>
+                <Grid
+                    container
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{
+                        backgroundColor: 'rgba(245, 245, 245, 0.7)', // Light gray background
+                        padding: 3,
+                        borderRadius: 2, // Rounded corners
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+                        maxWidth: 500, // Centered and limited width
+                        margin: '0 auto', // Center horizontally
+                        width: {
+                            xs: 300,
+                            sm: 500
+                        }
+                    }}
+                    component="form" // Make the entire grid a form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSchoolSubmit(); // Trigger the submit function
+                    }}
+                >
+                    {/* Header */}
+                    <Typography
+                        variant="h4"
+                        gutterBottom
+                        align="center"
+                        sx={{
+                            marginBottom: 3, // Space below the header
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Select a School
                     </Typography>
-                    {/* Your role selection code here */}
-                </>
-            ) : (
-                    <>
-                        <Grid
-                            container
-                            justifyContent="center"
-                            alignItems="center"
+
+                    {/* Dropdown */}
+                    {schoolOptions.length > 0 ? (
+                        <Autocomplete
                             sx={{
-                                backgroundColor: 'rgba(245, 245, 245, 0.7)', // Light gray background
-                                padding: 3,
-                                borderRadius: 2, // Rounded corners
-                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-                                maxWidth: 500, // Centered and limited width
-                                margin: '0 auto', // Center horizontally
-                                width: {
-                                    xs: 300, 
-                                    sm : 500
+                                width: '100%',
+                            }}
+                            id="school-select"
+                            value={selectedSchoolState}
+                            onChange={(event, value) => {
+                                setSelectedSchool(value);
+                                setSelectedSchoolState(value);
+                                console.log(selectedSchool);
+                            }}
+                            options={schoolOptions}
+                            getOptionLabel={(option) => option?.schoolName || ''}
+                            isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                            getOptionKey={(option) => option?._id || `${option.schoolName}-${Math.random()}`}
+                            onScroll={(event) => {
+                                const bottom = event.target.scrollHeight === event.target.scrollTop + event.target.clientHeight;
+                                if (bottom && hasMore) {
+                                    loadMoreSchools();
                                 }
                             }}
-                            component="form" // Make the entire grid a form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                handleSchoolSubmit(); // Trigger the submit function
-                            }}
-                        >
-                            {/* Header */}
-                            <Typography
-                                variant="h4"
-                                gutterBottom
-                                align="center"
-                                sx={{
-                                    marginBottom: 3, // Space below the header
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                Select a School
-                            </Typography>
-
-                            {/* Dropdown */}
-                            {schoolOptions.length > 0 ? (
-                                <Autocomplete
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="School"
                                     sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            '& fieldset': {
+                                                borderColor: 'green', // Green outline
+                                            },
+                                            '&:hover fieldset': {
+                                                borderColor: 'darkgreen', // Darker green on hover
+                                            },
+                                            '&.Mui-focused fieldset': {
+                                                borderColor: 'green', // Maintain green on focus
+                                                borderWidth: 2, // Slightly thicker border
+                                            },
+                                        },
                                         width: '100%',
                                     }}
-                                    id="school-select"
-                                    value={selectedSchoolState}
-                                    onChange={(event, value) => {
-                                        setSelectedSchool(value);
-                                        setSelectedSchoolState(value);
-                                        console.log(selectedSchool);
-                                    }}
-                                    options={schoolOptions}
-                                    getOptionLabel={(option) => option?.schoolName || ''}
-                                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
-                                    getOptionKey={(option) => option?._id || `${option.schoolName}-${Math.random()}`}
-                                    onScroll={(event) => {
-                                        const bottom = event.target.scrollHeight === event.target.scrollTop + event.target.clientHeight;
-                                        if (bottom && hasMore) {
-                                            loadMoreSchools();
-                                        }
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="School"
-                                            sx={{
-                                                '& .MuiOutlinedInput-root': {
-                                                    '& fieldset': {
-                                                        borderColor: 'green', // Green outline
-                                                    },
-                                                    '&:hover fieldset': {
-                                                        borderColor: 'darkgreen', // Darker green on hover
-                                                    },
-                                                    '&.Mui-focused fieldset': {
-                                                        borderColor: 'green', // Maintain green on focus
-                                                        borderWidth: 2, // Slightly thicker border
-                                                    },
-                                                },
-                                                width: '100%',
-                                            }}
-                                        />
-                                    )}
-                                    loading={loadingSchools}
-                                    noOptionsText="No schools found"
                                 />
-                            ) : (
-                                <Typography
-                                    variant="body1"
-                                    color="textSecondary"
-                                    sx={{ textAlign: 'center', marginTop: 2 }}
-                                >
-                                    No schools available
-                                </Typography>
                             )}
+                            loading={loadingSchools}
+                            noOptionsText="No schools found"
+                        />
+                    ) : (
+                        <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            sx={{ textAlign: 'center', marginTop: 2 }}
+                        >
+                            No schools available
+                        </Typography>
+                    )}
 
-                            {/* Button */}
-                            <Grid container justifyContent="center" sx={{ marginTop: 3 }}>
-                                <Button
-                                    type="submit" // Submit button
-                                    variant="contained"
-                                    sx={{
-                                        backgroundColor: "#546e13",
-                                        color: "#ffffff",
-                                        "&:hover": {
-                                            backgroundColor: "#40550f", // Slightly darker green on hover
-                                        },
-                                    }}
-                                >
-                                    Next
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </>
-
-
-            )}
+                    {/* Button */}
+                    <Grid container justifyContent="center" sx={{ marginTop: 3 }}>
+                        <Button
+                            type="submit" // Submit button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: "#546e13",
+                                color: "#ffffff",
+                                "&:hover": {
+                                    backgroundColor: "#40550f", // Slightly darker green on hover
+                                },
+                            }}
+                        >
+                            Next
+                        </Button>
+                    </Grid>
+                </Grid>
+            </>
         </Box>
     );
 };
