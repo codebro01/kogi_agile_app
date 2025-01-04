@@ -63,6 +63,10 @@ export const CreateStudent = () => {
     accountNumber: "",
     image: null,
   });
+
+  
+ 
+
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
@@ -77,6 +81,7 @@ export const CreateStudent = () => {
   const [storedSchool, setStoredSchool] = useState(null);
   const [selectedLga, setSelectedLga] = useState("");  // State for LGA selection
   const [selectedWard, setSelectedWard] = useState("");  // State for Ward selection
+
 
 
   useEffect(() => {
@@ -190,6 +195,40 @@ export const CreateStudent = () => {
         console.log(response)
         setSuccess(true);
         setSuccessMessage(`Great Job!!! New student registration successful!!!`)
+        const formSubmissionSuccess = true;
+        if (formSubmissionSuccess) {
+          // Clear form fields
+          setFormData({
+            ward: "",
+            schoolId: "",
+            surname: "",
+            otherNames: "",
+            studentNin: "",
+            dob: "",
+            stateOfOrigin: "",
+            lga: "",
+            lgaOfEnrollment: "",
+            gender: "",
+            communityName: "",
+            residentialAddress: "",
+            presentClass: "",
+            yearAdmitted: "",
+            yearOfErollment: "",
+            classAtEnrollment: "",
+            parentPhone: "",
+            parentName: "",
+            parentNin: "",
+            nationality: "Nigeria",
+            parentContact: "",
+            parentOccupation: "",
+            bankName: "",
+            accountNumber: "",
+            image: null,
+          });
+
+          // Optionally display a success message or reset other states
+          console.log("Form submitted successfully!");
+        }
         setTimeout(() => setSuccessMessage(''), 10000);
 
         setFormSubmissionLoading(false)
