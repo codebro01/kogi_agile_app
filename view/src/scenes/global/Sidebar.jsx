@@ -17,7 +17,7 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { ChangePasswordForm } from "../../components/changePasswordPopup.jsx";
-import { ExportButton } from "../../components/exportButton.jsx";
+import { ExportSubmitButton } from "../../components/exportButton.jsx";
 // import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import { useAuth } from '../auth/authContext.jsx';
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -176,15 +176,15 @@ const Sidebar = ({ isSidebar }) => {
               setSelected={setSelected}
             />
 
-            <Typography
+            {userPermissions.includes('handle_registrars') && <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
               Accounts
-            </Typography>
+            </Typography>}
             <Item
-              title="create Accounts"
+              title="Register student"
               to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/role-selector' : '/admin-dashboard/create-student-school-selector'}              
               icon={<PeopleOutlinedIcon />}
               selected={selected}

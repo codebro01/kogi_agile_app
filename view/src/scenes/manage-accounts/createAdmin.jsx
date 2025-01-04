@@ -20,7 +20,7 @@ export const CreateAdmin = () => {
     });
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
     const navigate = useNavigate();
 
     const handleChange = (e) => {

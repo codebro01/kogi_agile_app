@@ -18,7 +18,7 @@ const SignInForm = () => {
 
 
     const [showPassword, setShowPassword] = useState(false);
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = import.meta.env.VITE_API_URL / api / v1;
     const navigate = useNavigate();
     const handleClickShowPassword = () => setShowPassword(!showPassword);
 

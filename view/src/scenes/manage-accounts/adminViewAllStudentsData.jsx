@@ -11,7 +11,6 @@ import { tokens } from "../../theme";
 import { PersonLoader } from '../../components/personLoader';
 import { useAuth } from '../auth/authContext';
 import { getNigeriaStates } from 'geo-ng';
-import qs from 'qs';
 
 
 
@@ -33,7 +32,7 @@ export const AdminViewAllStudentsData = () => {
     const [fetchLoading, setFetchLoading] = useState(false)
     const [enumeratorsLoading, setEnumeratorsLoading] = useState(false)
 
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
     const token = localStorage.getItem('token') || '';
     const [filters, setFilters] = useState({
         ward: '',

@@ -1,16 +1,10 @@
 import { useState } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
-import Team from "./scenes/team";
-import Invoices from "./scenes/invoices";
-import Contacts from "./scenes/contacts";
-import Form from "./scenes/form";
-import FAQ from "./scenes/faq";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-import Calendar from "./scenes/calendar/calendar";
 import BrandingSignUpPage from "./scenes/auth/register";
 import { SignInForm, EnumeratorSignInForm } from "./scenes/auth/signIn";
 import CreateEnumerator from "./scenes/manage-accounts/createEnumeratorForm";
@@ -34,19 +28,22 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div className="app">
-          {location.pathname !== "/dashboard/sign-in" && location.pathname !== "/sign-in" && <Sidebar isSidebar={isSidebar} />}
+          {location.pathname !== "/dashboard/sign-in" && location.pathname !== "/" && location.pathname !== "/sign-in" && <Sidebar isSidebar={isSidebar} />}
 
           <main className={`content ${isSidebar ? "" : "collapsed"}`}>
-            {location.pathname !== "/sign-in" && location.pathname !== "/dashboard/sign-in" && <Topbar setIsSidebar={setIsSidebar} />}
+            {location.pathname !== "/sign-in" && location.pathname !== "/" && location.pathname !== "/dashboard/sign-in" && <Topbar setIsSidebar={setIsSidebar} />}
 
             <Routes>
               <Route path="/dashboard/sign-in" element={<SignInForm />} />
               <Route path="/sign-in" element={<EnumeratorSignInForm />} />
+              <Route path="/" element={<EnumeratorSignInForm />} />
+
               <Route
                 path="/*"
                 element={
                   <DataProvider>
                     <Routes>
+
                       <Route path="/admin-dashboard" element={<Dashboard />} />
                       <Route path="/enumerator-dashboard" element={<Dashboard />} />
                       <Route path="/enumerator-dashboard/view-all-students-data" element={<ViewAllStudentsData />} />
@@ -59,16 +56,12 @@ function App() {
                       <Route path="/admin-dashboard/update-student/:id" element={<UpdateStudent />} />
                       <Route path="/export-attendance-sheet" element={<ExportAttendanceSheet />} />
                       <Route path="/register" element={<BrandingSignUpPage />} />
-                      <Route path="/team" element={<Team />} />
-                      <Route path="/contacts" element={<Contacts />} />
-                      <Route path="/invoices" element={<Invoices />} />
-                      <Route path="/form" element={<Form />} />
-                      <Route path="/faq" element={<FAQ />} />
-                      <Route path="/calendar" element={<Calendar />} />
                     </Routes>
                   </DataProvider>
                 }
               />
+              <Route path="*" element={<Navigate to="/index.html" />} />
+
             </Routes>
           </main>
         </div>

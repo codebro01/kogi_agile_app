@@ -782,7 +782,6 @@ const Dashboard = () => {
                     textAlign: 'center',
                     padding: '20px 0',
                     marginTop: "100px",
-                    padding: "15px",
                     borderRadius: "5px",
                     cursor: "pointer",
                   }}

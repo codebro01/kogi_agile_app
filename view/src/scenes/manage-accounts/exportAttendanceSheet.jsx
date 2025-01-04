@@ -9,7 +9,7 @@ export const ExportAttendanceSheet = () => {
     const { loading, studentsData } = useContext(StudentsContext);
     const [schoolId, setSchoolId] = useState(''); // Correctly destructured
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
 
     if (loading) {
         return <h4>...loading</h4>

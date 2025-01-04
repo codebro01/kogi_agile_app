@@ -3,7 +3,6 @@ import { Box, Button, TextField, Typography, Modal, IconButton } from '@mui/mate
 import CloseIcon from '@mui/icons-material/Close';
 import { SpinnerLoader } from './spinnerLoader';
 import axios from 'axios';
-import { formatDate } from '@fullcalendar/react';
 
 export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
 
@@ -17,7 +16,7 @@ export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
         newPassword: ''
     })
     const token = localStorage.getItem('token')
-    const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
 
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
@@ -100,7 +99,6 @@ export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
                         boxShadow: 24,
                         p: 4,
                         borderRadius: 2,
-                        position: 'relative',
                     }}
                 >
                     {/* Cancel Icon */}

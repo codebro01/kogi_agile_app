@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Grid, Container, Autocomplete, Typography, Box, IconButton, InputAdornment, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 // import { useTheme } from '@mui/material/styles';
-import { GifBox, Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
 import { getNigeriaStates } from 'geo-ng';
 import { SchoolsContext, WardsContext } from "../../components/dataContext.jsx";
 import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
-
+import lgasAndWards from '../../Lga&wards.json';
 
 axios.defaults.withCredentials = true;
 
@@ -46,20 +45,20 @@ export const CreateStudent = () => {
     dob: "",
     stateOfOrigin: "",
     lga: "",
+    lgaOfEnrollment: "",
     gender: "",
     communityName: "",
     residentialAddress: "",
     presentClass: "",
     yearAdmitted: "",
     yearOfErollment: "",
-    classAtAdmission: "",
     classAtEnrollment: "",
-    guardianPhone: "",
-    guardianName: "",
-    guardianNin: "",
+    parentPhone: "",
+    parentName: "",
+    parentNin: "",
     nationality: "Nigeria",
-    guardianContact: "",
-    guardianOccupation: "",
+    parentContact: "",
+    parentOccupation: "",
     bankName: "",
     accountNumber: "",
     image: null,
@@ -70,12 +69,14 @@ export const CreateStudent = () => {
   const [validationError, setValidationError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errors, setErrors] = useState({});
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
   const [states, setStates] = useState([]);
   const [lgas, setLgas] = useState([]);
   const [wardValue, setWardValue] = useState(null)
   const [formSubmissionLoading, setFormSubmissionLoading] = useState(false);
   const [storedSchool, setStoredSchool] = useState(null);
+  const [selectedLga, setSelectedLga] = useState("");  // State for LGA selection
+  const [selectedWard, setSelectedWard] = useState("");  // State for Ward selection
 
 
   useEffect(() => {
@@ -83,7 +84,6 @@ export const CreateStudent = () => {
     setStoredSchool(JSON.parse(retrievedSchool));  // Store the retrieved value in state
   }, []);
 
-  console.log(storedSchool)
 
 
   const handleChange = useCallback((e) => {
@@ -107,6 +107,13 @@ export const CreateStudent = () => {
     const state = getNigeriaStates().find((s) => s.name === stateName);
     return state ? state.lgas : [];
   };
+
+  console.log(getNigeriaStates())
+  const foundKo = getNigeriaStates().find(state => state.code === 'KO');
+  console.log(foundKo)
+ 
+
+
 
   useEffect(() => {
     if (formData.nationality === 'Nigeria') {
@@ -138,11 +145,14 @@ export const CreateStudent = () => {
 
 
   const handleSelectChange = (e, { name }) => {
+    setSelectedLga(e.target.value);
+    setSelectedWard("");
     setFormData((prevData) => ({
       ...prevData,
       [name]: e.target.value, // Update the correct field based on `name`
     }));
   };
+  const selectedLgaWards = lgasAndWards.find(lga => lga.name === selectedLga)?.wards || [];
 
 
   const handleWardChange = (selectedWard) => {
@@ -165,36 +175,6 @@ export const CreateStudent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const accountNumberRegEx = /^\d{10}$/
-    const phoneNumberRegex = /^\d{11}$/
-    const ninRegex = /^\d{11}$/
-    const newErrors = {
-      surname: !formData.surname,
-      otherNames: !formData.otherNames,
-      gender: !formData.gender,
-      dob: !formData.dob,
-      schoolId: !formData.schoolId,
-      nationality: !formData.nationality,
-      studentNin: !formData.studentNin,
-      guardianPhone: !formData.guardianPhone,
-      guardianName: !formData.guardianName,
-      guardianNin: !formData.guardianNin || !ninRegex.test(formData.guardianNin),
-      guardianOccupation: !formData.guardianOccupation,
-      // email: !formData.email || !/\S+@\S+\.\S+/.test(formData.email),
-      presentClass: !formData.presentClass,
-      classAtAdmission: !formData.classAtAdmission,
-      yearAdmitted: !formData.yearAdmitted,
-      password: !formData.password,
-      residentialAddress: !formData.residentialAddress,
-      communityName: !formData.communityName,
-      bankName: !formData.bankName,
-      accountNumber: !formData.accountNumber || !(new RegExp()),
-      image: !formData.image,
-    };
-    setErrors(newErrors);
-
-    if (error) return;
 
     (async () => {
       try {
@@ -223,9 +203,6 @@ export const CreateStudent = () => {
       }
     })();
 
-    if (!Object.values(newErrors).includes(true)) {
-
-    }
   };
 
   // ** clear fields if students creation is successful
@@ -256,19 +233,18 @@ export const CreateStudent = () => {
     setSuccess('')
   }, 10000)
 
-  const wards = wardsData.map(ward => ward.name.toString());
+  // const wards = wardsData.map(ward => ward.name.toString());
   return (
     <>
       <Container maxWidth="sm" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', paddingTop: '16px', paddingBottom: '16px', marginTop: '32px', marginBottom: '50px' }}>
         <Box sx={{ p: 4, borderRadius: 2, boxShadow: 3, backgroundColor: 'white', width: '100%' }}>
           <Typography variant="h4" gutterBottom align="center" textTransform="uppercase" fontWeight="bolder" marginBottom="20px">
-            Create Students
+            Students Registration Form
           </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               {[{ label: 'Surname', name: 'surname' },
-              { label: 'Other Names', name: 'otherNames' },
-              { label: 'Student Nin', name: 'studentNin' }
+              { label: 'Other Names', name: 'otherNames' }
               ].map(({ label, name }) => (
                 <Grid item xs={12} key={name}>
                   <TextField
@@ -281,10 +257,23 @@ export const CreateStudent = () => {
                     error={errors[name]}
 
                     required
-                    helperText={errors[name] && `${label} is required`}
                   />
                 </Grid>
               ))}
+
+
+              <Grid item xs={12}>
+                <TextField
+                  label="Student Nin"
+                  name="studentNin"
+                  type="text"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.studentNin}
+                  onChange={handleChange}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
 
               <Grid item xs={12}>
                 <TextField
@@ -298,7 +287,6 @@ export const CreateStudent = () => {
                   error={errors.dob}
 
                   required
-                  helperText={errors.dob && 'Date of Birth is required'}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
@@ -312,7 +300,6 @@ export const CreateStudent = () => {
                   value={storedSchool.schoolName}
                   error={errors.school}
                   required
-                  helperText={errors.school && 'School name is required'}
                   InputLabelProps={{ shrink: true }}
                   InputProps={{
                     readOnly: true, // Make it readonly
@@ -332,7 +319,6 @@ export const CreateStudent = () => {
                   error={errors.gender}
 
                   required
-                  helperText={errors.gender && 'Gender is required'}
                 >
                   <MenuItem value="Female">Female</MenuItem>
                 </TextField>
@@ -350,7 +336,6 @@ export const CreateStudent = () => {
                   error={errors['Nationality']}
 
                   required
-                  helperText={errors['Nationality'] && `${'Nationality'} is required`}
 
                 >
                   <MenuItem value="Nigeria">Nigeria</MenuItem>
@@ -370,10 +355,7 @@ export const CreateStudent = () => {
                     fullWidth
                     value={formData.stateOfOrigin || ''}
                     onChange={(e) => handleStateChange(e.target.value)}
-                    error={formData.stateOfOrigin === ''} // For example, you can pass `true` or `false` here
-
                     required
-                    helperText={formData.stateOfOrigin === '' ? 'State of Origin is required' : ''}
                   >
                     {states.map((state) => (
                       <MenuItem key={state} value={state}>
@@ -384,31 +366,6 @@ export const CreateStudent = () => {
                 </Grid>
               )}
 
-              {/* LGA Select (visible only if a state is selected and nationality is Nigeria) */}
-              {formData.stateOfOrigin && formData.nationality === 'Nigeria' && (
-                <Grid item xs={12}>
-                  <TextField
-                    label="LGA"
-                    name="lga"
-                    select
-                    variant="outlined"
-                    fullWidth
-                    value={formData.lga || ''}
-                    onChange={(e) => handleSelectChange(e, { name: 'lga' })}
-                    error={errors['LGA']}
-
-                    required
-                    helperText={errors['LGA'] && `${'LGA'} is required`}
-
-                  >
-                    {lgas.map((lga) => (
-                      <MenuItem key={lga} value={lga}>
-                        {lga}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-              )}
               {formData.nationality === 'Others' && (
                 <Grid item xs={12}>
                   <TextField
@@ -423,28 +380,83 @@ export const CreateStudent = () => {
                 </Grid>
               )}
 
-              {formData.nationality === 'Nigeria' && wardsData.length > 1 && (
+              {/* LGA Select (visible only if a state is selected and nationality is Nigeria) */}
+              {formData.stateOfOrigin && formData.nationality === 'Nigeria' && (
                 <Grid item xs={12}>
                   <TextField
-                    label="Wards"
-                    name="ward"
+                    label="LGA of Origin"
+                    name="lga"
                     select
                     variant="outlined"
                     fullWidth
-                    value={formData.ward || ''} // Using ward ID
-                    onChange={(e) => handleWardChange(e.target.value)} // Updating the form data with the ward ID
-                    error={formData.ward === ''} // Error if the ward is not selected
+                    value={formData.lga || ''}
+                    onChange={(e) => handleSelectChange(e, { name: 'lga' })}
+                    error={errors['LGA']}
 
                     required
-                    helperText={formData.ward === '' ? 'Ward is required' : ''}
 
                   >
-                    {wardsData.map((ward) => (
-                      <MenuItem key={ward._id} value={ward._id}> {/* Use ward._id as the value */}
-                        {ward.name} {/* Display ward.name to the user */}
+                    {lgas.map((lga) => (
+                      <MenuItem key={lga} value={lga}>
+                        {lga}
                       </MenuItem>
                     ))}
                   </TextField>
+                </Grid>
+              )}
+
+                <Grid item xs={12}>
+                  <TextField
+                    label="LGA of Enrollment"
+                    name="lgaOfEnrollment"
+                    select
+                    variant="outlined"
+                    fullWidth
+                    value={formData.lgaOfEnrollment || ''}
+                    onChange={(e) => handleSelectChange(e, { name: 'lgaOfEnrollment' })}
+                    error={errors['LGA']}
+                    required
+
+                  >
+                    {lgasAndWards.map((lga) => (
+                      <MenuItem key={lga.name} value={lga.name}>
+                        {lga.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+              {formData.lgaOfEnrollment && <Grid item xs={12}>
+                <TextField
+                  label="Wards"
+                  name="ward"
+                  select
+                  variant="outlined"
+                  fullWidth
+                  value={formData.ward || ''} // Using ward ID
+                  onChange={(e) => handleWardChange(e.target.value)} // Updating the form data with the ward ID
+                >
+                  {selectedLgaWards.map((ward, index) => (
+                    <MenuItem key={index} value={ward}> {/* Use ward._id as the value */}
+                      {ward} {/* Display ward.name to the user */}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>}
+              
+
+
+
+              {formData.nationality === 'Others' && (
+                <Grid item xs={12}>
+                  <TextField
+                    label="Nationality (Specify)"
+                    name="customNationality"
+                    variant="outlined"
+                    fullWidth
+                    value={formData.customNationality}
+                    onChange={handleChange}
+
+                  />
                 </Grid>
               )}
 
@@ -462,7 +474,6 @@ export const CreateStudent = () => {
                     error={errors[name]}
 
                     required
-                    helperText={errors[name] && `${label} is required`}
 
                   />
                 </Grid>
@@ -479,7 +490,6 @@ export const CreateStudent = () => {
                     error={errors['Present Class']}
 
                     required
-                    helperText={errors['Present Class'] && `${'Present Class'} is required`}
                   >
                     <MenuItem value="Primary 6">Primary 6</MenuItem>
                     <MenuItem value="JSS 1">JSS 1</MenuItem>
@@ -489,27 +499,7 @@ export const CreateStudent = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel>Class at Admission</InputLabel>
-                  <Select
-                    name="classAtAdmission"
-                    value={formData.classAtAdmission}
-                    onChange={handleChange}
-                    label="Class at Admission"
-                    error={errors['Class at Admission']}
 
-                    required
-                    helperText={errors['Class at Admission'] && `${'Class at Admission'} is required`}
-                  >
-                    <MenuItem value="Primary 6">Primary 6</MenuItem>
-                    <MenuItem value="JSS 1">JSS 1</MenuItem>
-                    <MenuItem value="JSS 2">JSS 2</MenuItem>
-                    <MenuItem value="JSS 3">JSS 3</MenuItem>
-                    <MenuItem value="SS 1">SS 1</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
 
               <Grid item xs={12}>
                 <FormControl fullWidth>
@@ -522,7 +512,6 @@ export const CreateStudent = () => {
                     error={errors['Class at Enrollment']}
 
                     required
-                    helperText={errors['Class at Enrollment'] && `${'Class at Enrollment'} is required`}
                   >
                     <MenuItem value="Primary 6">Primary 6</MenuItem>
                     <MenuItem value="JSS 1">JSS 1</MenuItem>
@@ -542,7 +531,6 @@ export const CreateStudent = () => {
                     onChange={handleChange}
                     label="Year Admitted"
                     error={errors['Year Admitted']}
-                    helperText={errors['Year Admitted'] && `${'Year Admitted'} is required`}
                     required                >
                     <MenuItem value="2020">2020</MenuItem>
                     <MenuItem value="2021">2021</MenuItem>
@@ -556,14 +544,13 @@ export const CreateStudent = () => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel>Year of Agile Programme enrollment</InputLabel>
+                  <InputLabel>Year of enrollment</InputLabel>
                   <Select
                     name="yearOfErollment"
                     value={formData.yearOfErollment}
                     onChange={handleChange}
                     label="Year of Erollment"
                     error={errors['Year of Enrollment']}
-                    helperText={errors['Year of Enrollment'] && `${'Year of enrollment of'} is required`}
                     required                >
                     <MenuItem value="2024">2024</MenuItem>
                     <MenuItem value="2025">2025</MenuItem>
@@ -577,9 +564,8 @@ export const CreateStudent = () => {
               </Grid>
 
 
-              {[{ label: 'Guardian Name', name: 'guardianName' },
-              { label: 'Guardian Nin', name: 'guardianNin' },
-              { label: 'Guardian Mobile  No.', name: 'guardianPhone' }
+              {[{ label: 'Parent/caregiver Name', name: 'parentName' },
+              { label: 'Parent/caregiver phone No.', name: 'parentPhone' }
               ].map(({ label, name }) => (
                 <Grid item xs={12} key={name}>
                   <TextField
@@ -592,23 +578,36 @@ export const CreateStudent = () => {
                     error={errors[name]}
 
                     required
-                    helperText={errors[name] && `${label} is required`}
                   />
                 </Grid>
               ))}
+
+        
+              <Grid item xs={12}>
+                <TextField
+                  label={'Parent/caregiver Nin'}
+                  name={"parentNin"}
+                  variant="outlined"
+                  fullWidth
+                  value={formData.parentNin}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+
 
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Parent/Caregiver Occupation</InputLabel>
                   <Select
-                    name="guardianOccupation"
-                    value={formData.guardianOccupation}
+                    name="parentOccupation"
+                    value={formData.parentOccupation}
                     onChange={handleChange}
                     label="Occupation"
-                    error={errors['Guardian Occupation']}
+                    error={errors['parent Occupation']}
 
                     required
-                    helperText={errors['Guardian Occupation'] && `${'Guardian Occupation'} is required`}                  >
+                  >
 
                     {occupations.map((occupation, index) => {
                       return <MenuItem key={index} value={occupation}>{occupation}</MenuItem>
@@ -619,14 +618,14 @@ export const CreateStudent = () => {
               </Grid>
 
 
-              {formData.guardianOccupation === 'Others' && (
+              {formData.parentOccupation === 'Others' && (
                 <Grid item xs={12}>
                   <TextField
                     label="Occupation (Specify)"
-                    name="nationality"
+                    name="parentOccupation"
                     variant="outlined"
                     fullWidth
-                    value={formData.customNationality}
+                    value={formData.parentOccupation}
                     onChange={handleChange}
 
                   />
@@ -641,7 +640,6 @@ export const CreateStudent = () => {
                     value={formData.bankName}
                     onChange={handleChange}
                     label="Bank Name"
-                    error={!!errors.bankName}
                   >
                     <MenuItem value="Access Bank">Access Bank</MenuItem>
                     <MenuItem value="Citibank Nigeria">Citibank Nigeria</MenuItem>
@@ -674,37 +672,32 @@ export const CreateStudent = () => {
                   fullWidth
                   value={formData.accountNumber}
                   onChange={handleChange}
-                  error={errors.accountNumber}
-
-                  required
-                  helperText={errors.accountNumber && 'Account Number is required'}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  component="label"
-                  fullWidth
-                  sx={{
-                    backgroundColor: "#546e13",
-                    color: "#ffffff",
-                    "&:hover": {
-                      backgroundColor: "#40550f", // Slightly darker green for hover
-                    },
-                  }}
-                  error={errors.image}
-                  helperText={errors.image && 'image is required'}
+
+              <div style={{ margin: "20px" }}>
+                <label
+                  htmlFor="file-upload"
+                  style={{ cursor: "pointer", display: "block" }}
                 >
-                  Upload Passport
-                  <input
-                    type="file"
-                    name="image"
-                    hidden
-                    accept="image/*"
-                    onChange={handleChange}
-                  />
-                </Button>
-              </Grid>
+                  <strong>Add a passport </strong>
+                </label>
+                <input
+                  id="file-upload"
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleChange}
+                  style={{ marginBottom: "10px" }}
+                />
+                {/* Display the file name */}
+                {formData.image && (
+                  <p>
+                    Selected File: <strong>{formData.image.name}</strong>
+                  </p>
+                )}
+              </div>
+               
 
               {!formSubmissionLoading && <Grid item xs={12} marginTop="20px">
                 <Button
@@ -719,7 +712,7 @@ export const CreateStudent = () => {
                     },
                   }}
                 >
-                  Submit
+                  Register Student
                 </Button>
               </Grid>}
 

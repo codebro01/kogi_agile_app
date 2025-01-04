@@ -1,0 +1,346 @@
+[
+  {
+    "name": "ADAVI",
+    "wards": [
+      "OKUNCHI/OZURI/ONIEKA",
+      "OGAMINANA",
+      "IRUVUCHEBA",
+      "IDANUHUA",
+      "ADAVI-EBA",
+      "KUROKO I",
+      "KUROKO II",
+      "INO ZIOMI/IPAKU/OSISI",
+      "IKARAWORO/IDOBANYERE",
+      "NAGAZI FARM CENTRE",
+      "EGE/IRUVOCHINOMI"
+    ]
+  },
+  {
+    "name": "AJAOKUTA",
+    "wards": [
+      "EBIYA NORTH",
+      "EBIYA SOUTH",
+      "ABODI/PATESI",
+      "ICHUWA/UPAJA",
+      "BADOKO",
+      "OGIGIRI",
+      "ADOGO",
+      "ACHAGANA",
+      "ODONU/UNOSI",
+      "OMGBO",
+      "ADOGU/APAMIRA/OGODO UHUOVENE",
+      "OBANGEDE/OHUNENE/UKOKO INYE'RE",
+      "OLD AJAOKUTA",
+      "GANAGA/TOWNSHIP"
+    ]
+  },
+  {
+    "name": "ANKPA",
+    "wards": [
+      "ANKPA TOWNSHIP",
+      "ANKPA SUBURB I",
+      "ANKPA SUBURB II",
+      "ANKPA I",
+      "ANKPA II",
+      "ENJEMA I",
+      "ENJEMA II",
+      "ENJEMA III",
+      "ENJEMA IV",
+      "OJOKU I",
+      "OJOKU II",
+      "OJOKU III",
+      "OJOKU IV"
+    ]
+  },
+  {
+    "name": "BASSA",
+    "wards": [
+      "AKUBA I",
+      "AKUBA II",
+      "AYEDE/AKAKANA",
+      "OZONGULO/KPANCHE",
+      "IKENDE",
+      "GBOLOKO",
+      "KPATA",
+      "EFORO",
+      "MOZUM",
+      "OZUGBE"
+    ]
+  },
+  {
+    "name": "DEKINA",
+    "wards": [
+      "DEKINA TOWN",
+      "IYALE",
+      "EMEWE",
+      "ODU I",
+      "ODU II",
+      "ABOCHO",
+      "OGBABEDE",
+      "ADUMU EGUME",
+      "OJIKPADALA",
+      "ANYIGBA",
+      "OKURA OLAFIA",
+      "OGANE INIGU"
+    ]
+  },
+  {
+    "name": "IBAJI",
+    "wards": [
+      "ODEKE",
+      "UJEH",
+      "IYANO",
+      "AKPANYO",
+      "UNALE",
+      "OJILA",
+      "EJULE",
+      "AYAH",
+      "ANALO",
+      "ONYEDEGA"
+    ]
+  },
+  {
+    "name": "IDAH",
+    "wards": [
+      "IGALAOGBA",
+      "OWOLI APA",
+      "IGECHEBA",
+      "UKWAJA",
+      "OGEGELE",
+      "EDE",
+      "SABON GARI",
+      "EGA",
+      "UGWODA",
+      "ICHALA"
+    ]
+  },
+  {
+    "name": "IGALAMELAODOLU",
+    "wards": [
+      "AVRUGO",
+      "EKWULOKO",
+      "ODOLU",
+      "OJI-AJI",
+      "AKPANYA",
+      "UBELE",
+      "AJAKA I",
+      "AJAKA II",
+      "OFORACHI I",
+      "OFORACHI II"
+    ]
+  },
+  {
+    "name": "IJUMU",
+    "wards": [
+      "AIYEGUNLE",
+      "AIYETORO I",
+      "AIYETORO II",
+      "IYAH/AYEH",
+      "ODOKORO",
+      "AIYERE/ARIMAH",
+      "OGIDI",
+      "ILETEJU/ORIGA",
+      "OGALE/ADUGE",
+      "EGBEDA EGGA/OKEDAYO",
+      "IYARA",
+      "IFFE/IKOYI/OKEJUMU",
+      "IYAMOYE",
+      "EKINRIN ADE",
+      "IBGOLAYERE/ILAERE"
+    ]
+  },
+  {
+    "name": "KABBABUNU",
+    "wards": [
+      "ASUTA",
+      "ODO-AKETE",
+      "OKEKOKO",
+      "ODOLU",
+      "AIYEWA",
+      "AIYETEJU",
+      "OTU",
+      "EGBEDA",
+      "OKEDAYO",
+      "AKUTUPA-KIRI",
+      "AIYETORO-KIRI",
+      "ILUKE",
+      "OLLE/OKE-OFIN",
+      "ODO-APE",
+      "OKEBUKUN"
+    ]
+  },
+  {
+    "name": "KOGI",
+    "wards": [
+      "UKWO-KOTON KARFE",
+      "ODAKI-KOTON KARFE",
+      "KOTONKARFE SOUTH EAST",
+      "GIRINYA",
+      "IRENODU",
+      "AKPASU",
+      "TAWARI",
+      "GEGU-BEKI NORTH",
+      "GEGU-BEKI SOUTH",
+      "CHIKARA NORTH",
+      "CHIKARA SOUTH"
+    ]
+  },
+  {
+    "name": "LOKOJA",
+    "wards": [
+      "LOKOJA - A",
+      "LOKOJA - B",
+      "LOKOJA - C",
+      "LOKOJA - D",
+      "LOKOJA - E",
+      "KUPA NORTH EAST",
+      "KUPA SOUTH WEST",
+      "OWORO",
+      "KAKANDA",
+      "EGGAN"
+    ]
+  },
+  {
+    "name": "MOPAMURO",
+    "wards": [
+      "ODOLE - 1",
+      "ODOLE - 2",
+      "ILETEJU - 1",
+      "ILLETEJU - 2",
+      "OKEAGI/ILAI",
+      "OROKERE",
+      "TAKETE IDDE/OTAFUN",
+      "AIYEDAYO/AIYEDARO",
+      "AGBAFOGUN",
+      "AIYEDE/OKAGI"
+    ]
+  },
+  {
+    "name": "OFU",
+    "wards": [
+      "IGO",
+      "ALOMA",
+      "EJULE ALLAH",
+      "ITOBE/OKOKENYI",
+      "UGWOLAWO - I",
+      "UGWOLAWO - 2",
+      "ALOJI",
+      "OFOKE",
+      "OCHADAMU",
+      "OGBONICHA",
+      "IBOKO/EFAKWU"
+    ]
+  },
+  {
+    "name": "OGORI",
+    "wards": [
+      "ENI",
+      "OSHOBANE",
+      "OKIBO",
+      "OKESI",
+      "ILETEJU",
+      "AIYEROMI",
+      "UGUGU",
+      "OBINOYIN",
+      "OBATGBEN",
+      "OTURU OPOWUROYE"
+    ]
+  },
+  {
+    "name": "OKEHI ",
+    "wards": [
+      "OBAIBA I",
+      "OBAIBA II",
+      "OKUEHU",
+      "OHUETA",
+      "OBOROKE EBA",
+      "OBAROKE UVETE",
+      "EIKA / OHIZENYI",
+      "OKAITO / USUNGWEN",
+      "OHUEPE / OMAVI UBORO",
+      "OBANGEDE / UHUODO",
+      "OBOROKE UVETE - II"
+    ]
+  },
+  {
+    "name": "OKENE",
+    "wards": [
+      "BARIKI",
+      "OBESSA",
+      "ONYUKOKO",
+      "IDOJI",
+      "ORIETESU",
+      "OTUTU",
+      "OKENE-EBA / AGASSA/ AHACHE",
+      "OBEHIRA UVETTA",
+      "OBEHIRA EBA",
+      "ABUGA/OZUJA",
+      "UPOGORO/ODENKU"
+    ]
+  },
+  {
+    "name": "OLAMABORO",
+    "wards": [
+      "IMANE I",
+      "IMANE II",
+      "OGUGU I",
+      "OGUGU II",
+      "OGUGU III",
+      "OLAMABORO I",
+      "OLAMABORO II",
+      "OLAMABORO III",
+      "OLAMABORO IV",
+      "OLAMABORO V"
+    ]
+  },
+  {
+    "name": "OMALA",
+    "wards": [
+      "ABEJUKOLO I",
+      "ABEJUKOLO II",
+      "OPODA/OFEJIJI",
+      "BAGANA",
+      "OKPATALA",
+      "AKPACHA",
+      "BAGAJI",
+      "ICHEKE AJOPACHI",
+      "OGODU",
+      "OJI-AJI",
+      "OLLA"
+    ]
+  },
+  {
+    "name": "YAGBAEAST",
+    "wards": [
+      "IFE OLUKOTUN I",
+      "IFE OLUKOTUN II",
+      "PONYAN",
+      "ALU/IGBAGUN/ORANRE",
+      "EJUKU",
+      "JEGE/OKE/AGI OGBOM/ISAO",
+      "MAKUTU I",
+      "MAKUTU II",
+      "ITEDO",
+      "ILAFIN/IDOFIN/ODO - OGBA"
+    ]
+  },
+  {
+    "name": "YAGBAWEST",
+    "wards": [
+      "EJIBA",
+      "ODO ERI OKOTO",
+      "ODO ERE OKE ERE",
+      "ISAULU ESA/OKOLOKE/OKUNRAN",
+      "IYAMERIN/IGBARUKU",
+      "ODO ARA OMI OGGA",
+      "OGBE",
+      "OKE EGBE I",
+      "OKE EGBE II",
+      "OKE EGBE III",
+      "OKE EGBE IV",
+      "ODO EGBE I",
+      "ODO EGBE II",
+      "ODO EGBE"
+    ]
+  }
+]
