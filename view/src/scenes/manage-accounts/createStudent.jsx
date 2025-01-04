@@ -15,22 +15,6 @@ export const CreateStudent = () => {
   // const theme = useTheme();
   const { loading } = useContext(SchoolsContext);
 
-  // const location = useLocation()
-  // const selectedSchool = location.state.selectedSchool;
-  // console.log(selectedSchool)
-
-
-
-
-
-
-  // useEffect(() => {
-  //   // Check if state was passed to this page
-  //   if (location.state?.selectedSchool) {
-  //     console.log(location.state.selectedSchool);
-  //   }
-  // }, [location.state]);
-
 
   const { wardsData } = useContext(WardsContext)
 
@@ -67,7 +51,9 @@ export const CreateStudent = () => {
     residentialAddress: "",
     presentClass: "",
     yearAdmitted: "",
+    yearOfErollment: "",
     classAtAdmission: "",
+    classAtEnrollment: "",
     guardianPhone: "",
     guardianName: "",
     guardianNin: "",
@@ -82,6 +68,7 @@ export const CreateStudent = () => {
   const [error, setError] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const [validationError, setValidationError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [errors, setErrors] = useState({});
   const API_URL = 'http://localhost:3100/api/v1';
   const [states, setStates] = useState([]);
@@ -140,7 +127,7 @@ export const CreateStudent = () => {
       setLgas([]);
     }
   }, [formData.stateOfOrigin, formData.nationality]);
-  
+
   const handleStateChange = (selectedState) => {
     setFormData({
       ...formData,
@@ -201,7 +188,6 @@ export const CreateStudent = () => {
       password: !formData.password,
       residentialAddress: !formData.residentialAddress,
       communityName: !formData.communityName,
-      communityName: !formData.communityName,
       bankName: !formData.bankName,
       accountNumber: !formData.accountNumber || !(new RegExp()),
       image: !formData.image,
@@ -223,6 +209,9 @@ export const CreateStudent = () => {
         });
         console.log(response)
         setSuccess(true);
+        setSuccessMessage(`Great Job!!! New student registration successful!!!`)
+        setTimeout(() => setSuccessMessage(''), 10000);
+
         setFormSubmissionLoading(false)
       } catch (err) {
         console.log(err);
@@ -230,7 +219,7 @@ export const CreateStudent = () => {
         if (err.response?.data?.status === 401) return navigate('/sign-in')
         setError(true)
         setValidationError(err.response?.data?.message || 'An error occurred');
-        setTimeout(() => setValidationError(''), 3000);
+        setTimeout(() => setValidationError(''), 10000);
       }
     })();
 
@@ -238,6 +227,12 @@ export const CreateStudent = () => {
 
     }
   };
+
+  // ** clear fields if students creation is successful
+
+
+
+
 
   if (loading)
     return (
@@ -428,30 +423,6 @@ export const CreateStudent = () => {
                 </Grid>
               )}
 
-              <Grid item xs={12} > {/* Adjusts the grid item size based on screen size */}
-                {/* <Autocomplete
-                  value={wardValue}
-                  onChange={(event, newValue) => {
-                    setWardValue(newValue); // Set the selected object
-                    setFormData({ ...formData, ward: newValue?.id || '' }); // Store the ID in formData
-                  }}
-                  options={wards}
-                  getOptionLabel={(option) => option.name} // Display the label
-                  isOptionEqualToValue={(option, value) => option.id === value?.id} // Match by ID
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Select Ward"
-                      InputProps={{
-                        ...params.InputProps,
-                        readOnly: true, // Prevent typing
-                      }}
-                    />
-                  )}
-                  disableClearable
-                /> */}
-
-              </Grid>
               {formData.nationality === 'Nigeria' && wardsData.length > 1 && (
                 <Grid item xs={12}>
                   <TextField
@@ -542,7 +513,29 @@ export const CreateStudent = () => {
 
               <Grid item xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel>Year Admitted</InputLabel>
+                  <InputLabel>Class at Enrollment</InputLabel>
+                  <Select
+                    name="classAtEnrollment"
+                    value={formData.classAtEnrollment}
+                    onChange={handleChange}
+                    label="Class at Enrollment"
+                    error={errors['Class at Enrollment']}
+
+                    required
+                    helperText={errors['Class at Enrollment'] && `${'Class at Enrollment'} is required`}
+                  >
+                    <MenuItem value="Primary 6">Primary 6</MenuItem>
+                    <MenuItem value="JSS 1">JSS 1</MenuItem>
+                    <MenuItem value="JSS 2">JSS 2</MenuItem>
+                    <MenuItem value="JSS 3">JSS 3</MenuItem>
+                    <MenuItem value="SS 1">SS 1</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel>Year Admitted to school</InputLabel>
                   <Select
                     name="yearAdmitted"
                     value={formData.yearAdmitted}
@@ -557,6 +550,27 @@ export const CreateStudent = () => {
                     <MenuItem value="2023">2023</MenuItem>
                     <MenuItem value="2024">2024</MenuItem>
                     <MenuItem value="2025">2025</MenuItem>
+
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel>Year of Agile Programme enrollment</InputLabel>
+                  <Select
+                    name="yearOfErollment"
+                    value={formData.yearOfErollment}
+                    onChange={handleChange}
+                    label="Year of Erollment"
+                    error={errors['Year of Enrollment']}
+                    helperText={errors['Year of Enrollment'] && `${'Year of enrollment of'} is required`}
+                    required                >
+                    <MenuItem value="2024">2024</MenuItem>
+                    <MenuItem value="2025">2025</MenuItem>
+                    <MenuItem value="2020">2026</MenuItem>
+                    <MenuItem value="2021">2027</MenuItem>
+                    <MenuItem value="2022">2028</MenuItem>
+                    <MenuItem value="2023">2029</MenuItem>
 
                   </Select>
                 </FormControl>
@@ -731,7 +745,7 @@ export const CreateStudent = () => {
                   color="green"
                   sx={{ textAlign: "center", marginTop: "20px" }}
                 >
-                  Registration of student is Successfully!!!
+                  {successMessage}
                 </Typography>
               )}
 

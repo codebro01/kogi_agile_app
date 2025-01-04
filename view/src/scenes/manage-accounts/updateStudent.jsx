@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { TextField, Button, Grid, Container, Autocomplete, Typography, Box, IconButton, InputAdornment, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
+import { TextField, Button, Grid, Container, Autocomplete, Typography, Box, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 // import { useTheme } from '@mui/material/styles';
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
 import { getNigeriaStates } from 'geo-ng';
-import { SchoolsContext, StudentsContext, WardsContext } from "../../components/dataContext.jsx";
+import { SchoolsContext, WardsContext } from "../../components/dataContext.jsx";
 import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
 
 
@@ -18,13 +17,6 @@ export const UpdateStudent = React.memo(() => {
     const location = useLocation()
     const student = location.state;
 
-    const [bankList, setBankList] = useState([
-        'Access Bank', 'Citibank Nigeria', 'Diamond Bank', 'Ecobank Nigeria', 'Fidelity Bank',
-        'First Bank of Nigeria', 'Guaranty Trust Bank', 'Heritage Bank', 'Jaiz Bank', 'Keystone Bank',
-        'Lapo Microfinance Bank', 'Mainstreet Bank', 'Polaris Bank', 'Stanbic IBTC Bank', 'Sterling Bank',
-        'Union Bank', 'United Bank for Africa (UBA)', 'Wema Bank', 'Zenith Bank'
-    ]);
-
     const [occupations, setOccupation] = useState([
         'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser', 'Others'
     ])
@@ -34,10 +26,7 @@ export const UpdateStudent = React.memo(() => {
 
 
     const navigate = useNavigate();
-    const nationalityOptions = [
-        { value: 'Nigeria', label: 'Nigeria' },
-        { value: 'Others', label: 'Others' }
-    ];
+
 
     const [formData, setFormData] = useState({
         schoolId: student.schoolId._id,
@@ -55,6 +44,8 @@ export const UpdateStudent = React.memo(() => {
         presentClass: student.presentClass,
         yearAdmitted: student.yearAdmitted,
         classAtAdmission: student.classAtAdmission,
+        classAtEnrollment: student.classAtEnrollment,
+        yearOfEnrollment: student.yearOfEnrollment,
         guardianName: student.guardianName,
         guardianPhone: student.guardianPhone,
         guardianNin: student.guardianNin,
@@ -66,13 +57,11 @@ export const UpdateStudent = React.memo(() => {
     });
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false)
-    const [showPassword, setShowPassword] = useState(false);
     const [validationError, setValidationError] = useState('');
     const [errors, setErrors] = useState({});
     const API_URL = 'http://localhost:3100/api/v1';
     const [states, setStates] = useState([]);
     const [lgas, setLgas] = useState([]);
-    const [wardValue, setWardValue] = useState(null)
     const [schoolOptions, setSchoolOptions] = useState([]); // Start with an empty array
     const [hasMore, setHasMore] = useState(true); // To check if more data is available
     const [loadingSchools, setLoadingSchools] = useState(false); // Loading state for schools
@@ -99,9 +88,9 @@ export const UpdateStudent = React.memo(() => {
         setFormData({
             ...formData,
             [name]: files ? files[0] : value,
-        });
+        }, [formData]);
 
-    });
+    }, [formData]);
 
 
 
@@ -130,12 +119,12 @@ export const UpdateStudent = React.memo(() => {
         }
     }, [formData.stateOfOrigin, formData.nationality]);
 
-    const handleSelectChange = useCallback((e, { name }) => {
+    const handleSelectChange = (e, { name }) => {
         setFormData((prevData) => ({
             ...prevData,
             [name]: e.target.value, // Update the correct field based on `name`
         }));
-    })
+    }
 
     const handleStateChange = useCallback((selectedState) => {
         setFormData({
@@ -143,14 +132,14 @@ export const UpdateStudent = React.memo(() => {
             stateOfOrigin: selectedState,
             lga: '' // Reset LGA when state changes
         });
-    });
+    }, [formData]);
     const handleWardChange = useCallback((selectedWard) => {
         setFormData({
             ...formData,
             ward: selectedWard,
             // Reset LGA when state changes
         });
-    })
+    }, [formData])
 
     useEffect(() => {
         // Update selectedSchool if student.schoolId.schoolName or schoolOptions changes
@@ -201,7 +190,7 @@ export const UpdateStudent = React.memo(() => {
     }
 
 
-    const loadMoreSchools = useCallback(async () => {
+    const loadMoreSchools = async () => {
         if (loadingSchools || !hasMore) return;
 
         setLoadingSchools(true);
@@ -217,7 +206,7 @@ export const UpdateStudent = React.memo(() => {
         }
 
         setLoadingSchools(false);
-    })
+    }
 
     // Mock function to simulate fetching more schools from a backend
     const fetchMoreSchools = async (page) => {
@@ -503,6 +492,27 @@ export const UpdateStudent = React.memo(() => {
                                     />
                                 </Grid>
                             ))}
+                            <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                    <InputLabel>Class at Enrollment</InputLabel>
+                                    <Select
+                                        name="classAtEnrollment"
+                                        value={formData.classAtEnrollment}
+                                        onChange={handleChange}
+                                        label="Class at Enrollment"
+                                        error={errors['Class at Enrollment']}
+
+                                        
+                                        helperText={errors['Class at Enrollment'] && `${'Class at Enrollment'} is required`}
+                                    >
+                                        <MenuItem value="Primary 6">Primary 6</MenuItem>
+                                        <MenuItem value="JSS 1">JSS 1</MenuItem>
+                                        <MenuItem value="JSS 2">JSS 2</MenuItem>
+                                        <MenuItem value="JSS 3">JSS 3</MenuItem>
+                                        <MenuItem value="SS 1">SS 1</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
 
                             <Grid item xs={12}>
                                 <FormControl fullWidth>
@@ -557,6 +567,28 @@ export const UpdateStudent = React.memo(() => {
                                         <MenuItem value="2023">2023</MenuItem>
                                         <MenuItem value="2024">2024</MenuItem>
                                         <MenuItem value="2025">2025</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                    <InputLabel>Year of Agile Programme enrollment</InputLabel>
+                                    <Select
+                                        name="yearOfEnrollment"
+                                        value={formData.yearOfEnrollment}
+                                        onChange={handleChange}
+                                        label="Year of Erollment"
+                                        error={errors['Year of Enrollment']}
+                                        helperText={errors['Year of Enrollment'] && `${'Year of enrollment of'} is required`}
+                                                      >
+                                        <MenuItem value="2024">2024</MenuItem>
+                                        <MenuItem value="2025">2025</MenuItem>
+                                        <MenuItem value="2020">2026</MenuItem>
+                                        <MenuItem value="2021">2027</MenuItem>
+                                        <MenuItem value="2022">2028</MenuItem>
+                                        <MenuItem value="2023">2029</MenuItem>
+
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -673,7 +705,7 @@ export const UpdateStudent = React.memo(() => {
                                     helperText={errors.image && 'image is required'}
                                     style={{
                                         backgroundColor: '#546e13',
-                                        color: '#fff', 
+                                        color: '#fff',
                                     }}
                                 >
                                     Upload Passport
@@ -703,13 +735,13 @@ export const UpdateStudent = React.memo(() => {
                             </Grid>
 
                         </Grid>
-                        <Grid xs = {12} sx = {{
-                            display: "flex", 
-                            justifyContent:"center", 
-                            alignItems: "center", 
-                            marginTop:"6px"
+                        <Grid xs={12} sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginTop: "6px"
                         }}>
-                            {isLoading ? <SpinnerLoader /> :  (<Typography
+                            {isLoading ? <SpinnerLoader /> : (<Typography
                                 variant="body2"
                                 style={{
                                     marginTop: '8px',

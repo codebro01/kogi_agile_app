@@ -22,6 +22,7 @@ import { UpdateStudent } from './scenes/manage-accounts/updateStudent';
 import { DataProvider } from './components/dataContext.jsx';
 import { RoleSelector } from "./components/roleSelector.jsx";
 import { AdminViewAllStudentsData } from "./scenes/manage-accounts/adminViewAllStudentsData.jsx";
+import { ExportAttendanceSheet } from "./scenes/manage-accounts/exportAttendanceSheet.jsx";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -56,6 +57,7 @@ function App() {
                       <Route path="/admin-dashboard/create-accounts/register-enumerator" element={<CreateEnumerator />} />
                       <Route path="/admin-dashboard/create-accounts/register-student" element={<CreateStudent />} />
                       <Route path="/admin-dashboard/update-student/:id" element={<UpdateStudent />} />
+                      <Route path="/export-attendance-sheet" element={<ExportAttendanceSheet />} />
                       <Route path="/register" element={<BrandingSignUpPage />} />
                       <Route path="/team" element={<Team />} />
                       <Route path="/contacts" element={<Contacts />} />

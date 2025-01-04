@@ -6,6 +6,7 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
+import DescriptionIcon from '@mui/icons-material/Description'; // Sheet icon
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 // import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
@@ -16,6 +17,7 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { ChangePasswordForm } from "../../components/changePasswordPopup.jsx";
+import { ExportButton } from "../../components/exportButton.jsx";
 // import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import { useAuth } from '../auth/authContext.jsx';
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -196,6 +198,15 @@ const Sidebar = ({ isSidebar }) => {
               setSelected={setSelected}
             />
 
+          {userPermissions.length === 1 && (
+              <Item
+                title="Attendance Sheet"
+                to={'/export-attendance-sheet'}
+                icon={<DescriptionIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+          )}
 
 
 
