@@ -502,7 +502,7 @@ export const UpdateStudent = React.memo(() => {
                                         label="Class at Enrollment"
                                         error={errors['Class at Enrollment']}
 
-                                        
+
                                         helperText={errors['Class at Enrollment'] && `${'Class at Enrollment'} is required`}
                                     >
                                         <MenuItem value="Primary 6">Primary 6</MenuItem>
@@ -576,18 +576,18 @@ export const UpdateStudent = React.memo(() => {
                                     <InputLabel>Year of Agile Programme enrollment</InputLabel>
                                     <Select
                                         name="yearOfEnrollment"
-                                        value={formData.yearOfEnrollment}
+                                        value={formData.yearOfEnrollment || ''}
                                         onChange={handleChange}
                                         label="Year of Erollment"
                                         error={errors['Year of Enrollment']}
                                         helperText={errors['Year of Enrollment'] && `${'Year of enrollment of'} is required`}
-                                                      >
+                                    >
                                         <MenuItem value="2024">2024</MenuItem>
                                         <MenuItem value="2025">2025</MenuItem>
-                                        <MenuItem value="2020">2026</MenuItem>
-                                        <MenuItem value="2021">2027</MenuItem>
-                                        <MenuItem value="2022">2028</MenuItem>
-                                        <MenuItem value="2023">2029</MenuItem>
+                                        <MenuItem value="2026">2026</MenuItem>
+                                        <MenuItem value="2027">2027</MenuItem>
+                                        <MenuItem value="2028">2028</MenuItem>
+                                        <MenuItem value="2029">2029</MenuItem>
 
                                     </Select>
                                 </FormControl>

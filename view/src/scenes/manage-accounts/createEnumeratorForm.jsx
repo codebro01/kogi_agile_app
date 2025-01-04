@@ -76,7 +76,7 @@ export const CreateEnumerator = () => {
                     setSuccess('Enumerator Created Successfully');
                 } catch (err) {
                     console.log(err)
-                    if (err.response.status === 401) return navigate('/sign-in')
+                    if (err.response.data.status === 401) return navigate('/sign-in')
                     setValidationError(err.response?.data?.message || 'An error occurred');
                     setTimeout(() => setValidationError(''), 3000);
                 }

@@ -13,8 +13,7 @@ import {
 
 export const CreateAdmin = () => {
     const [formData, setFormData] = useState({
-        firstname: "",
-        lastname: "",
+        fullName: "",
         email: "",
         password: "",
         image: null,
@@ -64,7 +63,10 @@ export const CreateAdmin = () => {
     return (
         <Box
             sx={{
-                maxWidth: 500,
+                maxWidth: {
+                    xs: 300, 
+                    sm: 350 
+                },
                 mx: "auto",
                 mt: 5,
                 p: 3,
@@ -80,18 +82,9 @@ export const CreateAdmin = () => {
                 <TextField
                     fullWidth
                     margin="normal"
-                    label="First Name"
-                    name="firstname"
-                    value={formData.firstname}
-                    onChange={handleChange}
-                    required
-                />
-                <TextField
-                    fullWidth
-                    margin="normal"
-                    label="Last Name"
-                    name="lastname"
-                    value={formData.lastname}
+                    label="Full name"
+                    name="fullName"
+                    value={formData.fullName}
                     onChange={handleChange}
                     required
                 />

@@ -51,7 +51,7 @@ export const RoleSelector = () => {
                     marginBottom: "16px",
                 }}
             >
-                Select Role to Register
+                Create Account
             </Typography>
 
             <Box
