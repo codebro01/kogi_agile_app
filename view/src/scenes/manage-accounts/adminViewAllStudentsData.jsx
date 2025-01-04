@@ -33,7 +33,7 @@ export const AdminViewAllStudentsData = () => {
     const [fetchLoading, setFetchLoading] = useState(false)
     const [enumeratorsLoading, setEnumeratorsLoading] = useState(false)
 
-    const API_URL = 'http://localhost:3100/api/v1';
+    const API_URL = process.env.REACT_APP_API_URL;
     const token = localStorage.getItem('token') || '';
     const [filters, setFilters] = useState({
         ward: '',

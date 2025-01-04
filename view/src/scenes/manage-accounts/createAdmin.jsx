@@ -20,7 +20,7 @@ export const CreateAdmin = () => {
     });
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
-    const API_URL = 'http://localhost:3100/api/v1';
+    const API_URL = process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -64,8 +64,8 @@ export const CreateAdmin = () => {
         <Box
             sx={{
                 maxWidth: {
-                    xs: 300, 
-                    sm: 350 
+                    xs: 300,
+                    sm: 350
                 },
                 mx: "auto",
                 mt: 5,

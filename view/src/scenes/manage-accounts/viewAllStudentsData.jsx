@@ -39,7 +39,7 @@ export const ViewAllStudentsData = () => {
   const [filterLoading, setFilterLoading] = useState(false);
   const [filterError, setFilterError] = useState(null);
 
-  const API_URL = 'http://localhost:3100/api/v1';
+  const API_URL = process.env.REACT_APP_API_URL;
   const token = localStorage.getItem('token') || '';
 
   const classOptions = [
@@ -130,7 +130,7 @@ export const ViewAllStudentsData = () => {
   ).map(item => JSON.parse(item));
 
   return (
-    <Container maxWidth="lg" sx={{ marginTop: 4, marginBottom: "50px"}}>
+    <Container maxWidth="lg" sx={{ marginTop: 4, marginBottom: "50px" }}>
       <Typography variant="h3" component="h1" gutterBottom textAlign="center" sx={{ fontWeight: 'bold' }}>
         All Registered Students Information
       </Typography>

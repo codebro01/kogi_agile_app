@@ -11,13 +11,13 @@ export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
     const [message, setMessage] = useState(false);
-     
+
     const [formData, setFormData] = useState({
         currentPassword: '',
         newPassword: ''
     })
     const token = localStorage.getItem('token')
-    const API_URL = 'http://localhost:3100/api/v1';
+    const API_URL = process.env.REACT_APP_API_URL;
 
     const handleChange = useCallback((e) => {
         const { name, value } = e.target;
@@ -46,7 +46,7 @@ export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
                 setSuccess(true);
                 setMessage(response?.data?.message);
                 setFormData({
-                    newPassword: "", 
+                    newPassword: "",
                     currentPassword: "",
                 })
                 setTimeout(() => {
@@ -155,9 +155,9 @@ export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
                             required
                         />
 
-                        <Box sx = {{display: "flex", flexDirection: "column", justifyContent:"center",alignItems: "center", textAlign: "center"}}>
+                        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
                             {loading && <SpinnerLoader />}
-                            {!loading && error && <Typography color = 'red' fontWeight={600}>{message}</Typography>}
+                            {!loading && error && <Typography color='red' fontWeight={600}>{message}</Typography>}
                             {!loading && success && <Typography color='green' fontWeight={600}>{message}</Typography>}
 
                         </Box>

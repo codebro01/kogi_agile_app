@@ -59,7 +59,7 @@ export const UpdateStudent = React.memo(() => {
     const [error, setError] = useState(false)
     const [validationError, setValidationError] = useState('');
     const [errors, setErrors] = useState({});
-    const API_URL = 'http://localhost:3100/api/v1';
+    const API_URL = process.env.REACT_APP_API_URL;
     const [states, setStates] = useState([]);
     const [lgas, setLgas] = useState([]);
     const [schoolOptions, setSchoolOptions] = useState([]); // Start with an empty array

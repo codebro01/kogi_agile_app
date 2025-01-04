@@ -27,7 +27,7 @@ export const CreateEnumerator = () => {
     const [validationError, setValidationError] = useState('');
     const [errors, setErrors] = useState({});
     const [success, setSuccess] = useState('');
-    const API_URL = 'http://localhost:3100/api/v1';
+    const API_URL = process.env.REACT_APP_API_URL;
 
     const handleClickShowPassword = () => setShowPassword(!showPassword);
     const handleMouseDownPassword = (event) => event.preventDefault();

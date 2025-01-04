@@ -17,7 +17,7 @@ export const DataProvider = ({ children }) => {
   const [selectedSchool, setSelectedSchool] = useState(null);
 
 
-  const API_URL = 'http://localhost:3100/api/v1';
+  const API_URL = process.env.REACT_APP_API_URL;
   const token = localStorage.getItem('token') || ''; // Get token from localStorage
   const navigate = useNavigate();
 

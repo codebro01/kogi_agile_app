@@ -70,7 +70,7 @@ export const CreateStudent = () => {
   const [validationError, setValidationError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errors, setErrors] = useState({});
-  const API_URL = 'http://localhost:3100/api/v1';
+  const API_URL = process.env.REACT_APP_API_URL;
   const [states, setStates] = useState([]);
   const [lgas, setLgas] = useState([]);
   const [wardValue, setWardValue] = useState(null)

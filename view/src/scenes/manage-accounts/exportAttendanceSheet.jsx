@@ -9,7 +9,7 @@ export const ExportAttendanceSheet = () => {
     const { loading, studentsData } = useContext(StudentsContext);
     const [schoolId, setSchoolId] = useState(''); // Correctly destructured
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const API_URL = 'http://localhost:3100/api/v1';
+    const API_URL = process.env.REACT_APP_API_URL;
 
     if (loading) {
         return <h4>...loading</h4>
@@ -31,7 +31,7 @@ export const ExportAttendanceSheet = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-           setIsSubmitting(true);
+            setIsSubmitting(true);
             const token = localStorage.getItem('token');
 
             const response = await axios.get(`${API_URL}/student/attendance-sheet`, {
@@ -56,19 +56,19 @@ export const ExportAttendanceSheet = () => {
     }
 
     return (
-        <Box 
-        component={'form'}
-        onSubmit={handleSubmit}
-        sx={{
-            display: "flex",
-            justifyContent: "center", 
-            alignItems:"center",
-            height: "100%",
-            width:"100%",
-            flexDirection: "column", 
-            gap:"40px"
+        <Box
+            component={'form'}
+            onSubmit={handleSubmit}
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
+                flexDirection: "column",
+                gap: "40px"
 
-        }}
+            }}
         >
             <Grid item xs={12} sm={6} md={4}>
                 <InputLabel id="schoolId-label">Select School</InputLabel>

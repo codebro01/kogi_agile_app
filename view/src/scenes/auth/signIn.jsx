@@ -22,7 +22,7 @@ export const SignInForm = () => {
 
 
     const [showPassword, setShowPassword] = useState(false);
-    const API_URL = 'http://localhost:3100/api/v1';
+    const API_URL = process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
     const handleClickShowPassword = () => setShowPassword(!showPassword);
 
@@ -185,7 +185,7 @@ export const EnumeratorSignInForm = () => {
     const { login, userPermissions } = useAuth(); // Access login function from context
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate();
-    const API_URL = 'http://localhost:3100/api/v1';
+    const API_URL = process.env.REACT_APP_API_URL;
 
     const [validationError, setValidationError] = useState('');
 
@@ -338,11 +338,11 @@ export const EnumeratorSignInForm = () => {
                         </Button>
 
                         {validationError && (
-                            <Box textAlign="center" sx = {{display: "flex", justifyContent:"center", alignItems: "center"}}>
-                                {isLoading ? <SpinnerLoader/> : (<Typography color="red" fontWeight="600">
+                            <Box textAlign="center" sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                {isLoading ? <SpinnerLoader /> : (<Typography color="red" fontWeight="600">
                                     {validationError}
                                 </Typography>)}
-                                
+
                             </Box>
                         )}
 
