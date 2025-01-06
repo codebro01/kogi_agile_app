@@ -33,7 +33,6 @@ export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
         e.preventDefault();
         (async () => {
             try {
-                console.log(formData)
                 setLoading(true)
                 const response = await axios.patch(`${API_URL}/admin-enumerator/change-password`, formData, {
                     headers: {

@@ -75,7 +75,7 @@ export const AdminViewAllStudentsData = () => {
     const sortParam = {
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
-    }; console.log(sortParam)
+    }; 
 
 
     const yearOfAdmissionOptions = [{ year: '2020' }, { year: '2021' }, { year: '2022' }, { year: '2023' }, { year: '2024' }, { year: '2025' }];
@@ -164,7 +164,7 @@ export const AdminViewAllStudentsData = () => {
         { class: "Primary 6", id: 1 },
         { class: "JSS 1", id: 2 },
         { class: "JSS 3", id: 3 },
-        { class: "SS 1", id: 4 },
+        { class: "SSS 1", id: 4 },
     ];
 
 
@@ -184,7 +184,6 @@ export const AdminViewAllStudentsData = () => {
                 withCredentials: true,
             })
 
-            console.log(response);
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -230,7 +229,6 @@ export const AdminViewAllStudentsData = () => {
             </Box>
         );
 
-    console.log(filters)
     return (
         <>
             {userPermissions.includes('handle_registrars') ? (

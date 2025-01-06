@@ -48,7 +48,6 @@ export const CreateAdmin = () => {
                     withCredentials: true,
                 });
                 setSuccess('Admin successfully created')
-                console.log(response)
             } catch (err) {
 
                 if (err.response.status === 401) return navigate('/sign-in')

@@ -152,7 +152,6 @@ export const UpdateStudent = React.memo(() => {
     }, [student.schoolId.schoolName, schoolOptions]);
 
 
-    console.log(formData)
 
 
     const handleSubmit = (e) => {
@@ -169,7 +168,6 @@ export const UpdateStudent = React.memo(() => {
                     },
                     withCredentials: true,
                 });
-                console.log(response);
                 setIsLoading(false)
                 setSuccess(true);
                 setTimeout(() => {
@@ -257,7 +255,6 @@ export const UpdateStudent = React.memo(() => {
         setSuccess('')
     }, 10000)
 
-    console.log(selectedSchool)
 
     return (
         <>
@@ -309,7 +306,6 @@ export const UpdateStudent = React.memo(() => {
                                         value={selectedSchool} // Controlled value
                                         onChange={(event, newValue) => {
                                             if (newValue) {
-                                                console.log(newValue)
                                                 setSelectedSchool(newValue);
                                                 setFormData({ ...formData, ['schoolId']: newValue._id }); // Set schoolId in formData
                                             }
@@ -509,7 +505,7 @@ export const UpdateStudent = React.memo(() => {
                                         <MenuItem value="JSS 1">JSS 1</MenuItem>
                                         <MenuItem value="JSS 2">JSS 2</MenuItem>
                                         <MenuItem value="JSS 3">JSS 3</MenuItem>
-                                        <MenuItem value="SS 1">SS 1</MenuItem>
+                                        <MenuItem value="SSS 1">SSS 1</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -527,7 +523,7 @@ export const UpdateStudent = React.memo(() => {
                                         <MenuItem value="Primary 6">Primary 6</MenuItem>
                                         <MenuItem value="JSS 1">JSS 1</MenuItem>
                                         <MenuItem value="JSS 3">JSS 3</MenuItem>
-                                        <MenuItem value="SS 1">SS 1</MenuItem>
+                                        <MenuItem value="SSS 1">SSS 1</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -546,7 +542,7 @@ export const UpdateStudent = React.memo(() => {
                                         <MenuItem value="JSS 1">JSS 1</MenuItem>
                                         <MenuItem value="JSS 2">JSS 2</MenuItem>
                                         <MenuItem value="JSS 3">JSS 3</MenuItem>
-                                        <MenuItem value="SS 1">SS 1</MenuItem>
+                                        <MenuItem value="SSS 1">SSS 1</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>

@@ -59,16 +59,13 @@ export const SignInForm = () => {
 
         if (!Object.values(newErrors).includes(true)) {
 
-            console.log('Form Submitted:', formData);
 
 
             (async () => {
                 try {
 
                     const response = await axios.post(`${API_URL}/admin-admin/login`, formData, { withCredentials: true });
-                    console.log(response)
                     const { token, tokenUser, allPermissionNames } = response.data;
-                    console.log('allPermissionNames:', allPermissionNames);
 
                     login(token, tokenUser, allPermissionNames); // Set token globally using context
                     if (userPermissions.includes('handle_registrars')) {
@@ -195,12 +192,10 @@ export const EnumeratorSignInForm = () => {
         const email = formData.get('email');
         const password = formData.get('password');
 
-        console.log({ email, password });
         (async () => {
             try {
                 setIsLoading(true)
                 const response = await axios.post(`${API_URL}/admin-enumerator/login`, { email, password }, { withCredentials: true });
-                console.log('Login Response:', response.data);
 
                 const { token, tokenUser, allPermissionNames } = response.data;
 
@@ -262,7 +257,7 @@ export const EnumeratorSignInForm = () => {
 
                     <Box
                         component="img"
-                        src="/site-logo-dark.png" // Replace with your logo path
+                        src="/portal-landing-logo.png" // Replace with your logo path
                         alt="Logo"
                         sx={{
 
@@ -334,17 +329,24 @@ export const EnumeratorSignInForm = () => {
                                 },
                             }}
                         >
-                            Sign In
+                            {!isLoading && <Typography>Sign In</Typography>}
+                            {isLoading ? <SpinnerLoader /> : (<Typography color="red" fontWeight="600">
+                                {validationError}
+                            </Typography>)}
                         </Button>
+                       
 
-                        {validationError && (
-                            <Box textAlign="center" sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                {isLoading ? <SpinnerLoader /> : (<Typography color="red" fontWeight="600">
-                                    {validationError}
-                                </Typography>)}
-
-                            </Box>
-                        )}
+                        <Box textAlign="center" sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+                            <Typography  fontWeight="600">
+                                POWERED BY
+                            </Typography>
+                        
+                            <Typography  fontWeight="600" sx = {{
+                                color: colors.main["darkGreen"]
+                            }}>
+                                KOGI STATE MINISTRY OF EDUCATION
+                            </Typography>
+                        </Box>
 
                     </Box>
                 </Paper>

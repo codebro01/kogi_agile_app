@@ -10,7 +10,7 @@ import TrafficIcon from "@mui/icons-material/Traffic";
 import Header from "../../components/Header";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
-import {ResponsivePieChart} from '../../components/pieChart.jsx';
+import { ResponsivePieChart } from '../../components/pieChart.jsx';
 import { ResponsiveBarChart } from '../../components/barChart.jsx';
 import { useAuth } from '../auth/authContext.jsx';
 import { StudentsContext } from '../../components/dataContext.jsx';
@@ -33,35 +33,14 @@ const Dashboard = () => {
 
 
 
-  // if(studentsData === null) {
-  //     return <Typography>....StudentsData Loading</Typography>
-  // }
-  if (loading)
-    return (
-      <Box
-        sx={{
-          display: "flex", // Corrected from 'dispflex'
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "80vh",
-          width: "90vw",
-          position: "relative",
-        }}
-      >
-        <SpinnerLoader />
-      </Box>
-    );
-  // if(studentsData.length === 0) {
 
-  // }
 
 
   if (!studentsData) {
     return <Box
-      sx = {{
-        display: "flex", 
-        justifyContent:"center", 
+      sx={{
+        display: "flex",
+        justifyContent: "center",
         alignItems: "center"
       }}
     ><Typography variant='h2'>No data available.</Typography></Box>; // Optional fallback if data isn't fetched properly.
@@ -85,7 +64,6 @@ const Dashboard = () => {
       return []; // Return an empty array if studentsData is empty or not an array
     }
   };
-  console.log(studentsData)
 
 
   const filterByClass = (students, className) => {
@@ -100,11 +78,10 @@ const Dashboard = () => {
 
   // Example usage
   const jss1Students = filterByClass(studentsData, "JSS 1");
-  const ss1Students = filterByClass(studentsData, "SS 1");
+  const ss1Students = filterByClass(studentsData, "SSS 1");
   const primary6Students = filterByClass(studentsData, "Primary 6");
   const jss3Students = filterByClass(studentsData, "JSS 3");
 
-  console.log('students DAta:' + studentsData)
 
   function getNumberOfDistinctSchools(studentsData) {
     if (!studentsData) {
@@ -169,13 +146,15 @@ const Dashboard = () => {
 
       {userPermissions.includes("handle_registrars") && (
 
-      <Box sx = {{display: "flex", gridRow: " 10", marginBottom: "100px", maxWidth: "100%", flexDirection: {
-        xs: "column", 
-        md: "row"
-      }}}>
-          <ResponsivePieChart/>
-        <ResponsiveBarChart/>
-      </Box>
+        <Box sx={{
+          display: "flex", gridRow: " 10", marginBottom: "100px", maxWidth: "100%", flexDirection: {
+            xs: "column",
+            md: "row"
+          }
+        }}>
+          <ResponsivePieChart />
+          <ResponsiveBarChart />
+        </Box>
       )}
 
 
@@ -406,7 +385,7 @@ const Dashboard = () => {
           >
             <StatBox
               title={getNumberOfDistinctSchools(studentsData)}
-              subtitle="Total SS 1 Enrolled"
+              subtitle="Total SSS 1 Enrolled"
               progress="0.50"
               icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
             />
@@ -421,7 +400,7 @@ const Dashboard = () => {
               alignItems: 'center',
               flexDirection: 'column',
               justifyContent: 'center',
-              
+
             }}
           >
             <Typography
@@ -452,67 +431,67 @@ const Dashboard = () => {
               20 Recently Registered Students
             </Typography>
 
-               
 
-                <TableContainer
-                  component={Paper}
-                  sx={{
-                    maxWidth: '100%',
-                    overflowX: 'auto',
-                    boxShadow: 3,
-                    borderRadius: '8px',
-                    marginBottom: '20px',
-                    minHeight: "320px",
-                  }}
-                >
-                  <Table sx={{ minWidth: 650 }}>
-                    <TableHead>
-                      <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
-                        <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Surname</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Present Class</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>State of Origin</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>LGA</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Ward</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {last5Students().map((student, index) => (
-                        <TableRow key={index} sx={{
-                          '&:hover': { backgroundColor: '#f9f9f9' },
-                          borderBottom: '1px solid #ddd',
-                        }}>
-                          <TableCell>{student.surname}</TableCell>
-                          <TableCell>{student.presentClass}</TableCell>
-                          <TableCell>{student.stateOfOrigin}</TableCell>
-                          <TableCell>{student.lga}</TableCell>
-                          <TableCell>{student.ward.name}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
 
-                <Button
-                  component={Link}
-                  to="/enumerator-dashboard/view-all-students-data"
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  sx={{
-                    textTransform: 'none',
-                    fontSize: '1rem',
-                    padding: '12px 24px',
-                    borderRadius: '8px',
-                    boxShadow: 2,
-                    marginBottom: '100px',
-                    '&:hover': {
-                      backgroundColor: '#0D47A1',
-                      boxShadow: 3,
-                    },
-                  }}
-                >
-                  Click to View All Students Information
-                </Button>
+            <TableContainer
+              component={Paper}
+              sx={{
+                maxWidth: '100%',
+                overflowX: 'auto',
+                boxShadow: 3,
+                borderRadius: '8px',
+                marginBottom: '20px',
+                minHeight: "320px",
+              }}
+            >
+              <Table sx={{ minWidth: 650 }}>
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
+                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Surname</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Present Class</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>State of Origin</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>LGA</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Ward</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {last5Students().map((student, index) => (
+                    <TableRow key={index} sx={{
+                      '&:hover': { backgroundColor: '#f9f9f9' },
+                      borderBottom: '1px solid #ddd',
+                    }}>
+                      <TableCell>{student.surname}</TableCell>
+                      <TableCell>{student.presentClass}</TableCell>
+                      <TableCell>{student.stateOfOrigin}</TableCell>
+                      <TableCell>{student.lga}</TableCell>
+                      <TableCell>{student.ward.name}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            <Button
+              component={Link}
+              to="/enumerator-dashboard/view-all-students-data"
+              variant="contained"
+              size="large"
+              color="primary"
+              sx={{
+                textTransform: 'none',
+                fontSize: '1rem',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                boxShadow: 2,
+                marginBottom: '100px',
+                '&:hover': {
+                  backgroundColor: '#0D47A1',
+                  boxShadow: 3,
+                },
+              }}
+            >
+              Click to View All Students Information
+            </Button>
 
 
             <Typography
@@ -544,53 +523,53 @@ const Dashboard = () => {
             </Typography>
 
 
-              <TableContainer
-                component={Paper}
-                sx={{
-                  maxWidth: '100%',
-                  overflowX: 'auto',
-                  boxShadow: 3,
-                  borderRadius: '8px',
-                  marginBottom: '20px',
-                  minHeight: "320px",
-                }}
-              >
-                <Table sx={{ minWidth: 650 }}>
-                  <TableHead>
-                    <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
-                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Email Address</TableCell>
-                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Phone</TableCell>
-                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Activity</TableCell>
-                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>passport</TableCell>
+            <TableContainer
+              component={Paper}
+              sx={{
+                maxWidth: '100%',
+                overflowX: 'auto',
+                boxShadow: 3,
+                borderRadius: '8px',
+                marginBottom: '20px',
+                minHeight: "320px",
+              }}
+            >
+              <Table sx={{ minWidth: 650 }}>
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
+                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Email Address</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Phone</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Activity</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>passport</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {last5Students().map((student, index) => (
+                    <TableRow key={index} sx={{
+                      '&:hover': { backgroundColor: '#f9f9f9' },
+                      borderBottom: '1px solid #ddd',
+                    }}>
+                      <TableCell>{student.surname}</TableCell>
+                      <TableCell>{student.presentClass}</TableCell>
+                      <TableCell>{student.stateOfOrigin}</TableCell>
+                      <TableCell>{student.lga}</TableCell>
+                      <TableCell>{student.ward.name}</TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {last5Students().map((student, index) => (
-                      <TableRow key={index} sx={{
-                        '&:hover': { backgroundColor: '#f9f9f9' },
-                        borderBottom: '1px solid #ddd',
-                      }}>
-                        <TableCell>{student.surname}</TableCell>
-                        <TableCell>{student.presentClass}</TableCell>
-                        <TableCell>{student.stateOfOrigin}</TableCell>
-                        <TableCell>{student.lga}</TableCell>
-                        <TableCell>{student.ward.name}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            
-            
-            
-              
-             
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+
+
+
+
 
           </Box>
         </Box>
-      ) 
-      
-      
+      )
+
+
         : (<Box
           sx={{
             display: {
@@ -729,7 +708,7 @@ const Dashboard = () => {
           >
             <StatBox
               title={ss1Students?.length}
-              subtitle="Total SS 1 Enrolled"
+              subtitle="Total SSS 1 Enrolled"
               progress="0.75"
               borderRadius="5px"
               icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
@@ -852,7 +831,7 @@ const Dashboard = () => {
             )}
           </Box>
         </Box>)}
-      
+
 
     </Box>
   );

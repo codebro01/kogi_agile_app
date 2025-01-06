@@ -25,7 +25,7 @@ export const CreateStudent = () => {
   ]);
 
   const [occupations, setOccupation] = useState([
-    'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser', 'Others'
+    'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser',"Business Person", 'Others'
   ])
 
 
@@ -64,8 +64,8 @@ export const CreateStudent = () => {
     image: null,
   });
 
-  
- 
+
+
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false)
@@ -113,10 +113,7 @@ export const CreateStudent = () => {
     return state ? state.lgas : [];
   };
 
-  console.log(getNigeriaStates())
-  const foundKo = getNigeriaStates().find(state => state.code === 'KO');
-  console.log(foundKo)
- 
+
 
 
 
@@ -192,7 +189,6 @@ export const CreateStudent = () => {
           },
           withCredentials: true,
         });
-        console.log(response)
         setSuccess(true);
         setSuccessMessage(`Great Job!!! New student registration successful!!!`)
         const formSubmissionSuccess = true;
@@ -227,7 +223,6 @@ export const CreateStudent = () => {
           });
 
           // Optionally display a success message or reset other states
-          console.log("Form submitted successfully!");
         }
         setTimeout(() => setSuccessMessage(''), 10000);
 
@@ -246,26 +241,6 @@ export const CreateStudent = () => {
 
   // ** clear fields if students creation is successful
 
-
-
-
-
-  if (loading)
-    return (
-      <Box
-        sx={{
-          display: "flex", // Corrected from 'dispflex'
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "80vh",
-          width: "90vw",
-          position: "relative",
-        }}
-      >
-        <SpinnerLoader />
-      </Box>
-    );
 
   setTimeout(() => {
     setError('')
@@ -336,7 +311,7 @@ export const CreateStudent = () => {
                   name="schoolId"
                   variant="outlined"
                   fullWidth
-                  value={storedSchool.schoolName}
+                  value={storedSchool?.schoolName || 'No school found'}
                   error={errors.school}
                   required
                   InputLabelProps={{ shrink: true }}
@@ -444,26 +419,26 @@ export const CreateStudent = () => {
                 </Grid>
               )}
 
-                <Grid item xs={12}>
-                  <TextField
-                    label="LGA of Enrollment"
-                    name="lgaOfEnrollment"
-                    select
-                    variant="outlined"
-                    fullWidth
-                    value={formData.lgaOfEnrollment || ''}
-                    onChange={(e) => handleSelectChange(e, { name: 'lgaOfEnrollment' })}
-                    error={errors['LGA']}
-                    required
+              <Grid item xs={12}>
+                <TextField
+                  label="LGA of Enrollment"
+                  name="lgaOfEnrollment"
+                  select
+                  variant="outlined"
+                  fullWidth
+                  value={formData.lgaOfEnrollment || ''}
+                  onChange={(e) => handleSelectChange(e, { name: 'lgaOfEnrollment' })}
+                  error={errors['LGA']}
+                  required
 
-                  >
-                    {lgasAndWards.map((lga) => (
-                      <MenuItem key={lga.name} value={lga.name}>
-                        {lga.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
+                >
+                  {lgasAndWards.map((lga) => (
+                    <MenuItem key={lga.name} value={lga.name}>
+                      {lga.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
               {formData.lgaOfEnrollment && <Grid item xs={12}>
                 <TextField
                   label="Wards"
@@ -481,7 +456,7 @@ export const CreateStudent = () => {
                   ))}
                 </TextField>
               </Grid>}
-              
+
 
 
 
@@ -500,7 +475,7 @@ export const CreateStudent = () => {
               )}
 
 
-              {[{ label: 'Community Name', name: 'communityName' },
+              {[{ label: 'Name of community / Town of Residence', name: 'communityName' },
               { label: 'Residential Address', name: 'residentialAddress' }].map(({ label, name }) => (
                 <Grid item xs={12} key={name}>
                   <TextField
@@ -533,54 +508,12 @@ export const CreateStudent = () => {
                     <MenuItem value="Primary 6">Primary 6</MenuItem>
                     <MenuItem value="JSS 1">JSS 1</MenuItem>
                     <MenuItem value="JSS 3">JSS 3</MenuItem>
-                    <MenuItem value="SS 1">SS 1</MenuItem>
+                    <MenuItem value="SSS 1">SSS 1</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
 
 
-
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel>Class at Enrollment</InputLabel>
-                  <Select
-                    name="classAtEnrollment"
-                    value={formData.classAtEnrollment}
-                    onChange={handleChange}
-                    label="Class at Enrollment"
-                    error={errors['Class at Enrollment']}
-
-                    required
-                  >
-                    <MenuItem value="Primary 6">Primary 6</MenuItem>
-                    <MenuItem value="JSS 1">JSS 1</MenuItem>
-                    <MenuItem value="JSS 2">JSS 2</MenuItem>
-                    <MenuItem value="JSS 3">JSS 3</MenuItem>
-                    <MenuItem value="SS 1">SS 1</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel>Year Admitted to school</InputLabel>
-                  <Select
-                    name="yearAdmitted"
-                    value={formData.yearAdmitted}
-                    onChange={handleChange}
-                    label="Year Admitted"
-                    error={errors['Year Admitted']}
-                    required                >
-                    <MenuItem value="2020">2020</MenuItem>
-                    <MenuItem value="2021">2021</MenuItem>
-                    <MenuItem value="2022">2022</MenuItem>
-                    <MenuItem value="2023">2023</MenuItem>
-                    <MenuItem value="2024">2024</MenuItem>
-                    <MenuItem value="2025">2025</MenuItem>
-
-                  </Select>
-                </FormControl>
-              </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Year of enrollment</InputLabel>
@@ -621,7 +554,7 @@ export const CreateStudent = () => {
                 </Grid>
               ))}
 
-        
+
               <Grid item xs={12}>
                 <TextField
                   label={'Parent/caregiver Nin'}
@@ -736,7 +669,7 @@ export const CreateStudent = () => {
                   </p>
                 )}
               </div>
-               
+
 
               {!formSubmissionLoading && <Grid item xs={12} marginTop="20px">
                 <Button

@@ -61,7 +61,6 @@ export const CreateEnumerator = () => {
         if (!Object.values(newErrors).includes(true)) {
             (async () => {
                 try {
-                    console.log(formData)
 
                     const token = localStorage.getItem('token');
 
@@ -72,7 +71,6 @@ export const CreateEnumerator = () => {
                         },
                         withCredentials: true,
                     });
-                    console.log(response);
                     setSuccess('Enumerator Created Successfully');
                 } catch (err) {
                     console.log(err)

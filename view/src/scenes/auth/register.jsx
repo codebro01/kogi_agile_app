@@ -55,7 +55,6 @@ const SignInForm = () => {
 
         if (!Object.values(newErrors).includes(true)) {
             // Submit form if no errors
-            console.log('Form Submitted:', formData);
         }
 
         (async () => {

@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }) => {
         setUserData(userData);
         setUserPermissions(allPermissionNames)
 
-        console.log(allPermissionNames)
     };
 
     const logout = () => {

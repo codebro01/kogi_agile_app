@@ -46,7 +46,7 @@ export const ViewAllStudentsData = () => {
     { class: "Primary 6", id: 1 },
     { class: "JSS 1", id: 2 },
     { class: "JSS 3", id: 3 },
-    { class: "SS 1", id: 4 },
+    { class: "SSS 1", id: 4 },
   ];
 
   const buildQueryString = () => {
@@ -110,7 +110,6 @@ export const ViewAllStudentsData = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          justifyContent: "center",
           height: "50vh",
           width: "90vw"
         }}

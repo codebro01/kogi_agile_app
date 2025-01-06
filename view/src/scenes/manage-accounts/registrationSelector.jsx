@@ -82,26 +82,6 @@ const RegistrationSelector = () => {
  
 
 
-
-    // Loading state while the schools are being fetched
-    if (loading)
-        return (
-            <Box
-                sx={{
-                    display: "flex", // Corrected from 'dispflex'
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "80vh",
-                    width: "90vw",
-                    position: "relative",
-                }}
-            >
-                <SpinnerLoader />
-            </Box>
-        );
-
-
     return (
         <Box
             sx={{
