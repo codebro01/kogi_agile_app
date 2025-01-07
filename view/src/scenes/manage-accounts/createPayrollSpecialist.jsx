@@ -8,7 +8,28 @@ import lgasAndWards from '../../Lga&wards.json';
 axios.defaults.withCredentials = true;
 
 
-export const CreateEnumerator = () => {
+const InputFields = React.memo(({ label, name, value, errors, handleChange }) => {
+    // Error handling for display
+    const hasError = errors && errors[name];
+
+    return (
+        <Grid item xs={12}>
+            <TextField
+                label={label}
+                name={name}
+                variant="outlined"
+                fullWidth
+                value={value}
+                onChange={handleChange}
+                error={hasError} // Display error styling
+                helperText={hasError && `${label} is required`} // Error message for invalid input
+            />
+        </Grid>
+    );
+});
+
+
+export const CreatePayrollSpecialist = () => {
     // const theme = useTheme();
     const navigate = useNavigate();
 
@@ -63,22 +84,22 @@ export const CreateEnumerator = () => {
         };
         setErrors(newErrors);
 
-        if (!Object.values(newErrors).includes(true)) {
             (async () => {
                 try {
 
                     const token = localStorage.getItem('token');
 
-                    const response = await axios.post(`${API_URL}/admin-enumerator/register`, formData, {
+                    const response = await axios.post(`${API_URL}/payroll-specialists/register`, formData, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                             "Content-Type": "multipart/form-data",
                         },
                         withCredentials: true,
                     });
-                    setSuccess('Enumerator Registered Successfully');
+                    setSuccess('New Payroll Specialist Added');
+                    console.log(response);
                     const success = true;
-                    if(success) {
+                    if (success) {
                         setFormData({
                             fullName: '',
                             gender: '',
@@ -94,44 +115,36 @@ export const CreateEnumerator = () => {
                             image: null,
                         })
                     }
+
+                    setTimeout(() => setSuccess(''), 7000);
+
                 } catch (err) {
                     console.log(err)
                     if (err.response.data.status === 401) return navigate('/sign-in')
                     setValidationError(err.response?.data?.message || 'An error occurred');
-                    setTimeout(() => setValidationError(''), 3000);
+                    setTimeout(() => setValidationError(''), 7000);
                 }
             })();
-        }
+        
     };
 
     return (
         <Container maxWidth="sm" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', paddingTop: '16px', paddingBottom: '16px', marginTop: '32px', marginBottom: '50px' }}>
             <Box sx={{ p: 4, borderRadius: 2, boxShadow: 3, backgroundColor: 'white', width: '100%' }}>
                 <Typography variant="h4" gutterBottom align="center" textTransform="uppercase" fontWeight="bolder" marginBottom="20px">
-                    Register Enumerator
+                    Register payroll specialist
                 </Typography>
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         {[
-                            { label: 'First Name', name: 'fullName' },
+                            { label: 'Full Name', name: 'fullName' },
                             { label: 'BVN', name: 'bvn' },
                             { label: 'NIN', name: 'nin' },
                             { label: 'Phone', name: 'phone' },
                             { label: 'Address', name: 'address' },
                             { label: 'Account Number', name: 'accountNumber' },
                         ].map(({ label, name }) => (
-                            <Grid item xs={12} key={name}>
-                                <TextField
-                                    label={label}
-                                    name={name}
-                                    variant="outlined"
-                                    fullWidth
-                                    value={formData[name]}
-                                    onChange={handleChange}
-                                    error={errors[name]}
-                                    helperText={errors[name] && `${label} is required`}
-                                />
-                            </Grid>
+                              <InputFields key = {name} value={formData.name} label={label} handleChange={handleChange} errors={errors} name={name}  />
                         ))}
 
                         <Grid item xs={12}>
@@ -266,14 +279,14 @@ export const CreateEnumerator = () => {
                             </Box>
                         </Grid>
 
-                       <Box
-                        sx ={{
-                            display: "flex", 
-                            flexDirection: "column", 
-                            alignItems:"center",
-                            justifyContent: "center"
-                        }}
-                       >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center"
+                            }}
+                        >
                             {validationError && (
                                 <Grid item xs={12}>
                                     {validationError && <Typography color="red" align="center">
@@ -285,12 +298,10 @@ export const CreateEnumerator = () => {
                             {success && <Typography color="green" align="center">
                                 {success}
                             </Typography>}
-                       </Box>
+                        </Box>
                     </Grid>
                 </form>
             </Box>
         </Container>
     );
 };
-
-export default CreateEnumerator;

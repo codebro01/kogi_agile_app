@@ -322,15 +322,38 @@ export const EnumeratorSignInForm = () => {
                                 mt: 3,
                                 mb: 2,
                                 fontSize: "1.2rem",
-                                background: isLoading ? 'white' : colors.main['darkGreen'],
+                                background: validationError
+                                    ? "red" // Highlight button if there's a validation error
+                                    : isLoading
+                                        ? "white"
+                                        : colors.main["darkGreen"],
+                                color: validationError ? "white" : "inherit", // Adjust text color for error state
                                 "&:hover": {
-                                    background: colors.main["lightGreen"],
+                                    background: validationError
+                                        ? "darkred"
+                                        : colors.main["lightGreen"],
                                     opacity: 0.9, // Slightly transparent on hover
                                 },
                             }}
+                            disabled={isLoading || !!validationError} // Disable butt   on if loading or error exists
                         >
-                            {isLoading ? <SpinnerLoader/> : 'Submit'}
+                            {isLoading ? <SpinnerLoader /> : "Submit"}
                         </Button>
+
+                        {/* Render validation error message */}
+                        {validationError && (
+                            <Typography
+                                sx={{
+                                    color: "red",
+                                    fontSize: "0.9rem",
+                                    mt: 1, // Add spacing between button and error message
+                                    textAlign: "center",
+                                }}
+                            >
+                                {validationError}
+                            </Typography>
+                        )}
+
 
                        
 

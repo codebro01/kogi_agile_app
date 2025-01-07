@@ -17,6 +17,12 @@ import { DataProvider } from './components/dataContext.jsx';
 import { RoleSelector } from "./components/roleSelector.jsx";
 import { AdminViewAllStudentsData } from "./scenes/manage-accounts/adminViewAllStudentsData.jsx";
 import { ExportAttendanceSheet } from "./scenes/manage-accounts/exportAttendanceSheet.jsx";
+import { CreatePayrollSpecialist } from "./scenes/manage-accounts/createPayrollSpecialist.jsx";
+import DataTable from "./scenes/manage-accounts/manageAdmins.jsx";
+import { EditUserForm } from "./components/editUserForm.jsx";
+import { EditAdmin } from "./scenes/manage-accounts/editAdminData.jsx";
+import { ManageEnumerators } from "./scenes/manage-accounts/manageEnumerators.jsx";
+import { EditEnumerator } from "./scenes/manage-accounts/editEnumeratorData.jsx";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -52,15 +58,26 @@ function App() {
                       <Route path="/admin-dashboard/role-selector" element={<RoleSelector />} />
                       <Route path="/admin-dashboard/create-accounts/register-admin" element={<CreateAdmin />} />
                       <Route path="/admin-dashboard/create-accounts/register-enumerator" element={<CreateEnumerator />} />
+                      <Route path="/admin-dashboard/create-accounts/register-payroll-specialists" element={<CreatePayrollSpecialist />} />
                       <Route path="/admin-dashboard/create-accounts/register-student" element={<CreateStudent />} />
                       <Route path="/admin-dashboard/update-student/:id" element={<UpdateStudent />} />
                       <Route path="/export-attendance-sheet" element={<ExportAttendanceSheet />} />
+                      {/* Data tables n  */}
+                      <Route path="/admin-dashboard/manage-accounts/admins" element={<DataTable />} />
+                      <Route path="/admin-dashboard/manage-accounts/enumerators" element={<ManageEnumerators />} />
+
+
+                      {/* Edit form */}
+                      <Route path="/admin-dashboard/manage-accounts/admins/edit-admin/:id" element={<EditAdmin />} />
+                      <Route path="/admin-dashboard/manage-accounts/enumerators/edit-enumerator/:id" element={<EditEnumerator />} />
+
+
                       <Route path="/register" element={<BrandingSignUpPage />} />
+                      <Route path="/index.html" element={<Navigate to="/admin-dashboard/create-accounts/register-student" />} />
                     </Routes>
                   </DataProvider>
                 }
               />
-              <Route path="*" element={<Navigate to="/index.html" />} />
 
             </Routes>
           </main>

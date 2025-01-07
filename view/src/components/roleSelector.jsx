@@ -22,7 +22,7 @@ export const RoleSelector = () => {
         const roleLinks = {
             admin: "/admin-dashboard/create-accounts/register-admin",
             enumerator: "/admin-dashboard/create-accounts/register-enumerator",
-            student: "/admin-dashboard/create-student-school-selector",
+            payrollSpecialist: "/admin-dashboard/create-accounts/register-payroll-specialists",
             school: "/admin-dashboard/create-accounts/register-school",
         };
 
@@ -33,84 +33,118 @@ export const RoleSelector = () => {
 
     return (
         <Grid
+            container
             sx={{
                 height: "100vh",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                bgcolor: "#ffffff", // White background
-                flexDirection: "column",
+                bgcolor: "#f0f4f7", // Light gray background
+                padding: "32px",
             }}
         >
-            <Typography
-                variant="h4"
-                gutterBottom
-                sx={{
-                    color: "#196b57", // Green color for title
-                    fontWeight: "bold",
-                    marginBottom: "16px",
-                }}
-            >
-                Create Account
-            </Typography>
-
             <Box
                 sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
                     width: "100%",
+                    maxWidth: "500px",
+                    bgcolor: "#ffffff", // White card
+                    borderRadius: "16px", // Smooth round edges
+                    boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.15)", // Elevated card shadow
+                    overflow: "hidden",
                 }}
             >
                 <Box
                     sx={{
-                        width: "100%",
-                        maxWidth: "400px", // Limit width to 400px
+                        bgcolor: "#196b57", // Green header
                         padding: "24px",
-                        bgcolor: "#ffffff", // White background for the form
-                        borderRadius: "12px", // Rounded corners
-                        boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                        border: "2px solid #196b57", // Green border
+                        textAlign: "center",
+                    }}
+                >
+                    <Typography
+                        variant="h5"
+                        sx={{
+                            color: "#ffffff", // White text
+                            fontWeight: "bold",
+                        }}
+                    >
+                        Select Account Type
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "#e8f5f2", // Subtle lighter text
+                            marginTop: "8px",
+                        }}
+                    >
+                        After selecting account type, click proceed to go to the form page
+                    </Typography>
+                </Box>
+                <Box
+                    sx={{
+                        padding: "24px",
                     }}
                 >
                     <FormControl fullWidth>
                         <InputLabel
                             id="role-selector-label"
                             sx={{
-                                color: "#196b57", // Green label color
+                                color: "#196b57",
                             }}
                         >
-                            Select Role
+                            Account Type
                         </InputLabel>
                         <Select
                             labelId="role-selector-label"
-                            value={role}
-                            onChange={handleChange}
-                            label="Select Role"
+                            label="Account Type"
                             sx={{
                                 "& .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "#196b57", // Green border
+                                    borderColor: "#196b57",
                                 },
                                 "&:hover .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "#196b57", // Green hover border
+                                    borderColor: "#1b7a64",
                                 },
                                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "#196b57", // Green focus border
+                                    borderColor: "#196b57",
                                 },
                                 "& .MuiSelect-icon": {
-                                    color: "#196b57", // Green dropdown arrow
+                                    color: "#196b57",
                                 },
                                 borderRadius: "8px",
                             }}
                         >
                             <MenuItem value="admin">Register new Admin</MenuItem>
                             <MenuItem value="enumerator">Register new Enumerator</MenuItem>
-                            <MenuItem value="student">Register new Student</MenuItem>
-                            <MenuItem value="school">Register School</MenuItem>
+                            <MenuItem value="payrollSpecialist">Register Payroll Specialist</MenuItem>
+                            <MenuItem value="school">Add School</MenuItem>
                         </Select>
                     </FormControl>
+                    <Box
+                        sx={{
+                            marginTop: "24px",
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <button
+                            style={{
+                                backgroundColor: "#196b57",
+                                color: "#ffffff",
+                                border: "none",
+                                padding: "12px 24px",
+                                borderRadius: "8px",
+                                fontSize: "16px",
+                                cursor: "pointer",
+                                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            Proceed
+                        </button>
+                    </Box>
                 </Box>
             </Box>
         </Grid>
     );
+
+
 };

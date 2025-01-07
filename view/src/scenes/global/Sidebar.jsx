@@ -8,7 +8,11 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import DescriptionIcon from '@mui/icons-material/Description'; // Sheet icon
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
+import SchoolIcon from '@mui/icons-material/School';
 // import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
+import PaymentIcon from '@mui/icons-material/Payment';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
@@ -18,7 +22,7 @@ import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { ChangePasswordForm } from "../../components/changePasswordPopup.jsx";
 import { ExportSubmitButton } from "../../components/exportButton.jsx";
-// import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+
 import { useAuth } from '../auth/authContext.jsx';
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -183,8 +187,8 @@ const Sidebar = ({ isSidebar }) => {
               Accounts
             </Typography>}
             <Item
-              title="Register student"
-              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/role-selector' : '/admin-dashboard/create-student-school-selector'}              
+              title="Register Account"
+              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/role-selector' : '/admin-dashboard/create-student-school-selector'}
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -197,7 +201,45 @@ const Sidebar = ({ isSidebar }) => {
               setSelected={setSelected}
             />
 
-          {userPermissions.length === 1 && (
+              {userPermissions.includes('handle_admins') && (
+              <Item
+                title="Manage Admins"
+                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/admins' : 'enumerator-dashboard/view-all-students-data'}
+                icon={<AdminPanelSettingsIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+              )}
+   
+              {userPermissions.includes('handle_registrars') && 
+              
+              <>
+              <Item
+                title="Manage Enumerators"
+                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/enumerators' : 'enumerator-dashboard/view-all-students-data'}
+                icon={<FormatListNumberedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+              <Item
+                title="Manage Payroll Specialists"
+                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : 'enumerator-dashboard/view-all-students-data'}
+                icon={<PaymentIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+
+              <Item
+                title="Manage School"
+                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : 'enumerator-dashboard/view-all-students-data'}
+                icon={<SchoolIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+              </>
+              }
+
+            {userPermissions.length === 1 && (
               <Item
                 title="Attendance Sheet"
                 to={'/export-attendance-sheet'}
@@ -205,11 +247,11 @@ const Sidebar = ({ isSidebar }) => {
                 selected={selected}
                 setSelected={setSelected}
               />
-          )}
+            )}
 
 
 
-            {userPermissions.includes('handle_registrars') &&
+            {/* {userPermissions.includes('handle_registrars') &&
 
               <>
 
@@ -242,12 +284,12 @@ const Sidebar = ({ isSidebar }) => {
                   setSelected={setSelected}
                 />
               </>
-            }
+            } */}
 
 
 
 
-
+{/* 
             {userPermissions.includes('handle_registrars') &&
               <>
                 <Typography
@@ -280,7 +322,7 @@ const Sidebar = ({ isSidebar }) => {
                 />
               </>
 
-            }
+            } */}
 
 
 
