@@ -322,18 +322,16 @@ export const EnumeratorSignInForm = () => {
                                 mt: 3,
                                 mb: 2,
                                 fontSize: "1.2rem",
-                                backgroundColor: colors.main['darkGreen'],
+                                background: isLoading ? 'white' : colors.main['darkGreen'],
                                 "&:hover": {
-                                    backgroundColor: colors.main["lightGreen"],
-                                    opacity: 1, // Fully opaque on hover
+                                    background: colors.main["lightGreen"],
+                                    opacity: 0.9, // Slightly transparent on hover
                                 },
                             }}
                         >
-                            {!isLoading && <Typography>Sign In</Typography>}
-                            {isLoading ? <SpinnerLoader /> : (<Typography color="red" fontWeight="600">
-                                {validationError}
-                            </Typography>)}
+                            {isLoading ? <SpinnerLoader/> : 'Submit'}
                         </Button>
+
                        
 
                         <Box textAlign="center" sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
