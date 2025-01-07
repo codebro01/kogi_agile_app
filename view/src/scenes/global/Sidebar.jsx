@@ -223,7 +223,7 @@ const Sidebar = ({ isSidebar }) => {
               />
               <Item
                 title="Manage Payroll Specialists"
-                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : 'enumerator-dashboard/view-all-students-data'}
+                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/payroll-specialists' : 'enumerator-dashboard/view-all-students-data'}
                 icon={<PaymentIcon />}
                 selected={selected}
                 setSelected={setSelected}

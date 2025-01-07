@@ -263,6 +263,28 @@ export const AdminViewAllStudentsData = () => {
                         <Grid container spacing={2} alignItems="center">
                             {/* Existing Fields */}
                             <Grid item xs={12} sm={6} md={4}>
+                                <InputLabel id="lga-label" sx={{ marginBottom: 1 }}>All LGA</InputLabel>
+                                <Select
+                                    name="lga"
+                                    value={filters.lga}
+                                    onChange={handleInputChange}
+                                    displayEmpty
+                                    fullWidth
+                                    size="small"
+                                    labelId="lga-label"
+                                >
+                                    <MenuItem value="">
+                                        <em>All LGA</em>
+                                    </MenuItem>
+                                    {lgasData.map((lga) => (
+                                        <MenuItem key={lga} value={lga}>
+                                            {lga}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </Grid>
+                            
+                            <Grid item xs={12} sm={6} md={4}>
                                 <InputLabel id="ward-label" sx={{ marginBottom: 1 }}>Select Ward</InputLabel>
                                 <Select
                                     name="ward"
@@ -372,27 +394,7 @@ export const AdminViewAllStudentsData = () => {
                                 </Grid>
                             )}
 
-                            <Grid item xs={12} sm={6} md={4}>
-                                <InputLabel id="lga-label" sx={{ marginBottom: 1 }}>All LGA</InputLabel>
-                                <Select
-                                    name="lga"
-                                    value={filters.lga}
-                                    onChange={handleInputChange}
-                                    displayEmpty
-                                    fullWidth
-                                    size="small"
-                                    labelId="lga-label"
-                                >
-                                    <MenuItem value="">
-                                        <em>All LGA</em>
-                                    </MenuItem>
-                                    {lgasData.map((lga) => (
-                                        <MenuItem key={lga} value={lga}>
-                                            {lga}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </Grid>
+                         
 
 
 

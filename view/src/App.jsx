@@ -22,7 +22,9 @@ import DataTable from "./scenes/manage-accounts/manageAdmins.jsx";
 import { EditUserForm } from "./components/editUserForm.jsx";
 import { EditAdmin } from "./scenes/manage-accounts/editAdminData.jsx";
 import { ManageEnumerators } from "./scenes/manage-accounts/manageEnumerators.jsx";
+import { ManagePayrollSpecialists } from "./scenes/manage-accounts/managePayrollSpecialists.jsx";
 import { EditEnumerator } from "./scenes/manage-accounts/editEnumeratorData.jsx";
+import { EditPayrollSpecialists } from "./scenes/manage-accounts/editPayrollSpecialists.jsx";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -65,11 +67,13 @@ function App() {
                       {/* Data tables n  */}
                       <Route path="/admin-dashboard/manage-accounts/admins" element={<DataTable />} />
                       <Route path="/admin-dashboard/manage-accounts/enumerators" element={<ManageEnumerators />} />
+                      <Route path="/admin-dashboard/manage-accounts/payroll-specialists" element={<ManagePayrollSpecialists />} />
 
 
                       {/* Edit form */}
                       <Route path="/admin-dashboard/manage-accounts/admins/edit-admin/:id" element={<EditAdmin />} />
                       <Route path="/admin-dashboard/manage-accounts/enumerators/edit-enumerator/:id" element={<EditEnumerator />} />
+                      <Route path="/admin-dashboard/manage-accounts/payroll-specialists/edit-payroll-specialists/:id" element={<EditPayrollSpecialists />} />
 
 
                       <Route path="/register" element={<BrandingSignUpPage />} />
