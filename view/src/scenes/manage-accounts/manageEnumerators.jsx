@@ -1,10 +1,24 @@
-import { DataObjectSharp } from "@mui/icons-material";
+import {
+    Box,
+    TextField,
+    Button,
+    List,
+    ListItem,
+    ListItemText,
+    Paper, Table, TableHead, TableRow, TableCell, TableBody, Typography
+} from '@mui/material';
+
+
 import axios from "axios";
-import { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { DataTable } from "../../components/dataTableComponent";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const ManageEnumerators = () => {
+    const [enumeratorId, setEnumeratorId] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [students, setStudents] = useState([]);
     const [data, setData] = useState([]);
     const [fetchDataLoading, setDataFetchLoading] = useState(false);
     const [showModal, setShowModal] = useState(false); // Control modal visibility
@@ -94,8 +108,128 @@ export const ManageEnumerators = () => {
         fetchData();
     }, [handleToggle, handleDelete]);
 
+// ! Here handle filters 
+    const handleFilter = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/student/from-to`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: {
+                    startDate,
+                    endDate,
+                },
+                withCredentials: true,
+            });
+            setStudents(response.data.students);
+            console.log(response.data)
+        } catch (error) {
+            console.error('Error fetching students:', error);
+        }
+    };
+
     return (
         <>
+            <Box
+                sx={{
+                    width: '100%', // Adjusts to parent width
+                    // maxWidth: '600px', // Caps the width for compact design
+                    margin: '30px auto', // Centers the box with spacing
+                    padding: 2,
+                    backgroundColor: '#f9f9f9', // Subtle background
+                    borderRadius: 2, // Rounded corners
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)', // Light shadow
+                }}
+                component={Paper}
+                elevation={2}
+            >
+                <Typography
+                    variant="h6"
+                    component="h1"
+                    align="center"
+                    gutterBottom
+                    sx={{ fontWeight: 600 }}
+                >
+                    Filter Students
+                </Typography>
+
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 2, // Space between fields
+                        justifyContent: 'space-between',
+                        marginBottom: 2,
+                    }}
+                >
+                    <TextField
+                        label="Start Date"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        sx={{ flex: 1 }}
+                    />
+                    <TextField
+                        label="End Date"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        sx={{ flex: 1 }}
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleFilter}
+                        sx={{ height: '56px', alignSelf: 'stretch' }} // Aligns with input height
+                    >
+                        Filter
+                    </Button>
+                </Box>
+
+                <Typography variant="subtitle1" component="h2" align="center" gutterBottom>
+                    Results
+                </Typography>
+
+                <Box>
+                    {students.length > 0 ? (
+                        <Table sx={{ minWidth: 650 }} aria-label="student table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Full Name</TableCell>
+                                    <TableCell>Surname</TableCell>
+                                    <TableCell>Ward</TableCell> {/* Replace with actual field */}
+                                    <TableCell>Enumerator's Name</TableCell> {/* Replace with actual field */}
+                                    {/* Add more headers as per your requirement */}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {students.map((student) => (
+                                    <TableRow key={student._id}>
+                                        <TableCell>{student.surname + student.otherNames}</TableCell>
+                                        <TableCell>{student.lga}</TableCell>
+                                        <TableCell>{student.ward}</TableCell> {/* Replace with actual field */}
+                                        <TableCell>{student.createdBy}</TableCell> {/* Replace with actual field */}
+                                        {/* Add more table cells based on your schema */}
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    ) : (
+                        <Typography
+                            variant="body2"
+                            align="center"
+                            color="textSecondary"
+                            sx={{ padding: 2 }}
+                        >
+                            No students found
+                        </Typography>
+                    )}
+                </Box>
+            </Box>
+
             <DataTable
                 url={'admin-enumerator'}
                 data={data}
@@ -104,6 +238,9 @@ export const ManageEnumerators = () => {
                 handleDelete={handleDelete}
                 editNav={'edit-enumerator'}
                 handleResetPassword={handleResetPassword}
+                registerLink={'/admin-dashboard/create-accounts/register-enumerator'}
+                tableHeader={'MANAGE ENUMERATORS'}
+                showTotalStudentsRegistered = {true}
             />
             {showModal && (
                 <div style={overlayStyle}>

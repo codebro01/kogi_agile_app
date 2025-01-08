@@ -18,7 +18,7 @@ import { RoleSelector } from "./components/roleSelector.jsx";
 import { AdminViewAllStudentsData } from "./scenes/manage-accounts/adminViewAllStudentsData.jsx";
 import { ExportAttendanceSheet } from "./scenes/manage-accounts/exportAttendanceSheet.jsx";
 import { CreatePayrollSpecialist } from "./scenes/manage-accounts/createPayrollSpecialist.jsx";
-import DataTable from "./scenes/manage-accounts/manageAdmins.jsx";
+import { ManageAdmins } from "./scenes/manage-accounts/manageAdmins.jsx";
 import { EditUserForm } from "./components/editUserForm.jsx";
 import { EditAdmin } from "./scenes/manage-accounts/editAdminData.jsx";
 import { ManageEnumerators } from "./scenes/manage-accounts/manageEnumerators.jsx";
@@ -65,7 +65,7 @@ function App() {
                       <Route path="/admin-dashboard/update-student/:id" element={<UpdateStudent />} />
                       <Route path="/export-attendance-sheet" element={<ExportAttendanceSheet />} />
                       {/* Data tables n  */}
-                      <Route path="/admin-dashboard/manage-accounts/admins" element={<DataTable />} />
+                      <Route path="/admin-dashboard/manage-accounts/admins" element={<ManageAdmins />} />
                       <Route path="/admin-dashboard/manage-accounts/enumerators" element={<ManageEnumerators />} />
                       <Route path="/admin-dashboard/manage-accounts/payroll-specialists" element={<ManagePayrollSpecialists />} />
 

@@ -36,6 +36,13 @@ export const DataProvider = ({ children }) => {
           }),
           axios.get(`${API_URL}/all-schools`),
           axios.get(`${API_URL}/wards`),
+          axios.get(`${API_URL}/student/`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+          }),
         ]);
 
         setStudentsData(studentsRes.data.students);

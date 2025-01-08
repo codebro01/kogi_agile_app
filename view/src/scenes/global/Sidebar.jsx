@@ -179,13 +179,13 @@ const Sidebar = ({ isSidebar }) => {
               setSelected={setSelected}
             />
 
-            {userPermissions.includes('handle_registrars') && <Typography
+            {/* {userPermissions.includes('handle_registrars') && <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-              Accounts
-            </Typography>}
+              
+            </Typography>} */}
             <Item
               title="Register Account"
               to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/role-selector' : '/admin-dashboard/create-student-school-selector'}

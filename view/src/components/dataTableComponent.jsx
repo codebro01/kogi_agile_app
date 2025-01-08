@@ -24,7 +24,7 @@ import { useAuth } from "../scenes/auth/authContext";
 
 
 
-export const DataTable = ({ url, data, fetchDataLoading, handleToggle, handleDelete, editNav, handleResetPassword }) => {
+export const DataTable = ({showTotalStudentsRegistered = false, editInfo = true, url, data, fetchDataLoading, handleToggle, handleDelete, editNav, handleResetPassword, registerLink, tableHeader }) => {
 
 const navigate = useNavigate();
 
@@ -51,7 +51,7 @@ const navigate = useNavigate();
                     variant="h5"
                     sx={{ fontWeight: "bold", color: "#196b57" }}
                 >
-                    User Management
+                    {tableHeader}
                 </Typography>
                 <Button
                     variant="contained"
@@ -63,7 +63,7 @@ const navigate = useNavigate();
                         fontWeight: "bold",
                         textTransform: "none",
                     }}
-                    onClick={() => console.log("Add new entry")}
+                    onClick={() => navigate(registerLink)}
                 >
                     Add New User
                 </Button>
@@ -77,8 +77,8 @@ const navigate = useNavigate();
                             <TableCell>ID</TableCell>
                             <TableCell>Name</TableCell>
                             <TableCell>Email</TableCell>
-                           {userPermissions.includes('handle_registrars') && <TableCell>Total Registered Students</TableCell>} 
-                            <TableCell>Edit</TableCell>
+                            {showTotalStudentsRegistered && <TableCell>Total Registered Students</TableCell>} 
+                            {editInfo && <TableCell>Edit</TableCell>} 
                             <TableCell>Reset Password</TableCell>
                             <TableCell>Active/Deactivate</TableCell>
                             {/* <TableCell>Delete</TableCell> */}
@@ -90,16 +90,15 @@ const navigate = useNavigate();
                                 <TableCell>{row.randomId}</TableCell>
                                 <TableCell>{row.fullName}</TableCell>
                                 <TableCell>{row.email}</TableCell>
-                                {userPermissions.includes('handle_registrars') && <TableCell>0</TableCell>} 
-
-                                <TableCell>
+                                {showTotalStudentsRegistered && <TableCell>0</TableCell>} 
+                                {editInfo && <TableCell>
                                     <IconButton
                                         color="primary"
                                         onClick={() => navigate(`${editNav}/${row._id}`)}
                                     >
                                         <EditIcon />
                                     </IconButton>
-                                </TableCell>
+                                </TableCell>} 
                                 <TableCell>
                                     <IconButton
                                         color="secondary"

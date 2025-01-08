@@ -1,66 +1,82 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Button,
-    Switch,
-    IconButton,
-    Typography,
-    Box,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import LockIcon from "@mui/icons-material/Lock";
-import AddIcon from "@mui/icons-material/Add";
-import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { DataObjectSharp } from "@mui/icons-material";
+import axios from "axios";
+import { useState, useCallback, useEffect } from "react";
+import { DataTable } from "../../components/dataTableComponent";
+import { useLocation, useNavigate } from "react-router-dom";
 
-
-
-
-const DataTable = () => {
+export const ManageAdmins = () => {
     const [data, setData] = useState([]);
     const [fetchDataLoading, setDataFetchLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false); // Control modal visibility
+    const [message, setMessage] = useState('');
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
     const token = localStorage.getItem('token');
-    const navigate = useNavigate()
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    // ! Handle events 
+    const handleResetPassword = async (id) => {
+        try {
+            const response = await axios.patch(
+                `${API_URL}/admin-admin/reset-password`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    params: { id },
+                    withCredentials: true,
+                }
+            );
+            setMessage('Password reset successful!');
+            setShowModal(true);
+        } catch (error) {
+            setMessage(error.response?.data?.message);
+            setShowModal(true);
+            console.error('Error resetting password:', error.response?.data || error.message);
+        }
+    }
 
-    const handleToggle = useCallback(async (id) => {
-        
-             try {
-                 const response = await axios.patch(`${API_URL}/admin-admin/update`, {
-                     headers: {
-                         Authorization: `Bearer ${token}`,
-                         'Content-Type': 'application/json',
-                     },
-                     withCredentials: true,
-                 });
+    const handleToggle = useCallback(async (id, currentStatus) => {
+        try {
+            const response = await axios.patch(
+                `${API_URL}/admin-admin/toggle-status`,
+                {}, // Body is empty for this request
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    params: { id }, // Query parameter with id
+                    withCredentials: true,
+                }
+            );
 
-                 console.log(response)
-            }
-             catch (err) {
-                 console.log(err)
-             }
+            // Update the status in the parent state
+            setData((prevData) =>
+                prevData.map((item) =>
+                    item._id === id ? { ...item, isActive: !currentStatus } : item
+                )
+            );
 
-    }, []);
+            setMessage(response.data?.message);
+            setShowModal(true);
+        } catch (err) {
+            setMessage(err.response?.data?.message);
+            setShowModal(true);
+            console.log(err);
+        }
+    }, []);  // No data in the dependency array
+
 
     const handleDelete = useCallback((id) => {
         setData((prevData) => prevData.filter((row) => row.id !== id));
     }, []);
 
     useEffect(() => {
-
-           const fetchData = async () => {
+        const fetchData = async () => {
             try {
                 setDataFetchLoading(true);
-
                 const response = await axios.get(`${API_URL}/admin-admin`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -68,124 +84,75 @@ const DataTable = () => {
                     },
                     withCredentials: true,
                 });
-
-                console.log(response);
-                setData(response.data.admins)
+                setData(response.data.admins);
+                setDataFetchLoading(false);
+            } catch (err) {
+                console.log(err);
                 setDataFetchLoading(false);
             }
-            catch(err) {
-                console.log(err)
-                setDataFetchLoading(false);
-
-            }
-            finally {
-                setDataFetchLoading(false)
-            }
-           }
-
-           fetchData()
-
-
-
-
+        };
+        fetchData();
     }, [handleToggle, handleDelete]);
-    
-
-    if (fetchDataLoading) return (<p>Loading data.....</p>)
 
     return (
-        <Paper elevation={3} sx={{ padding: "16px" }}>
-            {/* Table Header */}
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "16px",
-                }}
-            >
-                <Typography
-                    variant="h5"
-                    sx={{ fontWeight: "bold", color: "#196b57" }}
-                >
-                    User Management
-                </Typography>
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    sx={{
-                        bgcolor: "#196b57",
-                        "&:hover": { bgcolor: "#145a46" },
-                        color: "#fff",
-                        fontWeight: "bold",
-                        textTransform: "none",
-                    }}
-                    onClick={() => console.log("Add new entry")}
-                >
-                    Add New User
-                </Button>
-            </Box>
+        <>
+            <DataTable
+                url={'admin-enumerator'}
+                data={data}
+                fetchDataLoading={fetchDataLoading}
+                handleToggle={handleToggle}
+                handleDelete={handleDelete}
+                editNav={'edit-admin'}
+                handleResetPassword={handleResetPassword}
+                registerLink={'/admin-dashboard/create-accounts/register-admin'}
+                tableHeader={'MANAGE ADMINS'}
+                editInfo = {false}
+            />
+            {showModal && (
+                <div style={overlayStyle}>
+                    <div style={modalContentStyle}>
+                        <h3>{message}</h3>
+                        <button style={closeButtonStyle} onClick={() => setShowModal(false)}>Close</button>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+}
 
-            {/* Table */}
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Edit</TableCell>
-                            <TableCell>Reset Password</TableCell>
-                            <TableCell>Active/Deactivate</TableCell>
-                            <TableCell>Delete</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {data.map((row) => (
-                            <TableRow key={row.randomId}>
-                                <TableCell>{row.randomId}</TableCell>
-                                <TableCell>{row.fullName}</TableCell>
-                                <TableCell>{row.email}</TableCell>
-                                <TableCell>
-                                    <IconButton
-                                        color="primary"
-                                        onClick={() => navigate(`edit-admin/${row._id}`)}
-                                    >
-                                        <EditIcon />
-                                    </IconButton>
-                                </TableCell>
-                                <TableCell>
-                                    <IconButton
-                                        color="secondary"
-                                        onClick={() =>
-                                            console.log(`Edit Password for ID ${row._id}`)
-                                        }
-                                    >
-                                        <LockIcon />
-                                    </IconButton>
-                                </TableCell>
-                                <TableCell>
-                                    <Switch
-                                        checked={row.active}
-                                        onChange={() => handleToggle(row._id)}
-                                        color="primary"
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <IconButton
-                                        color="error"
-                                        onClick={() => handleDelete(row.id)}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Paper>
-    );  
+const overlayStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+    transition: 'all 0.3s ease',
 };
 
-export default DataTable;
+const modalContentStyle = {
+    backgroundColor: '#fff',
+    padding: '30px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    textAlign: 'center',
+    width: '400px',
+    maxWidth: '90%',
+    animation: 'fadeIn 0.5s',
+};
+
+const closeButtonStyle = {
+    backgroundColor: '#3498db',
+    color: 'white',
+    border: 'none',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '16px',
+    marginTop: '20px',
+    transition: 'background-color 0.3s',
+};

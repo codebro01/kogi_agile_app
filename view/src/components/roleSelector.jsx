@@ -12,12 +12,14 @@ import { useState } from "react";
 
 export const RoleSelector = () => {
     const navigate = useNavigate();
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState(""); // Ensure role is initialized with an empty string
 
     const handleChange = (event) => {
         const selectedRole = event.target.value;
         setRole(selectedRole);
+    };
 
+    const handleProceed = () => {
         // Navigate to the corresponding URL
         const roleLinks = {
             admin: "/admin-dashboard/create-accounts/register-admin",
@@ -26,8 +28,10 @@ export const RoleSelector = () => {
             school: "/admin-dashboard/create-accounts/register-school",
         };
 
-        if (selectedRole && roleLinks[selectedRole]) {
-            navigate(roleLinks[selectedRole]);
+        if (role && roleLinks[role]) {
+            navigate(roleLinks[role]);
+        } else {
+            alert("Please select an account type before proceeding.");
         }
     };
 
@@ -95,6 +99,8 @@ export const RoleSelector = () => {
                         </InputLabel>
                         <Select
                             labelId="role-selector-label"
+                            value={role} // Ensure Select is controlled by role state
+                            onChange={handleChange} // Update state on change
                             label="Account Type"
                             sx={{
                                 "& .MuiOutlinedInput-notchedOutline": {
@@ -137,6 +143,7 @@ export const RoleSelector = () => {
                                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
                                 fontWeight: "bold",
                             }}
+                            onClick={handleProceed} // Navigate on button click
                         >
                             Proceed
                         </button>
@@ -145,6 +152,4 @@ export const RoleSelector = () => {
             </Box>
         </Grid>
     );
-
-
 };

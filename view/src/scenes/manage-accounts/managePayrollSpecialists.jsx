@@ -104,6 +104,8 @@ export const ManagePayrollSpecialists = () => {
                 handleToggle={handleToggle}
                 editNav={'edit-payroll-specialists'}
                 handleResetPassword={handleResetPassword}
+                registerLink={'/admin-dashboard/create-accounts/register-payroll-specialists'}
+                tableHeader = {'MANAGE PAYROLL SPECIALISTS'}
             />
             {showModal && (
                 <div style={overlayStyle}>
