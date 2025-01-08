@@ -1,18 +1,18 @@
 import React from "react";
 
 export const SpinnerLoader = () => {
-    return <div style={{ ...styles.loader, animation: styles.animation }}></div>;
+  return <div style={{ ...styles.loader, animation: styles.animation }}></div>;
 };
 
 const styles = {
-    loader: {
-        width: "40px",
-        height: "40px",
-        border: "1px solid #546e13",
-        borderTop: "1px solid transparent",
-        borderRadius: "50%",
-    },
-    animation: "spin 1s linear infinite",
+  loader: {
+    width: "40px",
+    height: "40px",
+    border: "1px solid #196b57",
+    borderTop: "1px solid transparent",
+    borderRadius: "50%",
+  },
+  animation: "spin 1s linear infinite",
 };
 
 // Define the keyframes using the CSSStyleSheet API

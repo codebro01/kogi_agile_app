@@ -79,7 +79,7 @@ const RegistrationSelector = () => {
 
     };
 
- 
+
 
 
     return (
@@ -91,7 +91,7 @@ const RegistrationSelector = () => {
                 justifyContent: "center",
                 height: "100vh",
                 gap: 3,
-                maxWidth:"100%",
+                maxWidth: "100%",
                 backgroundImage: `url('/landing-agile.jpg')`,
                 backgroundSize: "cover",
                 backgroundPosition: "center"
@@ -196,7 +196,7 @@ const RegistrationSelector = () => {
                             type="submit" // Submit button
                             variant="contained"
                             sx={{
-                                backgroundColor: "#546e13",
+                                backgroundColor: "#196b57",
                                 color: "#ffffff",
                                 "&:hover": {
                                     backgroundColor: "#40550f", // Slightly darker green on hover

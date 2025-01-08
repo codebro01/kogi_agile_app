@@ -9,18 +9,22 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/authContext";
 
 const Topbar = ({ setIsSidebar }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
+  const { userPermissions } = useAuth();
 
   const handleLogout = () => {
     // Remove the token from localStorage
     localStorage.removeItem("token");
+
     // Navigate to the sign-in page
-    navigate("/sign-in");
+    userPermissions.includes('handle_registrars') ? navigate("/dashboard/sign-in") : navigate("/sign-in")
+
   };
 
   return (
@@ -43,7 +47,7 @@ const Topbar = ({ setIsSidebar }) => {
       </Box>
 
       {/* ICONS */}
-      <Box sx = {{
+      <Box sx={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -71,7 +75,7 @@ const Topbar = ({ setIsSidebar }) => {
               boxShadow: 'none', // No box shadow
               border: '1px solid #f44336', // Border color
               backgroundColor: '#f44336', // Hover background color
-                color: 'white', // Text color on hover
+              color: 'white', // Text color on hover
 
               '&:hover': {
                 backgroundColor: 'transparent', // Hover background color

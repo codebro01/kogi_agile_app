@@ -1,19 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-
+import axios from 'axios';
+import { SpinnerLoader } from './spinnerLoader';
 // Register Chart.js components and plugins
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 export const ResponsivePieChart = () => {
+    const [apiDataLoading, setApiDataLoading] = useState(false)
+    const [apiData, setApiData] = useState([]);
+    const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
+    const token = localStorage.getItem('token');
+    useEffect(() => {
+        (async () => {
+
+            try {
+                setApiDataLoading(true)
+
+                const response = await axios.get(`${API_URL}/student/top-lga-count`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: true,
+                })
+                setApiDataLoading(false)
+
+                console.log(response.data.lgaCounts);
+                setApiData(response.data.lgaCounts)
+            }
+            catch (err) {
+                console.log(err)
+            }
+        })()
+    }, []);
     // Data for the Pie Chart
     const data = {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: apiData.map(oneApiData => oneApiData._id),
         datasets: [
             {
                 label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
+                data: apiData.map(oneApiData => oneApiData.totalStudents),
                 backgroundColor: [
                     'rgba(255, 99, 132, 1)',
                     'rgba(54, 162, 235, 1)',
@@ -60,20 +88,23 @@ export const ResponsivePieChart = () => {
         },
     };
 
+    if (apiDataLoading) return (<SpinnerLoader/>)
+
+
     return (
         <div style={{ width: '100%', height: '450px', padding: '20px', textAlign: 'center' }}>
             <h3
                 style={{
                     marginBottom: '20px',
                     color: '#2c3e50',
-                    fontWeight: '600',
-                    textTransform: 'capitalize',
+                    fontWeight: '700',
+                    textTransform: 'uppercase',
                     letterSpacing: '1px',
                     textAlign: 'center',
-                    fontSize: 'clamp(1rem, 2.5vw, 1.8rem)', // Better scaling for all screens
+                    fontSize: 'clamp(0.8rem, 1.9vw, 1.5rem)', // Better scaling for all screens
                 }}
             >
-                Wards with Most Registered Students
+                Top 5 LGA of Enrollment
             </h3>
 
             <Pie data={data} options={options} />

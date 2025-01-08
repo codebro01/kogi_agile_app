@@ -59,7 +59,7 @@ const Dashboard = () => {
 
   const last5Students = () => {
     if (Array.isArray(studentsData) && studentsData.length > 0) {
-      return studentsData.slice(0, 5); // Get the first 5 students
+      return studentsData.slice(0, 20); // Get the first 5 students
     } else {
       return []; // Return an empty array if studentsData is empty or not an array
     }
@@ -152,8 +152,18 @@ const Dashboard = () => {
             md: "row"
           }
         }}>
+          <Box sx={{
+            flexBasis: "50%"
+          }}>
+
           <ResponsivePieChart />
+          </Box>
+          <Box sx={{
+            flexBasis: "50%"
+          }}>
+
           <ResponsiveBarChart />
+          </Box>
         </Box>
       )}
 
@@ -494,71 +504,8 @@ const Dashboard = () => {
             </Button>
 
 
-            <Typography
-              variant="h3"
-              gutterBottom
-              sx={{
-                color: colors.main.darkGreen,
-                background: "linear-gradient(135deg, rgba(224, 224, 224, 1), rgba(200, 200, 200, 1))",
-                fontWeight: "bold",
-                letterSpacing: "1px",
-                textAlign: "center",
-                padding: "20px 15px",
-                borderRadius: "10px",
-                marginBottom: "20px",
-                cursor: "pointer",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                "&:hover": {
-                  transform: "scale(1.05)",
-                  boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.15)",
-                },
-                "&:active": {
-                  transform: "scale(0.98)",
-                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                },
-              }}
-            >
-              Enumerators Activity Log
-            </Typography>
 
-
-            <TableContainer
-              component={Paper}
-              sx={{
-                maxWidth: '100%',
-                overflowX: 'auto',
-                boxShadow: 3,
-                borderRadius: '8px',
-                marginBottom: '20px',
-                minHeight: "320px",
-              }}
-            >
-              <Table sx={{ minWidth: 650 }}>
-                <TableHead>
-                  <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
-                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Email Address</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Phone</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Activity</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>passport</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {last5Students().map((student, index) => (
-                    <TableRow key={index} sx={{
-                      '&:hover': { backgroundColor: '#f9f9f9' },
-                      borderBottom: '1px solid #ddd',
-                    }}>
-                      <TableCell>{student.surname}</TableCell>
-                      <TableCell>{student.presentClass}</TableCell>
-                      <TableCell>{student.stateOfOrigin}</TableCell>
-                      <TableCell>{student.lga}</TableCell>
-                      <TableCell>{student.ward.name}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+        
 
 
 

@@ -63,7 +63,6 @@ export const CreateEnumerator = () => {
         };
         setErrors(newErrors);
 
-        if (!Object.values(newErrors).includes(true)) {
             (async () => {
                 try {
 
@@ -77,23 +76,24 @@ export const CreateEnumerator = () => {
                         withCredentials: true,
                     });
                     setSuccess('Enumerator Registered Successfully');
+                    console.log(response)
                     const success = true;
-                    if(success) {
-                        setFormData({
-                            fullName: '',
-                            gender: '',
-                            phone: '',
-                            email: '',
-                            password: '',
-                            address: '',
-                            bankName: '',
-                            accountNumber: '',
-                            lga: '',
-                            bvn: '',
-                            nin: "",
-                            image: null,
-                        })
-                    }
+                    // if(success) {
+                    //     setFormData({
+                    //         fullName: '',
+                    //         gender: '',
+                    //         phone: '',
+                    //         email: '',
+                    //         password: '',
+                    //         address: '',
+                    //         bankName: '',
+                    //         accountNumber: '',
+                    //         lga: '',
+                    //         bvn: '',
+                    //         nin: "",
+                    //         image: null,
+                    //     })
+                    // }
                 } catch (err) {
                     console.log(err)
                     if (err.response.data.status === 401) return navigate('/sign-in')
@@ -101,7 +101,7 @@ export const CreateEnumerator = () => {
                     setTimeout(() => setValidationError(''), 3000);
                 }
             })();
-        }
+        
     };
 
     return (

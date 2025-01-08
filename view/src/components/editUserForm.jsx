@@ -61,6 +61,7 @@ export const EditUserForm = ({ formHeader, lga = true, gender = true, phone = tr
     
 
     const handleSubmit = (e) => {
+        console.log('submitting')
         e.preventDefault();
         (async () => {
             try {
@@ -77,22 +78,22 @@ export const EditUserForm = ({ formHeader, lga = true, gender = true, phone = tr
                 console.log(response)
                 setSuccess('User updated Successfully');
                 const success = true;
-                if (success) {
-                    setFormData({
-                        fullName: '',
-                        gender: '',
-                        phone: '',
-                        email: '',
-                        password: '',
-                        address: '',
-                        bankName: '',
-                        accountNumber: '',
-                        lga: '',
-                        bvn: '',
-                        nin: "",
-                        image: null,
-                    })
-                }
+                // if (success) {
+                //     setFormData({
+                //         fullName: '',
+                //         gender: '',
+                //         phone: '',
+                //         email: '',
+                //         password: '',
+                //         address: '',
+                //         bankName: '',
+                //         accountNumber: '',
+                //         lga: '',
+                //         bvn: '',
+                //         nin: "",
+                //         image: null,
+                //     })
+                // }
             } catch (err) {
                 console.log(err)
                 if (err.response.data.status === 401) return navigate('/sign-in')

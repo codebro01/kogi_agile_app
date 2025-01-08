@@ -700,7 +700,7 @@ export const UpdateStudent = React.memo(() => {
                                     error={errors.image}
                                     helperText={errors.image && 'image is required'}
                                     style={{
-                                        backgroundColor: '#546e13',
+                                        backgroundColor: '#196b57',
                                         color: '#fff',
                                     }}
                                 >
@@ -722,7 +722,7 @@ export const UpdateStudent = React.memo(() => {
                                     color="primary"
                                     fullWidth
                                     style={{
-                                        backgroundColor: '#546e13',
+                                        backgroundColor: '#196b57',
                                         color: '#fff', // Optional: To make the text readable on the green background
                                     }}
                                 >

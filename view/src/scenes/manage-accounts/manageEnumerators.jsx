@@ -108,6 +108,8 @@ export const ManageEnumerators = () => {
         fetchData();
     }, [handleToggle, handleDelete]);
 
+
+
 // ! Here handle filters 
     const handleFilter = async () => {
         try {
@@ -193,9 +195,9 @@ export const ManageEnumerators = () => {
                     Results
                 </Typography>
 
-                <Box>
+                <Box sx={{ overflowX: "scroll", maxHeight: "700px" }}>
                     {students.length > 0 ? (
-                        <Table sx={{ minWidth: 650 }} aria-label="student table">
+                        <Table sx={{  overflowX:"scroll", maxHeight: "700px" }} aria-label="student table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Full Name</TableCell>
@@ -211,7 +213,7 @@ export const ManageEnumerators = () => {
                                         <TableCell>{student.surname + student.otherNames}</TableCell>
                                         <TableCell>{student.lga}</TableCell>
                                         <TableCell>{student.ward}</TableCell> {/* Replace with actual field */}
-                                        <TableCell>{student.createdBy}</TableCell> {/* Replace with actual field */}
+                                        <TableCell>{student.createdBy.fullName}</TableCell> {/* Replace with actual field */}
                                         {/* Add more table cells based on your schema */}
                                     </TableRow>
                                 ))}

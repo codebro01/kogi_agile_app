@@ -73,7 +73,7 @@ export const tokens = (mode) => ({
           brown: "#8f4714", 
         },
         main: {
-          darkGreen: "#546e13",
+          darkGreen: "#196b57",
           lightGreen: "#a5e52d",
           darkText: "#adadad",
           lightText: "#fcfcfc",

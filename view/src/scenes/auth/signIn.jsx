@@ -11,13 +11,11 @@ import { SpinnerLoader } from '../../components/spinnerLoader';
 
 export const SignInForm = () => {
     const theme = useTheme();
-    const { login, userPermissions } = useAuth(); // Access login function from context
+    const colors = tokens(theme.palette.mode)
+    const [validationError, setValidationError] = useState('');
+    const [isLoading, setIsLoading] = useState(false)
 
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
-    const [validationError, setValidationError] = useState('')
+    const { login, userPermissions } = useAuth(); // Access login function from context
 
 
 
@@ -30,41 +28,28 @@ export const SignInForm = () => {
         event.preventDefault();
     };
 
-    const [errors, setErrors] = useState({
-        email: false,
-        password: false,
-    });
+ 
 
 
-    // Handle input changes
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
+
 
     // Handle form submit
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Simple validation
-        const newErrors = {
-            email: !formData.email || !/\S+@\S+\.\S+/.test(formData.email),
-            password: !formData.password,
-        };
-        setErrors(newErrors);
+     
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get('email');
+        const password = formData.get('password');
 
 
-
-        if (!Object.values(newErrors).includes(true)) {
 
 
 
             (async () => {
                 try {
-
-                    const response = await axios.post(`${API_URL}/admin-admin/login`, formData, { withCredentials: true });
+                    setIsLoading(true)
+                    const response = await axios.post(`${API_URL}/admin-admin/login`, {email, password}, { withCredentials: true });
                     const { token, tokenUser, allPermissionNames } = response.data;
 
                     login(token, tokenUser, allPermissionNames); // Set token globally using context
@@ -73,106 +58,175 @@ export const SignInForm = () => {
                     } else {
                         navigate('/dashboard/sign-in');
                     }
+                    setIsLoading(false)
+                    console.log(response)
 
                 }
                 catch (err) {
                     navigate('/dashboard/sign-in')
-                    console.log(err.response?.message);
+                    setIsLoading(false)
+                    console.log(err);
                     setValidationError(err.response?.message);
                     setTimeout(() => {
                         setValidationError('');
                     }, 3000)
                 }
             })();
-        }
+        
 
 
 
     };
 
     return (
-        <Container maxWidth="100w" sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-            width: "100%",
-            backgroundImage: "url('/landing-agile.jpg')", // Add your image URL here
-            backgroundSize: "cover", // Makes the background image cover the entire container
-            backgroundPosition: "center",
-        }}>
-            <Box sx={{
-                marginTop: theme.spacing(4),
-                boxShadow: 3, // Material-UI's shadow scale (1 to 24)
-                padding: 3,
-                borderRadius: 2,
-                backgroundColor: "white", // Optional: Ensure a background color for visibility
-                maxWidth: 350, // Optional: Set a maximum width for the form
-                margin: "0 auto",
-            }}>
-                <Typography variant="h4" gutterBottom align="center">
-                    Sign In
-                </Typography>
-                <form onSubmit={handleSubmit} >
-                    <Grid container spacing={2}>
+        <Box
+            sx={{
+                backgroundImage: `url("/landing-agile.jpg")`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                minHeight: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: "column",
+                gap: "2rem"
+            }}
+        >
 
 
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Email"
-                                name="email"
-                                variant="outlined"
-                                fullWidth
-                                value={formData.email}
-                                onChange={handleChange}
-                                error={errors.email}
-                                helperText={errors.email ? 'Valid email is required' : ''}
 
-                            />
-                        </Grid>
+            <Container maxWidth="xs">
+                <Paper
+                    elevation={6}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 4,
+                        borderRadius: 2,
+                        backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                    }}
+                >
 
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Password"
-                                name="password"
-                                type={showPassword ? "text" : "password"}
-                                variant="outlined"
-                                fullWidth
-                                value={formData.password}
-                                onChange={handleChange}
-                                error={errors.password}
-                                helperText={errors.password ? "Password is required" : ""}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={handleMouseDownPassword}
-                                                edge="end"
-                                            >
-                                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
+                    <Box
+                        component="img"
+                        src="/portal-landing-logo.png" // Replace with your logo path
+                        alt="Logo"
+                        sx={{
+
+                            // position: "absolute",
+                            // top: 16, // Distance from the top of the form
+                            // left: 16, // Distance from the left of the form
+                            width: 200, // Adjust logo size
+                            height: "auto",
+                        }}
+                    />
+
+                    <Divider
+                        sx={{
+                            marginY: 2,
+                            "&::before, &::after": {
+                                borderColor: colors.main["darkGreen"], // Line color
+                            },
+                            fontSize: "1.2rem",
+                            color: colors.main["darkGreen"], // Text color
+                            fontWeight: "bold", // Text weight
+                            width: "100%"
+                        }}
+                    >
+                        ADMIN SIGN IN
+                    </Divider>
+
+
+                    <Box
+                        component="form"
+                        onSubmit={handleSubmit}
+                        noValidate
+                        sx={{ mt: 2 }}
+                    >
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                            sx={{
+                                borderColor: colors.main["lightGreen"],
+                            }}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{
+                                mt: 3,
+                                mb: 2,
+                                fontSize: "1.2rem",
+                                background: validationError
+                                    ? "red" // Highlight button if there's a validation error
+                                    : isLoading
+                                        ? "white"
+                                        : colors.main["darkGreen"],
+                                color: validationError ? "white" : "inherit", // Adjust text color for error state
+                                "&:hover": {
+                                    background: validationError
+                                        ? "darkred"
+                                        : colors.main["lightGreen"],
+                                    opacity: 0.9, // Slightly transparent on hover
+                                },
+                            }}
+                            disabled={isLoading || !!validationError} // Disable butt   on if loading or error exists
+                        >
+                            {isLoading ? <SpinnerLoader /> : "Submit"}
+                        </Button>
+
+                        {/* Render validation error message */}
+                        {validationError && (
+                            <Typography
+                                sx={{
+                                    color: "red",
+                                    fontSize: "0.9rem",
+                                    mt: 1, // Add spacing between button and error message
+                                    textAlign: "center",
                                 }}
-                            />
-                        </Grid>
+                            >
+                                {validationError}
+                            </Typography>
+                        )}
 
-                        <Grid item xs={12}>
-                            <Box textAlign="center">
-                                <Button type="submit" variant="contained" color="primary" size="large">
-                                    Submit
-                                </Button>
-                            </Box>
-                        </Grid>
-                        <Typography variant='p'>
-                            {validationError && validationError}
-                        </Typography>
-                    </Grid>
-                </form>
-            </Box>
-        </Container>
+
+
+
+                        <Box textAlign="center" sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+                            <Typography fontWeight="600">
+                                POWERED BY
+                            </Typography>
+
+                            <Typography fontWeight="600" sx={{
+                                color: colors.main["darkGreen"]
+                            }}>
+                                KOGI STATE MINISTRY OF EDUCATION
+                            </Typography>
+                        </Box>
+
+                    </Box>
+                </Paper>
+            </Container>
+        </Box>
     );
 };
 
@@ -223,6 +277,8 @@ export const EnumeratorSignInForm = () => {
 
 
     };
+
+    console.log(validationError)
 
     return (
         <Box

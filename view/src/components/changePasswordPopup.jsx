@@ -79,7 +79,7 @@ export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
                 color="primary"
                 onClick={handleOpen}
                 sx={{
-                    background: "#546e13"
+                    background: "#196b57"
                 }}
             >
                 Change Password
@@ -162,7 +162,7 @@ export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
                         <Button
                             type="submit"
                             variant="contained"
-                            sx={{ bgcolor: '#546e13', '&:hover': { bgcolor: '#43540f' } }}
+                            sx={{ bgcolor: '#196b57', '&:hover': { bgcolor: '#43540f' } }}
                         >
                             Submit
                         </Button>

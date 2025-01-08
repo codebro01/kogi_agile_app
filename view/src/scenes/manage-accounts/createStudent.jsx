@@ -25,7 +25,7 @@ export const CreateStudent = () => {
   ]);
 
   const [occupations, setOccupation] = useState([
-    'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser',"Business Person", 'Others'
+    'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser', "Business Person", 'Others'
   ])
 
 
@@ -192,38 +192,38 @@ export const CreateStudent = () => {
         setSuccess(true);
         setSuccessMessage(`Great Job!!! New student registration successful!!!`)
         const formSubmissionSuccess = true;
-        if (formSubmissionSuccess) {
-          // Clear form fields
-          setFormData({
-            ward: "",
-            schoolId: "",
-            surname: "",
-            otherNames: "",
-            studentNin: "",
-            dob: "",
-            stateOfOrigin: "",
-            lga: "",
-            lgaOfEnrollment: "",
-            gender: "",
-            communityName: "",
-            residentialAddress: "",
-            presentClass: "",
-            yearAdmitted: "",
-            yearOfErollment: "",
-            classAtEnrollment: "",
-            parentPhone: "",
-            parentName: "",
-            parentNin: "",
-            nationality: "Nigeria",
-            parentContact: "",
-            parentOccupation: "",
-            bankName: "",
-            accountNumber: "",
-            image: null,
-          });
+        // if (formSubmissionSuccess) {
+        //   // Clear form fields
+        //   setFormData({
+        //     ward: "",
+        //     schoolId: storedSchool._id,
+        //     surname: "",
+        //     otherNames: "",
+        //     studentNin: "",
+        //     dob: "",
+        //     stateOfOrigin: "",
+        //     lga: "",
+        //     lgaOfEnrollment: "",
+        //     gender: "",
+        //     communityName: "",
+        //     residentialAddress: "",
+        //     presentClass: "",
+        //     yearAdmitted: "",
+        //     yearOfErollment: "",
+        //     classAtEnrollment: "",
+        //     parentPhone: "",
+        //     parentName: "",
+        //     parentNin: "",
+        //     nationality: "Nigeria",
+        //     parentContact: "",
+        //     parentOccupation: "",
+        //     bankName: "",
+        //     accountNumber: "",
+        //     image: null,
+        //   });
 
-          // Optionally display a success message or reset other states
-        }
+        //   // Optionally display a success message or reset other states
+        // }
         setTimeout(() => setSuccessMessage(''), 10000);
 
         setFormSubmissionLoading(false)
@@ -677,7 +677,7 @@ export const CreateStudent = () => {
                   variant="contained"
                   fullWidth
                   sx={{
-                    backgroundColor: "#546e13",
+                    backgroundColor: "#196b57",
                     color: "#ffffff",
                     "&:hover": {
                       backgroundColor: "#40550f", // Slightly darker green for hover

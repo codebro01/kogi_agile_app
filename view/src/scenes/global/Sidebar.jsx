@@ -107,16 +107,16 @@ const Sidebar = ({ isSidebar }) => {
               onClick={() => setIsCollapsed(!isCollapsed)}
               sx={{
                 '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#546e13',  // Color of the switch when checked
+                  color: '#',  // Color of the switch when checked
                 },
                 '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#546e13',  // Color of the track when checked
+                  backgroundColor: '#',  // Color of the track when checked
                 },
                 '& .MuiSwitch-switchBase': {
-                  color: '#546e13',  // Color of the switch when unchecked
+                  color: '#',  // Color of the switch when unchecked
                 },
                 '& .MuiSwitch-switchBase + .MuiSwitch-track': {
-                  backgroundColor: '#546e13',  // Color of the track when unchecked
+                  backgroundColor: '#',  // Color of the track when unchecked
                 },
               }}
             />
@@ -229,13 +229,13 @@ const Sidebar = ({ isSidebar }) => {
                 setSelected={setSelected}
               />
 
-              <Item
+              {/* <Item
                 title="Manage School"
                 to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : 'enumerator-dashboard/view-all-students-data'}
                 icon={<SchoolIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              />
+              /> */}
               </>
               }
 

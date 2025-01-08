@@ -121,7 +121,7 @@ export const RoleSelector = () => {
                             <MenuItem value="admin">Register new Admin</MenuItem>
                             <MenuItem value="enumerator">Register new Enumerator</MenuItem>
                             <MenuItem value="payrollSpecialist">Register Payroll Specialist</MenuItem>
-                            <MenuItem value="school">Add School</MenuItem>
+                            {/* <MenuItem value="school">Add School</MenuItem> */}
                         </Select>
                     </FormControl>
                     <Box

@@ -17,7 +17,7 @@ export const PersonLoader = () => {
             width: 64px;
             height: 64px;
             border-radius: 50%;
-            background: #546e13;
+            background: #196b57;
             transform: translate(-50%, 100%) scale(0);
             animation: push 2s infinite ease-in;
           }

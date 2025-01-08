@@ -7,6 +7,11 @@ import { Box } from '@mui/material';
 export const StudentsContext = createContext();
 export const SchoolsContext = createContext();
 export const WardsContext = createContext();
+const chartContext = createContext();
+
+
+
+
 
 // Create the provider component
 export const DataProvider = ({ children }) => {
@@ -16,6 +21,10 @@ export const DataProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSchool, setSelectedSchool] = useState(null);
+  const [user, setUser] = useState({
+    isAdmin: false,  // Change this according to your user data
+    // Add other user data like token, name, etc.
+  });
 
   const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
   const token = localStorage.getItem('token') || '';
@@ -36,13 +45,6 @@ export const DataProvider = ({ children }) => {
           }),
           axios.get(`${API_URL}/all-schools`),
           axios.get(`${API_URL}/wards`),
-          axios.get(`${API_URL}/student/`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-            withCredentials: true,
-          }),
         ]);
 
         setStudentsData(studentsRes.data.students);
@@ -67,7 +69,7 @@ export const DataProvider = ({ children }) => {
     <StudentsContext.Provider value={{ studentsData, setStudentsData }}>
       <SchoolsContext.Provider value={{ selectedSchool, setSelectedSchool, schoolsData }}>
         <WardsContext.Provider value={{ wardsData }}>
-          {loading ? <Box sx= {{display: "flex", justifyContent:"center", alignItems: "center", height: "80vh"}}><SpinnerLoader /></Box> : children}
+          {loading ? <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}><SpinnerLoader /></Box> : children}
           {error && <div>Error: {error.message}</div>}
         </WardsContext.Provider>
       </SchoolsContext.Provider>
