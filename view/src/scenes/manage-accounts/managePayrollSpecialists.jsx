@@ -16,7 +16,6 @@ export const ManagePayrollSpecialists = () => {
     const handleResetPassword = async (id) => {
         try {
 
-            console.log(id)
             const response = await axios.patch(
                 `${API_URL}/payroll-specialists/reset-password`,
                 {},

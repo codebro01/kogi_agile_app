@@ -61,7 +61,6 @@ export const EditUserForm = ({ formHeader, lga = true, gender = true, phone = tr
     
 
     const handleSubmit = (e) => {
-        console.log('submitting')
         e.preventDefault();
         (async () => {
             try {
@@ -74,8 +73,7 @@ export const EditUserForm = ({ formHeader, lga = true, gender = true, phone = tr
                     },
                     withCredentials: true,
                 });
-                console.log(formData)
-                console.log(response)
+               
                 setSuccess('User updated Successfully');
                 const success = true;
                 // if (success) {
@@ -118,7 +116,6 @@ export const EditUserForm = ({ formHeader, lga = true, gender = true, phone = tr
                     },
                     withCredentials: true,
                 });
-                console.log(response.data)
                  const role = response.data;
                 setFetchingPrevData(false)
 

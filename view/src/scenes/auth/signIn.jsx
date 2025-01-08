@@ -278,7 +278,6 @@ export const EnumeratorSignInForm = () => {
 
     };
 
-    console.log(validationError)
 
     return (
         <Box

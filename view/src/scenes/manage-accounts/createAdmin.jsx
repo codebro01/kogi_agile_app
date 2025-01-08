@@ -36,7 +36,6 @@ export const CreateAdmin = () => {
         e.preventDefault();
 
         // Log the form data to verify
-        console.log(formData);
         (async () => {
             try {
                 const token = localStorage.getItem('token');

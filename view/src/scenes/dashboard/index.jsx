@@ -237,7 +237,7 @@ const Dashboard = () => {
           >
             <StatBox
               title={primary6Students?.length}
-              subtitle="Total Enumerators"
+              subtitle="Total Primary 6"
               progress="0.75"
               borderRadius="5px"
               icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
@@ -261,7 +261,7 @@ const Dashboard = () => {
           >
             <StatBox
               title={jss1Students?.length}
-              subtitle="Total wards Regististered"
+              subtitle="Total JSS 1"
               progress="0.75"
               borderRadius="5px"
               icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
@@ -285,7 +285,7 @@ const Dashboard = () => {
           >
             <StatBox
               title={jss3Students?.length}
-              subtitle="Total LGA Registered"
+              subtitle="Total JSS 3"
               progress="0.75"
               borderRadius="5px"
               icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
@@ -309,7 +309,7 @@ const Dashboard = () => {
           >
             <StatBox
               title={ss1Students?.length}
-              subtitle="Total School Enrolled"
+              subtitle="Total SS 1"
               progress="0.75"
               borderRadius="5px"
               icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
@@ -332,12 +332,12 @@ const Dashboard = () => {
           >
             <StatBox
               title={getNumberOfDistinctSchools(studentsData)}
-              subtitle="Total Basic 6"
+              subtitle="Total School Registered"
               progress="0.50"
               icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
             />
           </Box>
-          <Box
+          {/* <Box
             className="statBoxContainer"
             sx={{
               gridColumn: {
@@ -399,7 +399,7 @@ const Dashboard = () => {
               progress="0.50"
               icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
             />
-          </Box>
+          </Box> */}
 
           <Box
             className="statBoxContainer"

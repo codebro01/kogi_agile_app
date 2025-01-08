@@ -26,7 +26,6 @@ export const ResponsiveBarChart = () => {
                     withCredentials: true,
                 })
 
-                console.log(response);
                 setApiDataLoading(false)
                 setApiData(response.data)
             }
@@ -37,7 +36,6 @@ export const ResponsiveBarChart = () => {
         })()
     }, []);
 
-    console.log(apiData)
 
     const data = {
         labels: apiData.map(oneApiData => oneApiData.enumeratorName.split(' ')[0]), // Label each slice by the enumerator's name

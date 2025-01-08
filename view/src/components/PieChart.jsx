@@ -27,7 +27,6 @@ export const ResponsivePieChart = () => {
                 })
                 setApiDataLoading(false)
 
-                console.log(response.data.lgaCounts);
                 setApiData(response.data.lgaCounts)
             }
             catch (err) {

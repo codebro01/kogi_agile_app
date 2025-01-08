@@ -76,7 +76,6 @@ export const CreateEnumerator = () => {
                         withCredentials: true,
                     });
                     setSuccess('Enumerator Registered Successfully');
-                    console.log(response)
                     const success = true;
                     // if(success) {
                     //     setFormData({
