@@ -60,6 +60,8 @@ const Sidebar = ({ isSidebar }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  console.log(userPermissions.length === 2);
+
   return (
     <Box className={`sidebark ${isSidebar ? "" : "collapsed"}`}
       sx={{
@@ -186,13 +188,15 @@ const Sidebar = ({ isSidebar }) => {
             >
               
             </Typography>} */}
-            <Item
-              title="Register Account"
+
+            {!userPermissions.includes('handle_payments') &&  (    <Item
+              title={userPermissions.includes('handle_registrars') ? 'Register Account' : 'Register Student'}
               to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/role-selector' : '/admin-dashboard/create-student-school-selector'}
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> )}
+        
             <Item
               title="Manage Students"
               to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : 'enumerator-dashboard/view-all-students-data'}

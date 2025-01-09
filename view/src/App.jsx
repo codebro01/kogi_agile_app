@@ -82,7 +82,7 @@ function App() {
     )
   }
 
-  if (subdomain === 'miscct') {
+  if (subdomain === 'enrolment' || subdomain === 'enrollment') {
     return (
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
@@ -101,7 +101,7 @@ function App() {
                   path="/*"
                   element={
                     <DataProvider>
-                        <Routes>
+                      <Routes>
                         <Route path="/enumerator-dashboard" element={<Dashboard />} />
                         <Route path="/enumerator-dashboard/view-all-students-data" element={<ViewAllStudentsData />} />
                         <Route path="/export-attendance-sheet" element={<ExportAttendanceSheet />} />
@@ -109,7 +109,7 @@ function App() {
                         <Route path="/admin-dashboard/create-accounts/register-student" element={<CreateStudent />} />
                         <Route path="/admin-dashboard/update-student/:id" element={<UpdateStudent />} />
                         <Route path="/index.html" element={<Navigate to="/" />} />
-                        </Routes>
+                      </Routes>
                     </DataProvider>
                   }
                 />
@@ -140,8 +140,8 @@ function App() {
                   path="/*"
                   element={
                     <DataProvider>
-                        <Routes>
-                        <Route path="/admin-dashboard" element={<Dashboard />} />
+                      <Routes>
+                        <Route path="/enumerator-dashboard" element={<Dashboard />} />
                         <Route path="/admin-dashboard/create-student-school-selector" element={<RegistrationSelector />} />
                         <Route path="/admin-dashboard/role-selector" element={<RoleSelector />} />
                         <Route path="/admin-dashboard/create-accounts/register-admin" element={<CreateAdmin />} />
@@ -154,7 +154,7 @@ function App() {
                         <Route path="/admin-dashboard/manage-accounts/enumerators/edit-enumerator/:id" element={<EditEnumerator />} />
                         <Route path="/admin-dashboard/manage-accounts/payroll-specialists/edit-payroll-specialists/:id" element={<EditPayrollSpecialists />} />
                         <Route path="/index.html" element={<Navigate to="/" />} />
-                        </Routes>
+                      </Routes>
                     </DataProvider>
                   }
                 />
@@ -172,7 +172,12 @@ export default App;
 
 
 const getSubdomain = () => {
-  const hostname = window.location.hostname;
+  const hostname = window.location.hostname; // e.g., 'www.subdomain.something.org'
   const parts = hostname.split('.');
-  return parts.length >= 2 ? parts[0] : 'default';
-};
+
+  return parts.length >= 2
+    ? parts[0].toLowerCase() === 'www'
+      ? parts[1] // Subdomain after 'www'
+      : parts[0] // Direct subdomain
+    : 'default'; // No subdomain
+}

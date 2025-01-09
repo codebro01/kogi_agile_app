@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import {
     Container, useTheme, Typography, Table, Button, TableBody, TableCell,
-    Select, MenuItem, TableContainer, TableHead, TableRow, Paper, Box, TextField, IconButton, Grid, InputLabel
+    Select, MenuItem, TableContainer, TableHead, TableRow, Paper, Box, TextField, IconButton, Grid, InputLabel, Autocomplete,
 } from '@mui/material';
 import { StudentsContext, WardsContext } from '../../components/dataContext';
 import axios from 'axios';
@@ -11,6 +11,10 @@ import { tokens } from "../../theme";
 import { PersonLoader } from '../../components/personLoader';
 import { useAuth } from '../auth/authContext';
 import { getNigeriaStates } from 'geo-ng';
+import lgasAndWards from '../../Lga&wards.json';
+import { SchoolsContext } from "../../components/dataContext.jsx";
+// Import context
+
 
 
 
@@ -20,7 +24,14 @@ export const AdminViewAllStudentsData = () => {
     const colors = tokens(theme.palette.mode)
     const navigate = useNavigate();
     // const [filterLoading, setFilterLoading] = useState(false);
-    const { studentsData, loading, setStudentsData } = useContext(StudentsContext);
+    const { studentsData, setStudentsData } = useContext(StudentsContext);
+    const { setSelectedSchool, loading, selectedSchool, schoolsData } = useContext(SchoolsContext); // Access context
+    const schools = schoolsData;
+    const [selectedSchoolState, setSelectedSchoolState] = useState(null); // State to hold the selected school object
+    const [schoolOptions, setSchoolOptions] = useState([]); // Start with an empty array
+    const [hasMore, setHasMore] = useState(true); // To check if more data is available
+    const [loadingSchools, setLoadingSchools] = useState(false); // Loading state for schools
+    const [page, setPage] = useState(1); // Kee
     const { wardsData } = useContext(WardsContext);
     const [yearsOfAdmissionData, setYearsOfAdmissionData] = useState([]);
     const [filterError, setFilterError] = useState(null);
@@ -30,26 +41,65 @@ export const AdminViewAllStudentsData = () => {
     const [lgasData, setLgasData] = useState([]);
     const [enumeratorsData, setEnumeratorsData] = useState([]);
     const [fetchLoading, setFetchLoading] = useState(false)
-    const [enumeratorsLoading, setEnumeratorsLoading] = useState(false)
+    const [enumeratorsLoading, setEnumeratorsLoading] = useState(false);
 
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
     const token = localStorage.getItem('token') || '';
     const [filters, setFilters] = useState({
         ward: '',
         presentClass: '',
-        classAtEnrollment: "",
         sortBy: '',
         sortOrder: "",
         lga: '',
         schoolId: '',
         nationality: "",
-        state: "",
+        stateOfOrigin: "",
         enumerator: "",
         dateFrom: "",
         dateTo: "",
         yearOfEnrollment: "",
         yearOfAdmission: "",
     });
+
+    useEffect(() => {
+        if (schools && schools.length > 0) {
+            setSchoolOptions(schools); // Set schools if available
+        }
+    }, [schools]); // Re-run whenever schools change
+    const loadMoreSchools = async () => {
+        if (loadingSchools || !hasMore) return;
+
+        setLoadingSchools(true);
+
+        // Fetch the next batch of schools here (this is just a mock-up)
+        const nextSchools = await fetchMoreSchools(page);
+
+        if (nextSchools.length > 0) {
+            setSchoolOptions((prev) => [...prev, ...nextSchools]); // Append new schools to the list
+            setPage((prev) => prev + 1); // Increment the page
+        } else {
+            setHasMore(false); // No more schools to load
+        }
+
+        setLoadingSchools(false);
+    };
+
+    const fetchMoreSchools = async (page) => {
+        // Simulate network request to fetch schools for the current page
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const startIndex = (page - 1) * 20;
+                resolve(schools.slice(startIndex, startIndex + 20)); // Return a slice of the schools array
+            }, 1000);
+        });
+    };
+
+
+
+
+
+
+
     const params = {
         ward: filters.ward,
         presentClass: filters.presentClass,
@@ -75,7 +125,7 @@ export const AdminViewAllStudentsData = () => {
     const sortParam = {
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
-    }; 
+    };
 
 
     const yearOfAdmissionOptions = [{ year: '2020' }, { year: '2021' }, { year: '2022' }, { year: '2023' }, { year: '2024' }, { year: '2025' }];
@@ -102,9 +152,6 @@ export const AdminViewAllStudentsData = () => {
 
         })()
     }, [])
-
-
-
     // ! Nationality state and local government data set up
     const nationalityOptions = [
         { value: 'Nigeria', label: 'Nigeria' },
@@ -135,19 +182,6 @@ export const AdminViewAllStudentsData = () => {
         }
     }, [filters.state, filters.nationality]);
 
-    const handleStateChange = (selectedState) => {
-        setFilters({
-            ...filters,
-            state: selectedState,
-            lga: '' // Reset LGA when state changes
-        });
-    };
-
-
-
-
-
-
     const clearFilters = () => {
         setFilters({
             ward: '',
@@ -159,15 +193,12 @@ export const AdminViewAllStudentsData = () => {
         setStudentsData(studentsData);
     };
 
-
     const classOptions = [
         { class: "Primary 6", id: 1 },
         { class: "JSS 1", id: 2 },
         { class: "JSS 3", id: 3 },
         { class: "SSS 1", id: 4 },
     ];
-
-
 
 
     const fetchStudents = async () => {
@@ -191,27 +222,36 @@ export const AdminViewAllStudentsData = () => {
             document.body.appendChild(link);
             link.click();
         } catch (error) {
-            console.log(error)
+            console.log(error?.response?.statusText)
+            setFilterError(error?.response?.statusText)
         }
     }
 
 
     const handleInputChange = useCallback((e) => {
         const { name, value } = e.target;
-        setFilters((prevFilters) => ({
-            ...prevFilters,
-            [name]: value,
-        }));
-    }, [])
+        setFilters((prevFilters) => {
+            const updatedFilters = {
+                ...prevFilters,
+                [name]: value,
+            };
+            return updatedFilters;
+        });
+    }, []);
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
         fetchStudents();
     };
 
-    const handleEdit = (student) => {
-        navigate(`/admin-dashboard/update-student/${student._id}`, { state: student })
-    };
+    // const handleEdit = (student) => {
+    //     navigate(`/admin-dashboard/update-student/${student._id}`, { state: student })
+    // };
+
+    console.log(statesData);
+    console.log(filters)
+
 
     if (loading)
         return (
@@ -262,6 +302,71 @@ export const AdminViewAllStudentsData = () => {
                         </Typography>
                         <Grid container spacing={2} alignItems="center">
                             {/* Existing Fields */}
+
+                            <Grid item xs={12} sm={6} md={4}>
+                                <InputLabel id="lga-label" sx={{ marginBottom: 1 }}>All Schools</InputLabel>
+                                {schoolOptions.length > 0 ? (
+                                    <Autocomplete
+                                        sx={{
+                                            width: '100%',
+                                            '& .MuiAutocomplete-input': {
+                                                height: '5px', // Adjust input field height
+                                                borderRadius: '4px',
+                                                padding: '10px',
+
+
+                                            },
+                                        }}
+                                        id="school-select"
+                                        value={schoolOptions.find((option) => option._id === filters.schoolId) || null
+                                        }
+                                        onChange={(event, newValue) => {
+                                            setFilters((prevFilters) => ({
+                                                ...prevFilters,
+                                                schoolId: newValue?._id || null,
+                                            }));
+                                        }}
+                                        options={schoolOptions}
+                                        getOptionLabel={(option) => option?.schoolName || ''}
+                                        isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="School"
+                                                sx={{
+                                                    '& .MuiOutlinedInput-root': {
+                                                        '& fieldset': {
+                                                            borderColor: 'green',
+                                                        },
+                                                        '&:hover fieldset': {
+                                                            borderColor: 'darkgreen',
+                                                        },
+                                                        '&.Mui-focused fieldset': {
+                                                            borderColor: 'green',
+                                                            borderWidth: 2,
+                                                        },
+                                                    },
+                                                }}
+                                            />
+                                        )}
+                                        loading={loadingSchools}
+                                        noOptionsText="No schools found"
+                                        getOptionKey={(option, index) => option?._id || `${option.schoolName}-${index}`} // Unique key
+                                    />
+
+
+                                ) : (
+                                    <Typography
+                                        variant="body1"
+                                        color="textSecondary"
+                                        sx={{ textAlign: 'center', marginTop: 2 }}
+                                    >
+                                        No schools available
+                                    </Typography>
+                                )
+
+                                }
+                            </Grid>
                             <Grid item xs={12} sm={6} md={4}>
                                 <InputLabel id="lga-label" sx={{ marginBottom: 1 }}>All LGA</InputLabel>
                                 <Select
@@ -276,14 +381,14 @@ export const AdminViewAllStudentsData = () => {
                                     <MenuItem value="">
                                         <em>All LGA</em>
                                     </MenuItem>
-                                    {lgasData.map((lga) => (
-                                        <MenuItem key={lga} value={lga}>
-                                            {lga}
+                                    {lgasAndWards.map((lga) => (
+                                        <MenuItem key={lga.name} value={lga.name}>
+                                            {lga.name}
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </Grid>
-                            
+
                             <Grid item xs={12} sm={6} md={4}>
                                 <InputLabel id="ward-label" sx={{ marginBottom: 1 }}>Select Ward</InputLabel>
                                 <Select
@@ -296,15 +401,19 @@ export const AdminViewAllStudentsData = () => {
                                     labelId="ward-label"
                                 >
                                     <MenuItem value="">
-                                        <em>All Ward</em>
+                                        <em>All Wards</em>
                                     </MenuItem>
-                                    {wardsData?.map((ward) => (
-                                        <MenuItem key={ward._id} value={ward._id}>
-                                            {ward.name}
-                                        </MenuItem>
-                                    ))}
+                                    {lgasAndWards
+                                        ?.flatMap((lga) => lga.wards) // Flatten all wards into a single array
+                                        .sort((a, b) => a.localeCompare(b)) // Sort the array alphabetically
+                                        .map((ward, index) => (
+                                            <MenuItem key={index} value={ward}>
+                                                {ward}
+                                            </MenuItem>
+                                        ))}
                                 </Select>
                             </Grid>
+
 
                             <Grid item xs={12} sm={6} md={4}>
                                 <InputLabel id="class-label" sx={{ marginBottom: 1 }}>Present Class</InputLabel>
@@ -327,27 +436,7 @@ export const AdminViewAllStudentsData = () => {
                                     ))}
                                 </Select>
                             </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <InputLabel id="class-label" sx={{ marginBottom: 1 }}> Enrollment class</InputLabel>
-                                <Select
-                                    name="classAtEnrollment"
-                                    value={filters.classAtEnrollment}
-                                    onChange={handleInputChange}
-                                    displayEmpty
-                                    fullWidth
-                                    size="small"
-                                    labelId="class-label"
-                                >
-                                    <MenuItem value="">
-                                        <em>Class at Enrollment</em>
-                                    </MenuItem>
-                                    {classOptions?.map((option) => (
-                                        <MenuItem key={option.id} value={option.class}>
-                                            {option.class}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </Grid>
+
 
                             {/* New Fields */}
                             <Grid item xs={12} sm={6} md={4}>
@@ -372,31 +461,26 @@ export const AdminViewAllStudentsData = () => {
                                 </Select>
                             </Grid>
 
-                            {filters.nationality === 'Nigeria' && (
-                                <Grid item xs={12}>
-                                    <TextField
-                                        label="State of Origin"
-                                        name="stateOfOrigin"
-                                        select
-                                        variant="outlined"
-                                        fullWidth
-                                        value={filters.state || ''}
-                                        onChange={(e) => handleStateChange(e.target.value)}
-                                        error={filters.stateOfOrigin === ''} // For example, you can pass `true` or `false` here
-                                        helperText={filters.stateOfOrigin === '' ? 'State of Origin is required' : ''}
-                                    >
-                                        {statesData.map((state) => (
-                                            <MenuItem key={state} value={state}>
-                                                {state}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
-                            )}
-
-                         
-
-
+                            <Grid item xs={12} sm={6} md={4}>
+                                <InputLabel id="lga-label" sx={{ marginBottom: 1 }}>All states</InputLabel>
+                                <Select
+                                    name="stateOfOrigin"
+                                    value={filters.stateOfOrigin || ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    size="small"
+                                    labelId="state-label"
+                                >
+                                    <MenuItem value="">
+                                        <em>All States</em>
+                                    </MenuItem>
+                                    {statesData.map((state) => (
+                                        <MenuItem key={state} value={state}>
+                                            {state}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </Grid>
 
                             <Grid item xs={12} sm={6} md={4}>
                                 <InputLabel id="enumerator-label" sx={{ marginBottom: 1 }}>All Enumerator</InputLabel>
@@ -442,7 +526,7 @@ export const AdminViewAllStudentsData = () => {
                                 </Select>
                             </Grid>
 
-                            <Grid item xs={12} sm={6} md={4}>
+                            {/* <Grid item xs={12} sm={6} md={4}>
                                 <InputLabel id="yearOfAdmission-label" sx={{ marginBottom: 1 }}>Year of Admission</InputLabel>
                                 <Select
                                     name="yearOfAdmission"
@@ -454,7 +538,7 @@ export const AdminViewAllStudentsData = () => {
                                     labelId="yearOfAdmission-label"
                                 >
                                     <MenuItem value="">
-                                        <em>Year of Admission</em>
+                                        <em>All Year</em>
                                     </MenuItem>
                                     {yearOfAdmissionOptions?.map((yearOfAdmission, index) => (
                                         <MenuItem key={index} value={yearOfAdmission.year}>
@@ -462,7 +546,7 @@ export const AdminViewAllStudentsData = () => {
                                         </MenuItem>
                                     ))}
                                 </Select>
-                            </Grid>
+                            </Grid> */}
 
                             {/* Existing Fields */}
                             <Grid item xs={12} sm={6} md={4}>
@@ -507,11 +591,6 @@ export const AdminViewAllStudentsData = () => {
                                     </Select>
                                 </Grid>
                             )}
-
-
-
-
-
 
                             {/* Date Filter */}
                             <Grid item xs={12} sm={6} md={4}>
@@ -569,6 +648,12 @@ export const AdminViewAllStudentsData = () => {
                                 Export Data
                             </Button>
                         </Box>
+
+                        {filterError && (
+                            <Typography>
+                                {filterError}
+                            </Typography>
+                        )}
                     </Box>
 
 

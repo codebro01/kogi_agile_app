@@ -51,7 +51,7 @@ export const CreateStudent = () => {
     residentialAddress: "",
     presentClass: "",
     yearAdmitted: "",
-    yearOfErollment: "",
+    yearOfEnrollment: "",
     parentPhone: "",
     parentName: "",
     parentNin: "",
@@ -211,7 +211,7 @@ export const CreateStudent = () => {
             residentialAddress: "",
             presentClass: "",
             yearAdmitted: "",
-            yearOfErollment: "",
+            yearOfEnrollment: "",
             parentPhone: "",
             parentName: "",
             parentNin: "",
@@ -520,8 +520,8 @@ export const CreateStudent = () => {
                 <FormControl fullWidth>
                   <InputLabel>Year of enrollment</InputLabel>
                   <Select
-                    name="yearOfErollment"
-                    value={formData.yearOfErollment}
+                    name="yearOfEnrollment"
+                    value={formData.yearOfEnrollment}
                     onChange={handleChange}
                     label="Year of Erollment"
                     error={errors['Year of Enrollment']}

@@ -117,6 +117,8 @@ const Dashboard = () => {
   const capitalize = (str) =>
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
+  console.log(userPermissions.length, userPermissions.includes('handle_payments'))
+
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -453,7 +455,7 @@ const Dashboard = () => {
                       <TableCell>{student.presentClass}</TableCell>
                       <TableCell>{student.stateOfOrigin}</TableCell>
                       <TableCell>{student.lga}</TableCell>
-                      <TableCell>{student.ward.name}</TableCell>
+                      <TableCell>{student.ward}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
