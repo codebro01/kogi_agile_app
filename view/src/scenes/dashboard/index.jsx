@@ -144,28 +144,13 @@ const Dashboard = () => {
 
       {/* GRID & CHARTS */}
 
-      {userPermissions.includes("handle_registrars") && (
 
-        <Box sx={{
-          display: "flex", gridRow: " 10", marginBottom: "100px", maxWidth: "100%", flexDirection: {
-            xs: "column",
-            md: "row"
-          }
-        }}>
-          <Box sx={{
-            flexBasis: "50%"
-          }}>
+      {userPermissions.length === 2 && userPermissions.includes('handle_payments') && (
 
-          <ResponsivePieChart />
-          </Box>
-          <Box sx={{
-            flexBasis: "50%"
-          }}>
-
-          <ResponsiveBarChart />
-          </Box>
-        </Box>
+            <Box>This is payroll</Box>
       )}
+
+     
 
 
 
@@ -178,7 +163,7 @@ const Dashboard = () => {
             },
             marginTop: "50px",
             gridAutoRows: '140px', // Set the row height for the grid
-            gap: '20px', // Spacing between grid items
+            gap: '10px', // Spacing between grid items
             gridTemplateColumns: {
               xs: 'repeat(1, 1fr)', // 1 column for extra-small screens
               sm: 'repeat(6, 1fr)', // 6 columns for small screens and up
@@ -337,79 +322,73 @@ const Dashboard = () => {
               icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
             />
           </Box>
-          {/* <Box
+
+            <Box
             className="statBoxContainer"
             sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.dashboardStatBox["grey"],
+              gridColumn: 'span 12', // Full width for the last box
+              gridRow: {
+                xs: 'span 7',
+                sm: 'span 5'
+              }, // Take up more vertical space
               display: 'flex',
               alignItems: 'center',
+              flexDirection: 'column',
               justifyContent: 'center',
+              marginTop: {
+                xs: "100px",
+                md: "0px"
+              }
+
             }}
-          >
-            <StatBox
-              title={getNumberOfDistinctSchools(studentsData)}
-              subtitle="Total JSS 1"
-              progress="0.50"
-              icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.dashboardStatBox["green"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <StatBox
-              title={getNumberOfDistinctSchools(studentsData)}
-              subtitle="Total JSS 3 Enrolled"
-              progress="0.50"
-              icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.dashboardStatBox["grey"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <StatBox
-              title={getNumberOfDistinctSchools(studentsData)}
-              subtitle="Total SSS 1 Enrolled"
-              progress="0.50"
-              icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box> */}
+            >
+            {userPermissions.includes("handle_registrars") && (
+
+              <Box sx={{
+                display: "flex", gridRow: " 10", maxWidth: "100%", flexDirection: {
+                  xs: "column",
+                  md: "row"
+                },
+              }}>
+                <Box sx={{
+                  flexBasis: "50%"
+                }}>
+
+                  <ResponsivePieChart />
+                </Box>
+                <Box sx={{
+                  flexBasis: "50%"
+                }}>
+
+                  <ResponsiveBarChart />
+                </Box>
+              </Box>
+            )}
+            </Box>
+
+
+          
+        
+
+              
+
 
           <Box
             className="statBoxContainer"
             sx={{
               gridColumn: 'span 12', // Full width for the last box
-              gridRow: 'span 7', // Take up more vertical space
+              gridRow: {
+                xs: 'span 10',
+                sm: 'span 7'
+              },// Take up more vertical space
               display: 'flex',
               alignItems: 'center',
               flexDirection: 'column',
               justifyContent: 'center',
+              marginTop: {
+                xs: "50px",
+                md: "0px"
+              }
 
             }}
           >
@@ -493,7 +472,6 @@ const Dashboard = () => {
                 padding: '12px 24px',
                 borderRadius: '8px',
                 boxShadow: 2,
-                marginBottom: '100px',
                 '&:hover': {
                   backgroundColor: '#0D47A1',
                   boxShadow: 3,
@@ -746,7 +724,7 @@ const Dashboard = () => {
                           <TableCell>{student.presentClass}</TableCell>
                           <TableCell>{student.stateOfOrigin}</TableCell>
                           <TableCell>{student.lga}</TableCell>
-                          <TableCell>{student.ward.name}</TableCell>
+                          <TableCell>{student.ward}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -778,6 +756,9 @@ const Dashboard = () => {
             )}
           </Box>
         </Box>)}
+
+
+     
 
 
     </Box>

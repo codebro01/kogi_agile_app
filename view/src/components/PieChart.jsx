@@ -87,7 +87,7 @@ export const ResponsivePieChart = () => {
         },
     };
 
-    if (apiDataLoading) return (<SpinnerLoader/>)
+    if (apiDataLoading) return (<SpinnerLoader />)
 
 
     return (

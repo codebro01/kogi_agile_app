@@ -6,20 +6,24 @@ import axios from 'axios';
 import { getNigeriaStates } from 'geo-ng';
 import { SchoolsContext, WardsContext } from "../../components/dataContext.jsx";
 import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
+import lgasAndWards from '../../Lga&wards.json';
 
 
 axios.defaults.withCredentials = true;
 
-export const UpdateStudent = React.memo(() => {
-    // const theme = useTheme();
+export const UpdateStudent = () => {
+
     const { loading, schoolsData } = useContext(SchoolsContext);
     const { wardsData } = useContext(WardsContext);
     const location = useLocation()
     const student = location.state;
+    console.log(student)
 
     const [occupations, setOccupation] = useState([
         'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser', 'Others'
     ])
+
+
 
 
 
@@ -30,7 +34,7 @@ export const UpdateStudent = React.memo(() => {
 
     const [formData, setFormData] = useState({
         schoolId: student.schoolId._id,
-        ward: student.ward._id,
+        ward: student.ward,
         surname: student.surname,
         otherNames: student.otherNames,
         studentNin: student.studentNin,
@@ -43,14 +47,15 @@ export const UpdateStudent = React.memo(() => {
         residentialAddress: student.residentialAddress,
         presentClass: student.presentClass,
         yearAdmitted: student.yearAdmitted,
-        classAtAdmission: student.classAtAdmission,
         classAtEnrollment: student.classAtEnrollment,
         yearOfEnrollment: student.yearOfEnrollment,
-        guardianName: student.guardianName,
-        guardianPhone: student.guardianPhone,
-        guardianNin: student.guardianNin,
-        guardianContact: student.guardianContact,
-        guardianOccupation: student.guardianOccupation,
+        lgaOfEnrollment: student.lgaOfEnrollment,
+
+        parentName: student.parentName,
+        parentPhone: student.parentPhone,
+        parentNin: student.parentNin,
+        parentContact: student.parentContact,
+        parentOccupation: student.parentOccupation,
         bankName: student.bankName,
         accountNumber: student.accountNumber,
         image: null,
@@ -69,11 +74,8 @@ export const UpdateStudent = React.memo(() => {
     const [selectedSchool, setSelectedSchool] = useState(
         schoolOptions.find((school) => school.schoolName === student.schoolId.schoolName) || null
     );
-    const [isLoading, setIsLoading] = useState(false)
-
-
-
-
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedLga, setSelectedLga] = useState("");  // State for LGA selection
 
     useEffect(() => {
         if (schoolsData && schoolsData.length > 0) {
@@ -120,6 +122,8 @@ export const UpdateStudent = React.memo(() => {
     }, [formData.stateOfOrigin, formData.nationality]);
 
     const handleSelectChange = (e, { name }) => {
+        setSelectedLga(e.target.value);
+
         setFormData((prevData) => ({
             ...prevData,
             [name]: e.target.value, // Update the correct field based on `name`
@@ -151,6 +155,7 @@ export const UpdateStudent = React.memo(() => {
         }
     }, [student.schoolId.schoolName, schoolOptions]);
 
+    const selectedLgaWards = lgasAndWards.find(lga => lga.name === selectedLga)?.wards || [];
 
 
 
@@ -254,6 +259,8 @@ export const UpdateStudent = React.memo(() => {
         setError('')
         setSuccess('')
     }, 10000)
+
+
 
 
     return (
@@ -413,6 +420,45 @@ export const UpdateStudent = React.memo(() => {
                                     </TextField>
                                 </Grid>
                             )}
+
+
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="LGA of Enrollment"
+                                    name="lgaOfEnrollment"
+                                    select
+                                    variant="outlined"
+                                    fullWidth
+                                    value={formData.lgaOfEnrollment || ''}
+                                    onChange={(e) => handleSelectChange(e, { name: 'lgaOfEnrollment' })}
+                                    error={errors['LGA']}
+                                    required
+
+                                >
+                                    {lgasAndWards.map((lga) => (
+                                        <MenuItem key={lga.name} value={lga.name}>
+                                            {lga.name}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            { <Grid item xs={12}>
+                                <TextField
+                                    label="Wards"
+                                    name="ward"
+                                    select
+                                    variant="outlined"
+                                    fullWidth
+                                    value={formData.ward} // Using ward ID
+                                    onChange={(e) => handleWardChange(e.target.value)} // Updating the form data with the ward ID
+                                >
+                                    {selectedLgaWards.map((ward, index) => (
+                                        <MenuItem key={index} value={formData.ward}> {/* Use ward._id as the value */}
+                                            {ward} {/* Display ward.name to the user */}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>}
                             {formData.nationality === 'Others' && (
                                 <Grid item xs={12}>
                                     <TextField
@@ -450,28 +496,6 @@ export const UpdateStudent = React.memo(() => {
                 /> */}
 
                             </Grid>
-                            {wardsData.length > 1 && (
-                                <Grid item xs={12}>
-                                    <TextField
-                                        label="Wards"
-                                        name="ward"
-                                        select
-                                        variant="outlined"
-                                        fullWidth
-                                        value={formData.ward || ''} // Using ward ID
-                                        onChange={(e) => handleWardChange(e.target.value)} // Updating the form data with the ward ID
-                                        error={formData.ward === ''} // Error if the ward is not selected
-                                        helperText={formData.ward === '' ? 'Ward is required' : ''}
-                                    >
-                                        {wardsData.map((ward) => (
-                                            <MenuItem key={ward._id} value={ward._id}> {/* Use ward._id as the value */}
-                                                {ward.name} {/* Display ward.name to the user */}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
-                            )}
-
 
                             {[{ label: 'Community Name', name: 'communityName' },
                             { label: 'Residential Address', name: 'residentialAddress' }].map(({ label, name }) => (
@@ -488,27 +512,7 @@ export const UpdateStudent = React.memo(() => {
                                     />
                                 </Grid>
                             ))}
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel>Class at Enrollment</InputLabel>
-                                    <Select
-                                        name="classAtEnrollment"
-                                        value={formData.classAtEnrollment}
-                                        onChange={handleChange}
-                                        label="Class at Enrollment"
-                                        error={errors['Class at Enrollment']}
-
-
-                                        helperText={errors['Class at Enrollment'] && `${'Class at Enrollment'} is required`}
-                                    >
-                                        <MenuItem value="Primary 6">Primary 6</MenuItem>
-                                        <MenuItem value="JSS 1">JSS 1</MenuItem>
-                                        <MenuItem value="JSS 2">JSS 2</MenuItem>
-                                        <MenuItem value="JSS 3">JSS 3</MenuItem>
-                                        <MenuItem value="SSS 1">SSS 1</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
+            
 
                             <Grid item xs={12}>
                                 <FormControl fullWidth>
@@ -528,48 +532,10 @@ export const UpdateStudent = React.memo(() => {
                                 </FormControl>
                             </Grid>
 
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel>Class at Admission</InputLabel>
-                                    <Select
-                                        name="classAtAdmission"
-                                        value={formData.classAtAdmission}
-                                        onChange={handleChange}
-                                        label="Class at Admission"
-                                        error={errors.classAtAdmission}
-                                    >
-                                        <MenuItem value="Primary 6">Primary 6</MenuItem>
-                                        <MenuItem value="JSS 1">JSS 1</MenuItem>
-                                        <MenuItem value="JSS 2">JSS 2</MenuItem>
-                                        <MenuItem value="JSS 3">JSS 3</MenuItem>
-                                        <MenuItem value="SSS 1">SSS 1</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
 
                             <Grid item xs={12}>
                                 <FormControl fullWidth>
-                                    <InputLabel>Year Admitted</InputLabel>
-                                    <Select
-                                        name="yearAdmitted"
-                                        value={formData.yearAdmitted}
-                                        onChange={handleChange}
-                                        label="Year Admitted"
-                                        error={errors.yearAdmitted}
-                                    >
-                                        <MenuItem value="2020">2020</MenuItem>
-                                        <MenuItem value="2021">2021</MenuItem>
-                                        <MenuItem value="2022">2022</MenuItem>
-                                        <MenuItem value="2023">2023</MenuItem>
-                                        <MenuItem value="2024">2024</MenuItem>
-                                        <MenuItem value="2025">2025</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel>Year of Agile Programme enrollment</InputLabel>
+                                    <InputLabel>Year of enrollment</InputLabel>
                                     <Select
                                         name="yearOfEnrollment"
                                         value={formData.yearOfEnrollment || ''}
@@ -590,9 +556,9 @@ export const UpdateStudent = React.memo(() => {
                             </Grid>
 
 
-                            {[{ label: 'Guardian Name', name: 'guardianName' },
-                            { label: 'Guardian Nin', name: 'guardianNin' },
-                            { label: 'Guardian Mobile  No.', name: 'guardianPhone' }
+                            {[{ label: 'parent Name', name: 'parentName' },
+                            { label: 'parent Nin', name: 'parentNin' },
+                            { label: 'parent Mobile  No.', name: 'parentPhone' }
                             ].map(({ label, name }) => (
                                 <Grid item xs={12} key={name}>
                                     <TextField
@@ -612,12 +578,12 @@ export const UpdateStudent = React.memo(() => {
                                 <FormControl fullWidth>
                                     <InputLabel>Parent/Caregiver Occupation</InputLabel>
                                     <Select
-                                        name="guardianOccupation"
-                                        value={formData.guardianOccupation}
+                                        name="parentOccupation"
+                                        value={formData.parentOccupation}
                                         onChange={handleChange}
                                         label="Occupation"
-                                        error={errors['Guardian Occupation']}
-                                        helperText={errors['Guardian Occupation'] && `${'Guardian Occupation'} is required`}                  >
+                                        error={errors['parent Occupation']}
+                                        helperText={errors['parent Occupation'] && `${'parent Occupation'} is required`}                  >
 
                                         {occupations.map((occupation, index) => {
                                             return <MenuItem key={index} value={occupation}>{occupation}</MenuItem>
@@ -632,7 +598,7 @@ export const UpdateStudent = React.memo(() => {
                             </Grid>
 
 
-                            {formData.guardianOccupation === 'Others' && (
+                            {formData.parentOccupation === 'Others' && (
                                 <Grid item xs={12}>
                                     <TextField
                                         label="Occupation (Specify)"
@@ -754,4 +720,4 @@ export const UpdateStudent = React.memo(() => {
             </Container>
         </>
     )
-})
+}

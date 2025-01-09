@@ -52,7 +52,6 @@ export const CreateStudent = () => {
     presentClass: "",
     yearAdmitted: "",
     yearOfErollment: "",
-    classAtEnrollment: "",
     parentPhone: "",
     parentName: "",
     parentNin: "",
@@ -61,7 +60,9 @@ export const CreateStudent = () => {
     parentOccupation: "",
     bankName: "",
     accountNumber: "",
+    parentBvn: "",
     image: null,
+
   });
 
 
@@ -191,39 +192,40 @@ export const CreateStudent = () => {
         });
         setSuccess(true);
         setSuccessMessage(`Great Job!!! New student registration successful!!!`)
+        console.log(response);
         const formSubmissionSuccess = true;
-        // if (formSubmissionSuccess) {
-        //   // Clear form fields
-        //   setFormData({
-        //     ward: "",
-        //     schoolId: storedSchool._id,
-        //     surname: "",
-        //     otherNames: "",
-        //     studentNin: "",
-        //     dob: "",
-        //     stateOfOrigin: "",
-        //     lga: "",
-        //     lgaOfEnrollment: "",
-        //     gender: "",
-        //     communityName: "",
-        //     residentialAddress: "",
-        //     presentClass: "",
-        //     yearAdmitted: "",
-        //     yearOfErollment: "",
-        //     classAtEnrollment: "",
-        //     parentPhone: "",
-        //     parentName: "",
-        //     parentNin: "",
-        //     nationality: "Nigeria",
-        //     parentContact: "",
-        //     parentOccupation: "",
-        //     bankName: "",
-        //     accountNumber: "",
-        //     image: null,
-        //   });
+        if (formSubmissionSuccess) {
+          // Clear form fields
+          setFormData({
+            ward: "",
+            schoolId: storedSchool._id,
+            surname: "",
+            otherNames: "",
+            studentNin: "",
+            dob: "",
+            stateOfOrigin: "",
+            lga: "",
+            lgaOfEnrollment: "",
+            gender: "",
+            communityName: "",
+            residentialAddress: "",
+            presentClass: "",
+            yearAdmitted: "",
+            yearOfErollment: "",
+            parentPhone: "",
+            parentName: "",
+            parentNin: "",
+            nationality: "Nigeria",
+            parentContact: "",
+            parentOccupation: "",
+            bankName: "",
+            accountNumber: "",
+            parentBvn: "",
+            image: null,
+          });
 
-        //   // Optionally display a success message or reset other states
-        // }
+          // Optionally display a success message or reset other states
+        }
         setTimeout(() => setSuccessMessage(''), 10000);
 
         setFormSubmissionLoading(false)
@@ -557,11 +559,22 @@ export const CreateStudent = () => {
 
               <Grid item xs={12}>
                 <TextField
-                  label={'Parent/caregiver Nin'}
+                  label={'Parent/caregiver NIN'}
                   name={"parentNin"}
                   variant="outlined"
                   fullWidth
                   value={formData.parentNin}
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  label={'Parent/caregiver BVN'}
+                  name={"parentBvn"}
+                  variant="outlined"
+                  fullWidth
+                  value={formData.parentBvn}
                   onChange={handleChange}
                 />
               </Grid>

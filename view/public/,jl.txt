@@ -1,0 +1,1 @@
+mongodb+srv://brainpalscodeacademy:Meprosper%4012@kogiagileapp.zjolb.mongodb.net/
