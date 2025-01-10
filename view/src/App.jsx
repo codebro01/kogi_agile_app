@@ -69,6 +69,8 @@ function App() {
                         <Route path="/admin-dashboard/manage-accounts/enumerators/edit-enumerator/:id" element={<EditEnumerator />} />
                         <Route path="/admin-dashboard/manage-accounts/payroll-specialists/edit-payroll-specialists/:id" element={<EditPayrollSpecialists />} />
                         <Route path="/index.html" element={<Navigate to="/" />} />
+                        <Route path="*" element={<Navigate to="/admin-dashboard" />} />
+
                       </Routes>
                     </DataProvider>
                   }
@@ -109,6 +111,8 @@ function App() {
                         <Route path="/admin-dashboard/create-accounts/register-student" element={<CreateStudent />} />
                         <Route path="/admin-dashboard/update-student/:id" element={<UpdateStudent />} />
                         <Route path="/index.html" element={<Navigate to="/" />} />
+                        <Route path="*" element={<Navigate to="/enumerator-dashboard" />} />
+
                       </Routes>
                     </DataProvider>
                   }
@@ -154,6 +158,8 @@ function App() {
                         <Route path="/admin-dashboard/manage-accounts/enumerators/edit-enumerator/:id" element={<EditEnumerator />} />
                         <Route path="/admin-dashboard/manage-accounts/payroll-specialists/edit-payroll-specialists/:id" element={<EditPayrollSpecialists />} />
                         <Route path="/index.html" element={<Navigate to="/" />} />
+                        <Route path="*" element={<Navigate to="/enumerator-dashboard" />} />
+
                       </Routes>
                     </DataProvider>
                   }

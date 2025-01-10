@@ -119,6 +119,274 @@ const Dashboard = () => {
 
   console.log(userPermissions.length, userPermissions.includes('handle_payments'))
 
+// ! Payroll Specialist's Dashboard
+
+  if(userPermissions.includes('handle_payments'))  {
+    return (
+      <Box
+        sx={{
+          display: {
+            xs: 'flex',  // flex layout for extra-small screens
+            sm: 'grid',  // grid layout for medium screens and up
+            padding: "10px"
+          },
+          marginTop: "50px",
+          gridAutoRows: '140px', // Set the row height for the grid
+          gap: '20px', // Spacing between grid items
+          gridTemplateColumns: {
+            xs: 'repeat(1, 1fr)', // 1 column for extra-small screens
+            sm: 'repeat(6, 1fr)', // 6 columns for small screens and up
+            md: 'repeat(12, 1fr)', // 12 columns for medium screens and up
+            lg: 'repeat(12, 1fr)', // 12 columns for large screens and up
+          },
+          flexDirection: {
+            xs: 'column', // Flex direction as column for xs (flex)
+          },
+          '& > *': {
+            color: "#fff",
+            borderRadius: '5px', // Apply border-radius to all direct children
+          },
+        }}
+      >
+        {/* ROW 1 */}
+        <Box
+          className="statBoxContainer"
+          sx={{
+            gridColumn: {
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.main["darkGreen"],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '5px',
+          }}
+        >
+          <StatBox
+            title={studentsData?.length || 0}
+            subtitle="Total Number of Students Enrolled"
+            progress="0.75"
+            borderRadius="5px"
+            icon={<EmailIcon sx={{ color: colors.main["darkGreen"], fontSize: "26px" }} />}
+          />
+        </Box>
+
+        <Box
+          className="statBoxContainer"
+          sx={{
+            gridColumn: {
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.dashboardStatBox["red"],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '5px',
+          }}
+        >
+          <StatBox
+            title={primary6Students?.length}
+            subtitle="Total Disbursted Funds"
+            progress="0.75"
+            borderRadius="5px"
+            icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+          />
+        </Box>
+
+        <Box
+          className="statBoxContainer"
+          sx={{
+            gridColumn: {
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.dashboardStatBox["yellow"],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '5px',
+          }}
+        >
+          <StatBox
+            title={jss1Students?.length}
+            subtitle="Total Students Paid"
+            progress="0.75"
+            borderRadius="5px"
+            icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+          />
+        </Box>
+{/* 
+        <Box
+          className="statBoxContainer"
+          sx={{
+            gridColumn: {
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.dashboardStatBox["gold"],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '5px',
+          }}
+        >
+          <StatBox
+            title={jss3Students?.length}
+            subtitle="Total JSS 3 Enrolled"
+            progress="0.75"
+            borderRadius="5px"
+            icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+          />
+        </Box>
+
+        <Box
+          className="statBoxContainer"
+          sx={{
+            gridColumn: {
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.blueAccent[400],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '5px',
+          }}
+        >
+          <StatBox
+            title={ss1Students?.length}
+            subtitle="Total SSS 1 Enrolled"
+            progress="0.75"
+            borderRadius="5px"
+            icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+          />
+        </Box>
+
+        <Box
+          className="statBoxContainer"
+          sx={{
+            gridColumn: {
+              xs: 'span 12', // Full width on xs screens
+              sm: 'span 6',  // Half width on sm screens
+              md: 'span 4',  // Quarter width on md screens
+            },
+            backgroundColor: colors.dashboardStatBox["grey"],
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <StatBox
+            title={getNumberOfDistinctSchools(studentsData)}
+            subtitle="Total School Enrolled"
+            progress="0.50"
+            icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+          />
+        </Box> */}
+
+        <Box
+          className="statBoxContainer"
+          sx={{
+            gridColumn: 'span 12', // Full width for the last box
+            gridRow: 'span 3', // Take up more vertical space
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          {userPermissions.length === 1 && (
+            <>
+              <Typography
+                variant="h3"
+                gutterBottom
+                sx={{
+                  color: colors.main["darkGreen"],
+                  background: "rgba(224, 224, 224, 1)",
+                  fontWeight: 'bold',
+                  letterSpacing: '0.5px',
+                  textAlign: 'center',
+                  padding: '20px 0',
+                  marginTop: "100px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Information of Last 5 Registered Students
+              </Typography>
+
+              <TableContainer
+                component={Paper}
+                sx={{
+                  maxWidth: '100%',
+                  overflowX: 'auto',
+                  boxShadow: 3,
+                  borderRadius: '8px',
+                  marginBottom: '20px',
+                  minHeight: "320px",
+                }}
+              >
+                <Table sx={{ minWidth: 650 }}>
+                  <TableHead>
+                    <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
+                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Surname</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Present Class</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>State of Origin</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>LGA</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Ward</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {last5Students().map((student, index) => (
+                      <TableRow key={index} sx={{
+                        '&:hover': { backgroundColor: '#f9f9f9' },
+                        borderBottom: '1px solid #ddd',
+                      }}>
+                        <TableCell>{student.surname}</TableCell>
+                        <TableCell>{student.presentClass}</TableCell>
+                        <TableCell>{student.stateOfOrigin}</TableCell>
+                        <TableCell>{student.lga}</TableCell>
+                        <TableCell>{student.ward}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              <Button
+                component={Link}
+                to="/enumerator-dashboard/view-all-students-data"
+                variant="contained"
+                size="large"
+                color="primary"
+                sx={{
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  boxShadow: 2,
+                  marginBottom: '100px',
+                  '&:hover': {
+                    backgroundColor: '#0D47A1',
+                    boxShadow: 3,
+                  },
+                }}
+              >
+                Click to View All Students Information
+              </Button>
+            </>
+          )}
+        </Box>
+      </Box>)
+  }
+
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -145,16 +413,6 @@ const Dashboard = () => {
 
 
       {/* GRID & CHARTS */}
-
-
-      {userPermissions.length === 2 && userPermissions.includes('handle_payments') && (
-
-            <Box>This is payroll</Box>
-      )}
-
-     
-
-
 
       {userPermissions.includes("handle_registrars") ? (
         <Box
