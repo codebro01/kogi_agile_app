@@ -22,6 +22,10 @@ import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { ChangePasswordForm } from "../../components/changePasswordPopup.jsx";
 import { ExportSubmitButton } from "../../components/exportButton.jsx";
+import ImportContactsIcon from '@mui/icons-material/ImportContacts'; // For import
+import FileUploadIcon from '@mui/icons-material/FileUpload'; // For export
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+
 
 import { useAuth } from '../auth/authContext.jsx';
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -243,14 +247,36 @@ const Sidebar = ({ isSidebar }) => {
               </>
               }
 
-            {userPermissions.length === 1 && (
-              <Item
-                title="Attendance Sheet"
+            {userPermissions.length === 1 && !userPermissions.includes('handle_payments') && (
+              <>
+                       <Item
+                title="Export Sheet"
                 to={'/export-attendance-sheet'}
                 icon={<DescriptionIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />
+
+              <Item
+                title="Import Sheet"
+                to={'/import-attendance-sheet'}
+                  icon={<FileUploadIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />      
+
+              <Item
+                title="View Attendance"
+                to={'/view-attendance-sheet'}
+                  icon={<RemoveRedEyeIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />      
+              </>
+ 
+
+
+
             )}
 
 

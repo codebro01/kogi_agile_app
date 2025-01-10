@@ -25,6 +25,8 @@ import { ManageEnumerators } from "./scenes/manage-accounts/manageEnumerators.js
 import { ManagePayrollSpecialists } from "./scenes/manage-accounts/managePayrollSpecialists.jsx";
 import { EditEnumerator } from "./scenes/manage-accounts/editEnumeratorData.jsx";
 import { EditPayrollSpecialists } from "./scenes/manage-accounts/editPayrollSpecialists.jsx";
+import { ImportAttendanceSheet } from "./scenes/manage-accounts/importAttendanceSheet.jsx";
+import { ViewAttendance } from "./components/viewAttendance .jsx";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -107,9 +109,11 @@ function App() {
                         <Route path="/enumerator-dashboard" element={<Dashboard />} />
                         <Route path="/enumerator-dashboard/view-all-students-data" element={<ViewAllStudentsData />} />
                         <Route path="/export-attendance-sheet" element={<ExportAttendanceSheet />} />
+                        <Route path="/import-attendance-sheet" element={<ImportAttendanceSheet />} />
                         <Route path="/admin-dashboard/create-student-school-selector" element={<RegistrationSelector />} />
                         <Route path="/admin-dashboard/create-accounts/register-student" element={<CreateStudent />} />
                         <Route path="/admin-dashboard/update-student/:id" element={<UpdateStudent />} />
+                        <Route path="/view-attendance-sheet" element={<ViewAttendance />} />
                         <Route path="/index.html" element={<Navigate to="/" />} />
                         <Route path="*" element={<Navigate to="/enumerator-dashboard" />} />
 
