@@ -44,10 +44,14 @@ export const ImportAttendanceSheet = () => {
             setIsSubmitting(false);
             setSuccess(true);
             setTotalUploads(response.data.totalInserted);
+            setTimeout(() => setMessage(''), 7000)
         } catch (error) {
+            setError(true)
             setIsSubmitting(false);
             console.log(error);
-            setMessage(error?.response?.data?.message);    
+            setMessage(error?.response?.data?.message);  
+            setTimeout(() => setMessage(''), 7000)
+  
         }
     }
 
@@ -241,7 +245,7 @@ export const ImportAttendanceSheet = () => {
                 <ExportSubmitButton label="Upload Attendance Sheet" />
             </Grid>
 
-        {!isSubmitting  && 
+        {error  && 
                 <Typography
                     sx={{
                         color: "red",
@@ -250,19 +254,18 @@ export const ImportAttendanceSheet = () => {
                 <>
 
                     {message}
-                    {totalUploads > 0 && <p>{totalUploads} records uploaded successfully</p>}
                 </>
                 </Typography>
         }
         {success  && 
                 <Typography
                     sx={{
-                        color: "green",
+                        color: "red",
                     }}
                 >
                 <>
+
                     {message}
-                    {<p>{totalUploads} persons</p>}
                 </>
                 </Typography>
         }
