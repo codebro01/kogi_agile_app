@@ -25,7 +25,7 @@ export const ViewAllStudentsData = () => {
     schoolId: '',
   });
 
-  const clearFilters = () => {
+  const clearFilters = async () => {
     setFilters({
       ward: '',
       presentClass: '',
@@ -33,8 +33,14 @@ export const ViewAllStudentsData = () => {
       lga: '',
       schoolId: '',
     });
-    setStudentsData(studentsData);
-  };
+    try {
+      const response = await axios.get(`${API_URL}/student`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setStudentsData(response.data.students);
+    } catch (err) {
+      console.error("Failed to fetch students data:", err);
+    }  };
 
   const [filterLoading, setFilterLoading] = useState(false);
   const [filterError, setFilterError] = useState(null);
@@ -291,7 +297,7 @@ export const ViewAllStudentsData = () => {
             {studentsData && studentsData.length > 0 ? (
               studentsData.map((student, index) => (
                 <TableRow key={index}>
-                  <TableCell>{index++}</TableCell>
+                  <TableCell>{index+1}</TableCell>
                   <TableCell>
                     <img src={`${student.passport}`} alt="Student Passport" />
                   </TableCell>

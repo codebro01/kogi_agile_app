@@ -222,16 +222,16 @@ export const CreateStudent = () => {
 
           // Optionally display a success message or reset other states
         }
-        setTimeout(() => setSuccessMessage(''), 10000);
-
         setFormSubmissionLoading(false)
+        setTimeout(() => setSuccessMessage(''), 20000);
+
       } catch (err) {
         console.log(err);
         setFormSubmissionLoading(false)
         if (err.response?.data?.status === 401) return navigate('/sign-in')
         setError(true)
         setValidationError(err.response?.data?.message || 'An error occurred');
-        setTimeout(() => setValidationError(''), 10000);
+        setTimeout(() => setValidationError(''), 20000);
       }
     })();
 
@@ -240,10 +240,10 @@ export const CreateStudent = () => {
   // ** clear fields if students creation is successful
 
 
-  setTimeout(() => {
-    setError('')
-    setSuccess('')
-  }, 10000)
+  // setTimeout(() => {
+  //   setError('')
+  //   setSuccess('')
+  // }, 10000)
 
   // const wards = wardsData.map(ward => ward.name.toString());
   return (
@@ -735,7 +735,7 @@ export const CreateStudent = () => {
                   color="red"
                   sx={{ textAlign: "center", marginTop: "20px" }}
                 >
-                  Oops! {validationError}
+                  {validationError}
                 </Typography>
               )}
 
