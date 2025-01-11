@@ -64,8 +64,6 @@ const Sidebar = ({ isSidebar }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  console.log(userPermissions.length === 2);
-
   return (
     <Box className={`sidebark ${isSidebar ? "" : "collapsed"}`}
       sx={{

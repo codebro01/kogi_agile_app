@@ -6,7 +6,7 @@ import Dashboard from "./scenes/dashboard";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import BrandingSignUpPage from "./scenes/auth/register";
-import { SignInForm, EnumeratorSignInForm, PayrollSpecialistSignInForm } from "./scenes/auth/signIn";
+import { SignInForm, EnumeratorSignInForm, PayrollSpecialistSignInForm, EnumeratorSignInFormWebView } from "./scenes/auth/signIn";
 import CreateEnumerator from "./scenes/manage-accounts/createEnumeratorForm";
 import RegistrationSelector from './scenes/manage-accounts/registrationSelector';
 import { ViewAllStudentsData } from './scenes/manage-accounts/viewAllStudentsData';
@@ -34,7 +34,7 @@ function App() {
   const location = useLocation();
   const subdomain = getSubdomain();
 
-  console.log(window.location.hostname);
+  // console.log(window.location.hostname);
 
   if (subdomain === 'portal') {
     return (
@@ -100,6 +100,7 @@ function App() {
               <Routes>
                 <Route path="/sign-in" element={<EnumeratorSignInForm />} />
                 <Route path="/" element={<EnumeratorSignInForm />} />
+                <Route path="/webview" element={<EnumeratorSignInFormWebView />} />
 
                 <Route
                   path="/*"
@@ -107,6 +108,7 @@ function App() {
                     <DataProvider>
                       <Routes>
                         <Route path="/enumerator-dashboard" element={<Dashboard />} />
+                        <Route path="/enumerator-dashboard/webview" element={<Dashboard />} />
                         <Route path="/enumerator-dashboard/view-all-students-data" element={<ViewAllStudentsData />} />
                         <Route path="/export-attendance-sheet" element={<ExportAttendanceSheet />} />
                         <Route path="/import-attendance-sheet" element={<ImportAttendanceSheet />} />

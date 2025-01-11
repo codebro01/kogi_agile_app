@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, TextField, Divider, Button, Grid, Container, Typography, Box, IconButton, InputAdornment, Paper } from '@mui/material';
 // import { useTheme } from '@mui/material/styles';
@@ -7,6 +7,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
 import { useAuth } from './authContext'; // Import useAuth
 import { SpinnerLoader } from '../../components/spinnerLoader';
+import { useSearchParams } from 'react-router-dom';
 
 
 export const SignInForm = () => {
@@ -250,8 +251,8 @@ export const EnumeratorSignInForm = () => {
             try {
                 setIsLoading(true)
                 const response = await axios.post(`${API_URL}/admin-enumerator/login`, { email, password }, { withCredentials: true });
-
-                const { token, tokenUser, allPermissionNames } = response.data;
+                
+                let { token, tokenUser, allPermissionNames } = response.data;
 
                 // Update context or state
                 await login(token, tokenUser, allPermissionNames);
@@ -428,6 +429,56 @@ export const EnumeratorSignInForm = () => {
                 </Paper>
             </Container>
         </Box>
+    );
+};
+
+
+export const EnumeratorSignInFormWebView = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [validationError, setValidationError] = useState('');
+    const navigate = useNavigate();
+    const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
+    const { login, userPermissions } = useAuth(); // Access login function from context
+
+
+
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const email = queryParams.get('email');
+        const randomId = queryParams.get('randomId');
+
+        if (email && randomId) {
+            // Trigger login logic
+            (async () => {
+                try {
+                    setIsLoading(true);
+                    const webViewResponse = await axios.get(`${API_URL}/admin-enumerator/login/webview?email=${email}&randomId=${randomId}`, { withCredentials: true });
+
+                    const { token, tokenUser, allPermissionNames } = webViewResponse.data;
+                    await login(token, tokenUser, allPermissionNames);
+                    setIsLoading(false);
+
+                    // Navigate based on permissions
+                    if (allPermissionNames.includes('handle_students')) {
+                        navigate('/enumerator-dashboard');
+                    } else {
+                        navigate('/sign-in');
+                    }
+                } catch (err) {
+                    setIsLoading(false);
+                    console.error('Login Error:', err.response?.data?.message);
+                    setValidationError(err.response?.data?.message);
+                    setTimeout(() => setValidationError(''), 10000);
+                }
+            })();
+        }
+    }, [navigate]);
+
+    return (
+        <div>
+            {isLoading ? <p>Loading...</p> : <p>{validationError || "Logging in..."}</p>}
+        </div>
     );
 };
 
