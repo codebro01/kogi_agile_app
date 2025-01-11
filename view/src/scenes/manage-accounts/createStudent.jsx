@@ -256,7 +256,7 @@ export const CreateStudent = () => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               {[{ label: 'Surname', name: 'surname' },
-              { label: 'Other Names', name: 'firstname' },
+              { label: 'Firstname', name: 'firstname' },
                 { label: 'Middlename', name: 'middlename' }
               ].map(({ label, name }) => (
                 <Grid item xs={12} key={name}>
@@ -285,6 +285,11 @@ export const CreateStudent = () => {
                   value={formData.studentNin}
                   onChange={handleChange}
                   InputLabelProps={{ shrink: true }}
+                  inputProps={{
+                    maxLength: 11, // Stops further input after 11 characters
+                    pattern: "\\d{11}", // Requires exactly 11 digits
+                    title: "Student Nin must be exactly 11 digits", // Shows this message on invalid input
+                  }}
                 />
               </Grid>
 
@@ -562,6 +567,11 @@ export const CreateStudent = () => {
                   fullWidth
                   value={formData.parentNin}
                   onChange={handleChange}
+                  inputProps={{
+                    maxLength: 11, // Stops further input after 11 characters
+                    pattern: "\\d{11}", // Requires exactly 11 digits
+                    title: "Parent Nin must be exactly 11 digits", // Shows this message on invalid input
+                  }}
                 />
               </Grid>
 
@@ -573,6 +583,11 @@ export const CreateStudent = () => {
                   fullWidth
                   value={formData.parentBvn}
                   onChange={handleChange}
+                  inputProps={{
+                    maxLength: 11, // Stops further input after 11 characters
+                    pattern: "\\d{11}", // Requires exactly 11 digits
+                    title: "BVN must be exactly 11 digits", // Shows this message on invalid input
+                  }}
                 />
               </Grid>
 
@@ -623,24 +638,8 @@ export const CreateStudent = () => {
                     onChange={handleChange}
                     label="Bank Name"
                   >
-                    <MenuItem value="Access Bank">Access Bank</MenuItem>
-                    <MenuItem value="Citibank Nigeria">Citibank Nigeria</MenuItem>
-                    <MenuItem value="Diamond Bank">Diamond Bank</MenuItem>
-                    <MenuItem value="Ecobank Nigeria">Ecobank Nigeria</MenuItem>
-                    <MenuItem value="Fidelity Bank">Fidelity Bank</MenuItem>
-                    <MenuItem value="First Bank of Nigeria">First Bank of Nigeria</MenuItem>
-                    <MenuItem value="Guaranty Trust Bank">Guaranty Trust Bank</MenuItem>
-                    <MenuItem value="Heritage Bank">Heritage Bank</MenuItem>
-                    <MenuItem value="Jaiz Bank">Jaiz Bank</MenuItem>
-                    <MenuItem value="Keystone Bank">Keystone Bank</MenuItem>
-                    <MenuItem value="Lapo Microfinance Bank">Lapo Microfinance Bank</MenuItem>
-                    <MenuItem value="Mainstreet Bank">Mainstreet Bank</MenuItem>
+                    <MenuItem value="Access Bank">FCMB</MenuItem>
                     <MenuItem value="Polaris Bank">Polaris Bank</MenuItem>
-                    <MenuItem value="Stanbic IBTC Bank">Stanbic IBTC Bank</MenuItem>
-                    <MenuItem value="Sterling Bank">Sterling Bank</MenuItem>
-                    <MenuItem value="Union Bank">Union Bank</MenuItem>
-                    <MenuItem value="United Bank for Africa (UBA)">United Bank for Africa (UBA)</MenuItem>
-                    <MenuItem value="Wema Bank">Wema Bank</MenuItem>
                     <MenuItem value="Zenith Bank">Zenith Bank</MenuItem>
                   </Select>
                 </FormControl>
@@ -654,6 +653,11 @@ export const CreateStudent = () => {
                   fullWidth
                   value={formData.accountNumber}
                   onChange={handleChange}
+                  inputProps={{
+                    maxLength: 10, // Stops further input after 10 characters
+                    pattern: "\\d{10}", // Requires exactly 11 digits
+                    title: "Account Number must be exactly 10 digits", // Shows this message on invalid input
+                  }}
                 />
               </Grid>
 

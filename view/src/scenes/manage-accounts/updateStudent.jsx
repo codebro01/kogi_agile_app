@@ -274,8 +274,7 @@ export const UpdateStudent = () => {
                         <Grid container spacing={2}>
                             {[{ label: 'Surname', name: 'surname' },
                             { label: 'Firstname', name: 'firstname' },
-                            { label: 'Middlename', name: 'middlename' },
-                            { label: 'Studdent Nin', name: 'studentNin' }].map(({ label, name }) => (
+                            { label: 'Middlename', name: 'middlename' }].map(({ label, name }) => (
                                 <Grid item xs={12} key={name}>
                                     <TextField
                                         label={label}
@@ -284,12 +283,26 @@ export const UpdateStudent = () => {
                                         fullWidth
                                         value={formData[name]}
                                         onChange={handleChange}
-                                        error={errors[name]}
-                                        helperText={errors[name] && `${label} is required`}
 
                                     />
                                 </Grid>
                             ))}
+
+                            <Grid item xs={12}>
+                                <TextField
+                                    label={'Student Nin'}
+                                    name={'studentNin'}
+                                    variant="outlined"
+                                    fullWidth
+                                    value={formData.studentNin}
+                                    onChange={handleChange}
+                                    inputProps={{
+                                        maxLength: 11, // Stops further input after 11 characters
+                                        pattern: "\\d{11}", // Requires exactly 11 digits
+                                        title: "Student Nin be exactly 11 digits", // Shows this message on invalid input
+                                    }}
+                                />
+                            </Grid>
 
                             <Grid item xs={12}>
                                 <TextField
@@ -559,7 +572,7 @@ export const UpdateStudent = () => {
 
                             {[{ label: 'parent Name', name: 'parentName' },
                             { label: 'parent Nin', name: 'parentNin' },
-                            { label: 'parent Mobile  No.', name: 'parentPhone' }
+
                             ].map(({ label, name }) => (
                                 <Grid item xs={12} key={name}>
                                     <TextField
@@ -574,6 +587,17 @@ export const UpdateStudent = () => {
                                     />
                                 </Grid>
                             ))}
+
+                            <Grid item xs={12} key={name}>
+                                <TextField
+                                    label={"parent Mobile  No."}
+                                    name={'parentPhone'}
+                                    variant="outlined"
+                                    fullWidth
+                                    value={formData.parentPhone}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
 
                             <Grid item xs={12}>
                                 <FormControl fullWidth>
@@ -657,6 +681,11 @@ export const UpdateStudent = () => {
                                     onChange={handleChange}
                                     error={errors.accountNumber}
                                     helperText={errors.accountNumber && 'Account Number is required'}
+                                    inputProps={{
+                                        maxLength: 10, // Stops further input after 11 characters
+                                        pattern: "\\d{10}", // Requires exactly 11 digits
+                                        title: "Account Number must be exactly 10 digits", // Shows this message on invalid input
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
