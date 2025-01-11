@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import EditIcon from "@mui/icons-material/Edit";
 import { tokens } from "../../theme";
 import { PersonLoader } from '../../components/personLoader';
+import lgasAndWards from '../../Lga&wards.json';
 
 
 export const ViewAllStudentsData = () => {
@@ -20,8 +21,7 @@ export const ViewAllStudentsData = () => {
   const [filters, setFilters] = useState({
     ward: '',
     presentClass: '',
-    sortBy: '',
-    lga: '',
+    lgaOfEnrollment: '',
     schoolId: '',
   });
 
@@ -29,8 +29,7 @@ export const ViewAllStudentsData = () => {
     setFilters({
       ward: '',
       presentClass: '',
-      sortBy: '',
-      lga: '',
+      lgaOfEnrollment: '',
       schoolId: '',
     });
     try {
@@ -47,6 +46,8 @@ export const ViewAllStudentsData = () => {
 
   const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
   const token = localStorage.getItem('token') || '';
+  const allWards = lgasAndWards.flatMap(ward => ward.wards).sort((a, b) => a.localeCompare(b));;
+
 
   const classOptions = [
     { class: "Primary 6", id: 1 },
@@ -57,13 +58,12 @@ export const ViewAllStudentsData = () => {
 
   const buildQueryString = () => {
     const query = new URLSearchParams();
-    const { schoolId, presentClass, sortBy, lga, ward } = filters;
+    const { schoolId, presentClass, lgaOfEnrollment, ward } = filters;
 
     if (schoolId) query.append('schoolId', schoolId);
     if (ward) query.append('ward', ward);
-    if (lga) query.append('lga', lga);
+    if (lgaOfEnrollment) query.append('lgaOfEnrollment', lgaOfEnrollment);
     if (presentClass) query.append('presentClass', presentClass);
-    if (sortBy) query.append('sortBy', sortBy);
     return query.toString();
   };
 
@@ -78,7 +78,9 @@ export const ViewAllStudentsData = () => {
         },
         withCredentials: true,
       });
-      setStudentsData(response.data.students);
+      console.log(response.data);
+      console.log(queryString)
+     setStudentsData(response.data.students);
     } catch (err) {
       console.error(err);
       if (err.response?.status === 401) {
@@ -170,9 +172,9 @@ export const ViewAllStudentsData = () => {
               <MenuItem value="">
                 <em>Select Ward</em>
               </MenuItem>
-              {wardsData?.map((ward) => (
-                <MenuItem key={ward._id} value={ward._id}>
-                  {ward.name}
+              {allWards?.map((ward, index) => (
+                <MenuItem key={index++} value={ward}>
+                  {ward}
                 </MenuItem>
               ))}
             </Select>
@@ -200,32 +202,27 @@ export const ViewAllStudentsData = () => {
             </Select>
           </Grid>
 
-          <Grid item xs={12} sm={6} md={4}>
-            <em>Sort</em>
-
-            <TextField
-              label="Sort By"
-              name="sortBy"
-              value={filters.sortBy}
-              onChange={handleInputChange}
-              variant="outlined"
-              size="small"
-              fullWidth
-            />
-          </Grid>
 
           <Grid item xs={12} sm={6} md={4}>
-            <em>Select LGA</em>
-
-            <TextField
-              label="LGA"
-              name="lga"
-              value={filters.lga}
+            <InputLabel id="ward-label">Select LGA of Enrollment</InputLabel>
+            <Select
+              name="lgaOfEnrollment"
+              value={filters.lgaOfEnrollment}
               onChange={handleInputChange}
-              variant="outlined"
-              size="small"
+              displayEmpty
               fullWidth
-            />
+              size="small"
+              labelId="ward-label"
+            >
+              <MenuItem value="">
+                <em>Select LGA</em>
+              </MenuItem>
+              {lgasAndWards?.map((lga) => (
+                <MenuItem key={lga.name} value={lga.name}>
+                  {lga.name}
+                </MenuItem>
+              ))}
+            </Select>
           </Grid>
 
           <Grid item xs={12} sm={6} md={4}>
@@ -285,9 +282,11 @@ export const ViewAllStudentsData = () => {
               <TableCell>S/N</TableCell>
               <TableCell>Passport</TableCell>
               <TableCell>Surname</TableCell>
+              <TableCell>Firstname</TableCell>
+              <TableCell>Middlename</TableCell>
               <TableCell>School Name</TableCell>
               <TableCell>Present Class</TableCell>
-              <TableCell>State of Origin/LGA of Origin</TableCell>
+              <TableCell>State of Origin/LGA</TableCell>
               <TableCell>LGA of Enrollment</TableCell>
               <TableCell>Ward</TableCell>
               <TableCell>Edit</TableCell>
@@ -302,6 +301,8 @@ export const ViewAllStudentsData = () => {
                     <img src={`${student.passport}`} alt="Student Passport" />
                   </TableCell>
                   <TableCell>{student.surname}</TableCell>
+                  <TableCell>{student.firstname}</TableCell>
+                  <TableCell>{student.middlename}</TableCell>
                   <TableCell>{student.schoolId.schoolName}</TableCell>
                   <TableCell>{student.presentClass}</TableCell>
                   <TableCell>{student.stateOfOrigin} | {student.lga}</TableCell>

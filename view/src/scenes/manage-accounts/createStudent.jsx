@@ -15,7 +15,7 @@ export const CreateStudent = () => {
   const { loading } = useContext(SchoolsContext);
 
   const [bankList, setBankList] = useState([
-   'FCMB', 'Polaris Bank' ,'Zenith Bank'
+    'FCMB', 'Polaris Bank', 'Zenith Bank'
   ]);
 
   const [occupations, setOccupation] = useState([
@@ -257,7 +257,7 @@ export const CreateStudent = () => {
             <Grid container spacing={2}>
               {[{ label: 'Surname', name: 'surname' },
               { label: 'Firstname', name: 'firstname' },
-                { label: 'Middlename', name: 'middlename' }
+              { label: 'Middlename', name: 'middlename' }
               ].map(({ label, name }) => (
                 <Grid item xs={12} key={name}>
                   <TextField
@@ -530,10 +530,10 @@ export const CreateStudent = () => {
                     required                >
                     <MenuItem value="2024">2024</MenuItem>
                     <MenuItem value="2025">2025</MenuItem>
-                    <MenuItem value="2020">2026</MenuItem>
-                    <MenuItem value="2021">2027</MenuItem>
-                    <MenuItem value="2022">2028</MenuItem>
-                    <MenuItem value="2023">2029</MenuItem>
+                    <MenuItem value="2026">2026</MenuItem>
+                    <MenuItem value="2027">2027</MenuItem>
+                    <MenuItem value="2028">2028</MenuItem>
+                    <MenuItem value="2029">2029</MenuItem>
 
                   </Select>
                 </FormControl>
@@ -541,7 +541,7 @@ export const CreateStudent = () => {
 
 
               {[{ label: 'Parent/caregiver Name', name: 'parentName' },
-              { label: 'Parent/caregiver phone No.', name: 'parentPhone' }
+
               ].map(({ label, name }) => (
                 <Grid item xs={12} key={name}>
                   <TextField
@@ -558,6 +558,22 @@ export const CreateStudent = () => {
                 </Grid>
               ))}
 
+              <Grid item xs={12}>
+                <TextField
+                  label={'Parent/caregiver phone No.'}
+                  name={'parentPhone'}
+                  variant="outlined"
+                  fullWidth
+                  value={formData.parentPhone}
+                  onChange={handleChange}
+                  inputProps={{
+                    maxLength: 11, // Stops further input after 11 characters
+                    pattern: "\\d{11}", // Requires exactly 11 digits
+                    title: "Phone number must be exactly 11 digits", // Shows this message on invalid input
+                  }}
+                  required
+                />
+              </Grid>
 
               <Grid item xs={12}>
                 <TextField

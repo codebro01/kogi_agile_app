@@ -261,6 +261,8 @@ export const UpdateStudent = () => {
     }, 10000)
 
 
+console.log(formData)
+    const allWards = lgasAndWards.flatMap(ward => ward.wards).sort((a, b) => a.localeCompare(b));;
 
 
     return (
@@ -343,7 +345,7 @@ export const UpdateStudent = () => {
                                                 loadMoreSchools();
                                             }
                                         }}
-                                        renderInput={(params) => <TextField {...params} label="School" fullWidth />}
+                                        renderInput={(params) => <TextField {...params} label={selectedSchool ? selectedSchool.schoolName : 'Select a school'} fullWidth />}
                                         loading={loadingSchools}
                                         noOptionsText="No schools found"
                                     />
@@ -423,17 +425,18 @@ export const UpdateStudent = () => {
                                         select
                                         variant="outlined"
                                         fullWidth
-                                        value={formData.lga || ''}
+                                        value={formData.lga || ''} 
                                         onChange={(e) => handleSelectChange(e, { name: 'lga' })}
                                     >
-                                        {lgas.map((lga) => (
-                                            <MenuItem key={lga} value={lga}>
+                                        {lgas.map((lga, index) => (
+                                            <MenuItem key={index} value={lga}>
                                                 {lga}
                                             </MenuItem>
                                         ))}
                                     </TextField>
                                 </Grid>
                             )}
+
 
 
                             <Grid item xs={12}>
@@ -456,23 +459,24 @@ export const UpdateStudent = () => {
                                     ))}
                                 </TextField>
                             </Grid>
-                            {<Grid item xs={12}>
+                            <Grid item xs={12}>
                                 <TextField
                                     label="Wards"
                                     name="ward"
                                     select
                                     variant="outlined"
                                     fullWidth
-                                    value={formData.ward} // Using ward ID
-                                    onChange={(e) => handleWardChange(e.target.value)} // Updating the form data with the ward ID
+                                    value={formData.ward} // Binding formData.ward, which should be ward ID or object
+                                    onChange={(e) => handleWardChange(e.target.value)} // Update formData with selected value
                                 >
-                                    {selectedLgaWards.map((ward, index) => (
-                                        <MenuItem key={index} value={formData.ward}> {/* Use ward._id as the value */}
-                                            {ward} {/* Display ward.name to the user */}
+                                    {allWards.map((ward, index) => (
+                                        <MenuItem key={index} value={ward}> {/* Assuming `ward` is an object with `id` */}
+                                            {ward} {/* Display ward name to the user */}
                                         </MenuItem>
                                     ))}
                                 </TextField>
-                            </Grid>}
+                            </Grid>
+
                             {formData.nationality === 'Others' && (
                                 <Grid item xs={12}>
                                     <TextField

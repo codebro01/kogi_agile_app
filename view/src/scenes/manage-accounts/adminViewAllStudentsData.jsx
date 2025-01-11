@@ -101,6 +101,7 @@ export const AdminViewAllStudentsData = () => {
 
 
     const params = {
+        stateOfOrigin: filters.stateOfOrigin,
         ward: filters.ward,
         presentClass: filters.presentClass,
         lga: filters.lga,
