@@ -209,7 +209,7 @@ export const ManageEnumerators = () => {
                             <TableBody>
                                 {students.map((student) => (
                                     <TableRow key={student._id}>
-                                        <TableCell>{student.surname + student.otherNames}</TableCell>
+                                        <TableCell>{student.surname + student.firstname}</TableCell>
                                         <TableCell>{student.lga}</TableCell>
                                         <TableCell>{student.ward}</TableCell> {/* Replace with actual field */}
                                         <TableCell>{student.createdBy.fullName}</TableCell> {/* Replace with actual field */}

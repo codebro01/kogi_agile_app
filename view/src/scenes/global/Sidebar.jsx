@@ -191,14 +191,14 @@ const Sidebar = ({ isSidebar }) => {
               
             </Typography>} */}
 
-            {!userPermissions.includes('handle_payments') &&  (    <Item
+            {!userPermissions.includes('handle_payments') && (<Item
               title={userPermissions.includes('handle_registrars') ? 'Register Account' : 'Register Student'}
               to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/role-selector' : '/admin-dashboard/create-student-school-selector'}
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            /> )}
-        
+            />)}
+
             <Item
               title="Manage Students"
               to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : 'enumerator-dashboard/view-all-students-data'}
@@ -207,7 +207,7 @@ const Sidebar = ({ isSidebar }) => {
               setSelected={setSelected}
             />
 
-              {userPermissions.includes('handle_admins') && (
+            {userPermissions.includes('handle_admins') && (
               <Item
                 title="Manage Admins"
                 to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/admins' : 'enumerator-dashboard/view-all-students-data'}
@@ -215,27 +215,27 @@ const Sidebar = ({ isSidebar }) => {
                 selected={selected}
                 setSelected={setSelected}
               />
-              )}
-   
-              {userPermissions.includes('handle_registrars') && 
-              
-              <>
-              <Item
-                title="Manage Enumerators"
-                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/enumerators' : 'enumerator-dashboard/view-all-students-data'}
-                icon={<FormatListNumberedIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
-              <Item
-                title="Manage Payroll Specialists"
-                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/payroll-specialists' : 'enumerator-dashboard/view-all-students-data'}
-                icon={<PaymentIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
+            )}
 
-              {/* <Item
+            {userPermissions.includes('handle_registrars') &&
+
+              <>
+                <Item
+                  title="Manage Enumerators"
+                  to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/enumerators' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<FormatListNumberedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Manage Payroll Specialists"
+                  to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/payroll-specialists' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<PaymentIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+
+                {/* <Item
                 title="Manage School"
                 to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : 'enumerator-dashboard/view-all-students-data'}
                 icon={<SchoolIcon />}
@@ -243,35 +243,59 @@ const Sidebar = ({ isSidebar }) => {
                 setSelected={setSelected}
               /> */}
               </>
-              }
+            }
 
-            {userPermissions.length === 1 && !userPermissions.includes('handle_payments') && (
+            {userPermissions.length === 1 && (
               <>
-                       <Item
-                title="Export Sheet"
-                to={'/export-attendance-sheet'}
-                icon={<DescriptionIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
+                <Item
+                  title="Export Sheet"
+                  to={'/export-attendance-sheet'}
+                  icon={<DescriptionIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
 
-              <Item
-                title="Import Sheet"
-                to={'/import-attendance-sheet'}
+                <Item
+                  title="Import Sheet"
+                  to={'/import-attendance-sheet'}
                   icon={<FileUploadIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />      
+                  selected={selected}
+                  setSelected={setSelected}
+                />
 
-              <Item
-                title="View Attendance"
-                to={'/view-attendance-sheet'}
+                <Item
+                  title="View Attendance"
+                  to={'/view-attendance-sheet'}
                   icon={<RemoveRedEyeIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />      
+                  selected={selected}
+                  setSelected={setSelected}
+                />
               </>
- 
+
+
+
+
+            )}
+            {userPermissions.length === 2 && userPermissions.includes('handle_payments') && (
+              <>
+                <Item
+                  title="Export Attendance"
+                  to={'/export-attendance-sheet'}
+                  icon={<DescriptionIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+
+
+                <Item
+                  title="View Attendance"
+                  to={'/view-attendance-sheet'}
+                  icon={<RemoveRedEyeIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
+
 
 
 
@@ -317,7 +341,7 @@ const Sidebar = ({ isSidebar }) => {
 
 
 
-{/* 
+            {/* 
             {userPermissions.includes('handle_registrars') &&
               <>
                 <Typography

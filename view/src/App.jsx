@@ -151,18 +151,11 @@ function App() {
                   element={
                     <DataProvider>
                       <Routes>
-                        <Route path="/enumerator-dashboard" element={<Dashboard />} />
-                        <Route path="/admin-dashboard/create-student-school-selector" element={<RegistrationSelector />} />
-                        <Route path="/admin-dashboard/role-selector" element={<RoleSelector />} />
-                        <Route path="/admin-dashboard/create-accounts/register-admin" element={<CreateAdmin />} />
+                        <Route path="/payroll-specialist-dashboard" element={<Dashboard />} />
+                        <Route path="/payroll-specialist-dashboard/view-attendance" element={<RegistrationSelector />} />
+                        <Route path="/payroll-specialist-dashboard/view-payments" element={<RoleSelector />} />
+                        <Route path="payroll-specialist-dashboard/upload-payment" element={<CreateAdmin />} />
                         <Route path="/admin-dashboard/create-accounts/register-enumerator" element={<CreateEnumerator />} />
-                        <Route path="/admin-dashboard/create-accounts/register-payroll-specialists" element={<CreatePayrollSpecialist />} />
-                        <Route path="/admin-dashboard/manage-accounts/admins" element={<ManageAdmins />} />
-                        <Route path="/admin-dashboard/manage-accounts/enumerators" element={<ManageEnumerators />} />
-                        <Route path="/admin-dashboard/manage-accounts/payroll-specialists" element={<ManagePayrollSpecialists />} />
-                        <Route path="/admin-dashboard/manage-accounts/admins/edit-admin/:id" element={<EditAdmin />} />
-                        <Route path="/admin-dashboard/manage-accounts/enumerators/edit-enumerator/:id" element={<EditEnumerator />} />
-                        <Route path="/admin-dashboard/manage-accounts/payroll-specialists/edit-payroll-specialists/:id" element={<EditPayrollSpecialists />} />
                         <Route path="/index.html" element={<Navigate to="/" />} />
                         <Route path="*" element={<Navigate to="/enumerator-dashboard" />} />
 

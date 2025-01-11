@@ -275,10 +275,14 @@ export const ViewAllStudentsData = () => {
         <Table>
           <TableHead>
             <TableRow>
+
+              <TableCell>S/N</TableCell>
+              <TableCell>Passport</TableCell>
               <TableCell>Surname</TableCell>
+              <TableCell>School Name</TableCell>
               <TableCell>Present Class</TableCell>
-              <TableCell>State of Origin</TableCell>
-              <TableCell>LGA</TableCell>
+              <TableCell>State of Origin/LGA of Origin</TableCell>
+              <TableCell>LGA of Enrollment</TableCell>
               <TableCell>Ward</TableCell>
               <TableCell>Edit</TableCell>
             </TableRow>
@@ -287,11 +291,16 @@ export const ViewAllStudentsData = () => {
             {studentsData && studentsData.length > 0 ? (
               studentsData.map((student, index) => (
                 <TableRow key={index}>
+                  <TableCell>{index++}</TableCell>
+                  <TableCell>
+                    <img src={`${student.passport}`} alt="Student Passport" />
+                  </TableCell>
                   <TableCell>{student.surname}</TableCell>
+                  <TableCell>{student.schoolId.schoolName}</TableCell>
                   <TableCell>{student.presentClass}</TableCell>
-                  <TableCell>{student.stateOfOrigin}</TableCell>
-                  <TableCell>{student.lga}</TableCell>
-                  <TableCell>{student.ward.name}</TableCell>
+                  <TableCell>{student.stateOfOrigin} | {student.lga}</TableCell>
+                  <TableCell>{student.lgaOfEnrollment}</TableCell>
+                  <TableCell>{student.ward}</TableCell>
                   <TableCell>
                     <IconButton onClick={() => handleEdit(student)} color="primary">
                       <EditIcon />

@@ -314,7 +314,7 @@ export const ViewAttendance = () => {
                         <TableBody>
                             {filteredData.map((row, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>{`${row?.studentDetails.surname} ${row?.studentDetails.otherNames}`}</TableCell>
+                                    <TableCell>{`${row?.studentDetails.surname} ${row?.studentDetails.firstname}`}</TableCell>
                                     {<TableCell>{row?.schoolDetails.schoolName}</TableCell>} {/* Hide on mobile */}
                                     {<TableCell>{row.class}</TableCell>}  {/* Hide on mobile */}
                                     {<TableCell>{row.AttendanceScore}</TableCell>}  {/* Hide on mobile */}

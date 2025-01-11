@@ -511,7 +511,7 @@ export const PayrollSpecialistSignInForm = () => {
                 setIsLoading(false)
                 // Check permissions and navigate
                 if (allPermissionNames.includes('handle_students')) {
-                    navigate('/enumerator-dashboard');
+                    navigate('/payroll-specialist-dashboard');
                 } else {
                     navigate('/sign-in');
                 }

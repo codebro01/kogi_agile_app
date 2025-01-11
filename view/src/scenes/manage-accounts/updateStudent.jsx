@@ -36,7 +36,8 @@ export const UpdateStudent = () => {
         schoolId: student.schoolId._id,
         ward: student.ward,
         surname: student.surname,
-        otherNames: student.otherNames,
+        firstname: student.firstname,
+        middlename: student.middlename,
         studentNin: student.studentNin,
         dob: student.dob,
         nationality: student.nationality,
@@ -50,7 +51,6 @@ export const UpdateStudent = () => {
         classAtEnrollment: student.classAtEnrollment,
         yearOfEnrollment: student.yearOfEnrollment,
         lgaOfEnrollment: student.lgaOfEnrollment,
-
         parentName: student.parentName,
         parentPhone: student.parentPhone,
         parentNin: student.parentNin,
@@ -273,7 +273,8 @@ export const UpdateStudent = () => {
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             {[{ label: 'Surname', name: 'surname' },
-                            { label: 'Other Names', name: 'otherNames' },
+                            { label: 'Firstname', name: 'firstname' },
+                            { label: 'Middlename', name: 'middlename' },
                             { label: 'Studdent Nin', name: 'studentNin' }].map(({ label, name }) => (
                                 <Grid item xs={12} key={name}>
                                     <TextField
@@ -442,7 +443,7 @@ export const UpdateStudent = () => {
                                     ))}
                                 </TextField>
                             </Grid>
-                            { <Grid item xs={12}>
+                            {<Grid item xs={12}>
                                 <TextField
                                     label="Wards"
                                     name="ward"
@@ -512,7 +513,7 @@ export const UpdateStudent = () => {
                                     />
                                 </Grid>
                             ))}
-            
+
 
                             <Grid item xs={12}>
                                 <FormControl fullWidth>
@@ -670,7 +671,7 @@ export const UpdateStudent = () => {
                                         color: '#fff',
                                     }}
                                 >
-                                    Upload Passport
+                                    Change Passport
                                     <input
                                         type="file"
                                         name="image"

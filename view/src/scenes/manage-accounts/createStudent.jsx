@@ -14,14 +14,8 @@ export const CreateStudent = () => {
   // const theme = useTheme();
   const { loading } = useContext(SchoolsContext);
 
-
-  const { wardsData } = useContext(WardsContext)
-
   const [bankList, setBankList] = useState([
-    'Access Bank', 'Citibank Nigeria', 'Diamond Bank', 'Ecobank Nigeria', 'Fidelity Bank',
-    'First Bank of Nigeria', 'Guaranty Trust Bank', 'Heritage Bank', 'Jaiz Bank', 'Keystone Bank',
-    'Lapo Microfinance Bank', 'Mainstreet Bank', 'Polaris Bank', 'Stanbic IBTC Bank', 'Sterling Bank',
-    'Union Bank', 'United Bank for Africa (UBA)', 'Wema Bank', 'Zenith Bank'
+   'FCMB', 'Polaris Bank' ,'Zenith Bank'
   ]);
 
   const [occupations, setOccupation] = useState([
@@ -40,7 +34,8 @@ export const CreateStudent = () => {
     ward: "",
     schoolId: "",
     surname: "",
-    otherNames: "",
+    firstname: "",
+    middlename: "",
     studentNin: "",
     dob: "",
     stateOfOrigin: "",
@@ -200,7 +195,8 @@ export const CreateStudent = () => {
             ward: "",
             schoolId: storedSchool._id,
             surname: "",
-            otherNames: "",
+            firstname: "",
+            middlename: "",
             studentNin: "",
             dob: "",
             stateOfOrigin: "",
@@ -260,7 +256,8 @@ export const CreateStudent = () => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               {[{ label: 'Surname', name: 'surname' },
-              { label: 'Other Names', name: 'otherNames' }
+              { label: 'Other Names', name: 'firstname' },
+                { label: 'Middlename', name: 'middlename' }
               ].map(({ label, name }) => (
                 <Grid item xs={12} key={name}>
                   <TextField
