@@ -662,16 +662,18 @@ export const CreateStudent = () => {
                   <InputLabel>Bank Name</InputLabel>
                   <Select
                     name="bankName"
-                    value={formData.bankName}
+                    value={formData.bankName || ''}  // Default value set to 'Select Bank'
                     onChange={handleChange}
                     label="Bank Name"
                   >
+                    <MenuItem value="">Select Bank</MenuItem>
                     <MenuItem value="FCMB">FCMB</MenuItem>
                     <MenuItem value="Polaris Bank">Polaris Bank</MenuItem>
                     <MenuItem value="Zenith Bank">Zenith Bank</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
+
 
               <Grid item xs={12}>
                 <TextField

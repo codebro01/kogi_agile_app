@@ -14,6 +14,8 @@ import { getNigeriaStates } from 'geo-ng';
 import lgasAndWards from '../../Lga&wards.json';
 import { SchoolsContext } from "../../components/dataContext.jsx";
 import DataTable from 'react-data-table-component';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 
 // Import context
@@ -255,6 +257,8 @@ export const AdminViewAllStudentsDataNoExport = () => {
     }
 
 
+
+
     const handleInputChange = useCallback((e) => {
         const { name, value } = e.target;
         setFilters((prevFilters) => {
@@ -296,6 +300,39 @@ export const AdminViewAllStudentsDataNoExport = () => {
             </Box>
         );
 
+    const handleDelete = (row) => {
+        // Replace this with your actual delete logic, such as making an API request to delete the record
+        const confirmDelete = window.confirm(`Are you sure you want to delete ${row.firstname} ${row.surname}?`);
+
+        if (confirmDelete) {
+            try {
+                (async () => {
+                    try {
+                        const token = localStorage.getItem('token');
+                        setEnumeratorsLoading(true);
+                        const response = await axios.delete(`${API_URL}/student/${row.randomId}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                            withCredentials: true,
+                        });
+                        console.log(response.data.remainingStudents)
+                        setStudentsData(response.data.remainingStudents)
+                    }
+                    catch (err) {
+                        console.log(err)
+                    }
+
+                })()
+
+                console.log(`Student with ID ${row.randomId} deleted successfully`);
+                // Optionally, you can refresh or re-fetch the data here
+            } catch (error) {
+                console.error("Error deleting student:", error);
+            }
+        }
+    };
+
     const customStyles = {
         rows: {
             style: {
@@ -319,6 +356,11 @@ export const AdminViewAllStudentsDataNoExport = () => {
 
     const columns = [
         {
+            name: 'S/N',
+            selector: (row, index) => index + 1, // Calculate serial number (starting from 1)
+            sortable: true,
+        },
+        {
             name: 'Image',
             cell: (row) => (
                 <img
@@ -329,6 +371,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
             ),
             sortable: false,
         },
+
         {
             name: 'Surname',
             selector: row => row.surname,
@@ -385,6 +428,27 @@ export const AdminViewAllStudentsDataNoExport = () => {
                     }}
                 >
                     View student
+                </button>
+            ),
+        },
+
+        {
+            name: 'Actions',
+            cell: (row) => (
+                <button
+                    onClick={() => handleDelete(row)}
+                    style={{
+                        padding: '5px 10px',
+                        backgroundColor: 'transparent', // Optional: color for the delete button
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                >
+                    <DeleteIcon style={{ marginRight: '8px', color: "red" }} />
                 </button>
             ),
         },
@@ -874,13 +938,25 @@ export const AdminViewAllStudentsDataNoExport = () => {
                                 padding: '20px',
                                 borderRadius: '10px',
                                 boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                                width: "80%",
+                                display: "flex",
+                                flexDirection: "column", 
+                                alignItems: "center", 
+                                justifyContent:"center",
                             }}
                         >
                             <h3>Student Details</h3>
                             <div><img src={`${selectedItem.passport}`} alt="" /></div>
                             <p><strong>Student ID:</strong> {selectedItem.randomId}</p>
                             <p><strong>Name:</strong> {`${selectedItem.surname} ${selectedItem.firstname} ${selectedItem.fiddlename || ''}`}</p>
+                            <p><strong>School name:</strong> {selectedItem.schoolId.schoolName}</p>
+                            <p><strong>Date of Birth</strong> {selectedItem.dob}</p>
+                            <p><strong>LGA of Enrollment</strong> {selectedItem.lgaOfEnrollment}</p>
+                            <p><strong>Ward:</strong> {selectedItem.ward}</p>
+                            <p><strong>Present Class:</strong> {selectedItem.presentClass}</p>
+                            {/* <p><strong>Attendance Score:</strong> {selectedItem.schoolId.schoolName}</p>
                             <p><strong>Attendance Score:</strong> {selectedItem.schoolId.schoolName}</p>
+                            <p><strong>Attendance Score:</strong> {selectedItem.schoolId.schoolName}</p> */}
                             <button
                                 onClick={() => setIsModalOpen(false)}
                                 style={{

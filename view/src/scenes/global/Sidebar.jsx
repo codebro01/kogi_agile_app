@@ -21,6 +21,8 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { ChangePasswordForm } from "../../components/changePasswordPopup.jsx";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
 import { ExportSubmitButton } from "../../components/exportButton.jsx";
 import ImportContactsIcon from '@mui/icons-material/ImportContacts'; // For import
 import FileUploadIcon from '@mui/icons-material/FileUpload'; // For export
@@ -206,22 +208,26 @@ const Sidebar = ({ isSidebar }) => {
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
-              title="View all Students"
-              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-all-students-no-export' : 'enumerator-dashboard/view-all-students-data'}
-              icon={<ContactsOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+       
 
             {userPermissions.includes('handle_admins') && (
-              <Item
+              <>  
+                     <Item
+              title="View all Students"
+              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-all-students-no-export' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<VisibilityIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />  
+            <Item
                 title="Manage Admins"
                 to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/admins' : 'enumerator-dashboard/view-all-students-data'}
                 icon={<AdminPanelSettingsIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />
+              </>
+            
             )}
 
             {userPermissions.includes('handle_registrars') &&

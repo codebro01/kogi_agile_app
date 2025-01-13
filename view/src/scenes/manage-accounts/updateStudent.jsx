@@ -662,7 +662,7 @@ export const UpdateStudent = () => {
                                         error={!!errors.bankName}
                                     >
 
-
+                                        <MenuItem value="">Select Bank</MenuItem>
                                         <MenuItem value="Fidelity Bank">FCMB</MenuItem>
                                         <MenuItem value="Polaris Bank">Polaris Bank</MenuItem>
                                         <MenuItem value="Zenith Bank">Zenith Bank</MenuItem>
