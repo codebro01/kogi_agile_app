@@ -15,15 +15,15 @@ const StatBox = ({ title, subtitle, icon, progress, increase, bgColor }) => {
       <Box display="flex" justifyContent="center" alignItems={"center"} >
         <Box>
           <Typography
-            variant="h4"
+            variant="h1"
             fontWeight="bold"
             sx={{ 
               color: "#fff",
               fontSize : {
                 xs: '1.3rem', // Mobile
                 // sm: '1.2rem',   // Tablet
-                md: '1.6rem', // Medium screens
-                lg: '2rem',   // Large screens
+                md: '2.0rem', // Medium screens
+                lg: '2.5rem',   // Large screens
               } 
               
               }}
@@ -35,7 +35,7 @@ const StatBox = ({ title, subtitle, icon, progress, increase, bgColor }) => {
         </Box>
       </Box>
       <Box display="flex" justifyContent="center" mt="3px">
-        <Typography variant="h4" sx={{ 
+        <Typography variant="h5" sx={{ 
           textAlign: "center",
           fontWeight: "700"
           }}>

@@ -256,8 +256,7 @@ export const CreateStudent = () => {
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               {[{ label: 'Surname', name: 'surname' },
-              { label: 'Firstname', name: 'firstname' },
-              { label: 'Middlename', name: 'middlename' }
+              { label: 'Firstname', name: 'firstname' }
               ].map(({ label, name }) => (
                 <Grid item xs={12} key={name}>
                   <TextField
@@ -273,6 +272,21 @@ export const CreateStudent = () => {
                   />
                 </Grid>
               ))}
+
+
+
+              <Grid item xs={12} key={'middlename'}>
+                <TextField
+                  label={'Middlename'}
+                  name={'middlename'}
+                  variant="outlined"
+                  fullWidth
+                  value={formData.middlename}
+                  onChange={handleChange}
+
+                  required
+                />
+              </Grid>
 
 
               <Grid item xs={12}>

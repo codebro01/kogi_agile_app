@@ -261,7 +261,7 @@ export const UpdateStudent = () => {
     }, 10000)
 
 
-console.log(formData)
+    console.log(formData)
     const allWards = lgasAndWards.flatMap(ward => ward.wards).sort((a, b) => a.localeCompare(b));;
 
 
@@ -425,7 +425,7 @@ console.log(formData)
                                         select
                                         variant="outlined"
                                         fullWidth
-                                        value={formData.lga || ''} 
+                                        value={formData.lga || ''}
                                         onChange={(e) => handleSelectChange(e, { name: 'lga' })}
                                     >
                                         {lgas.map((lga, index) => (
@@ -652,24 +652,10 @@ console.log(formData)
                                         label="Bank Name"
                                         error={!!errors.bankName}
                                     >
-                                        <MenuItem value="Access Bank">Access Bank</MenuItem>
-                                        <MenuItem value="Citibank Nigeria">Citibank Nigeria</MenuItem>
-                                        <MenuItem value="Diamond Bank">Diamond Bank</MenuItem>
-                                        <MenuItem value="Ecobank Nigeria">Ecobank Nigeria</MenuItem>
-                                        <MenuItem value="Fidelity Bank">Fidelity Bank</MenuItem>
-                                        <MenuItem value="First Bank of Nigeria">First Bank of Nigeria</MenuItem>
-                                        <MenuItem value="Guaranty Trust Bank">Guaranty Trust Bank</MenuItem>
-                                        <MenuItem value="Heritage Bank">Heritage Bank</MenuItem>
-                                        <MenuItem value="Jaiz Bank">Jaiz Bank</MenuItem>
-                                        <MenuItem value="Keystone Bank">Keystone Bank</MenuItem>
-                                        <MenuItem value="Lapo Microfinance Bank">Lapo Microfinance Bank</MenuItem>
-                                        <MenuItem value="Mainstreet Bank">Mainstreet Bank</MenuItem>
+
+
+                                        <MenuItem value="Fidelity Bank">FCMB</MenuItem>
                                         <MenuItem value="Polaris Bank">Polaris Bank</MenuItem>
-                                        <MenuItem value="Stanbic IBTC Bank">Stanbic IBTC Bank</MenuItem>
-                                        <MenuItem value="Sterling Bank">Sterling Bank</MenuItem>
-                                        <MenuItem value="Union Bank">Union Bank</MenuItem>
-                                        <MenuItem value="United Bank for Africa (UBA)">United Bank for Africa (UBA)</MenuItem>
-                                        <MenuItem value="Wema Bank">Wema Bank</MenuItem>
                                         <MenuItem value="Zenith Bank">Zenith Bank</MenuItem>
                                     </Select>
                                 </FormControl>

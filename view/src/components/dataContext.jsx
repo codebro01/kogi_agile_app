@@ -34,7 +34,6 @@ export const DataProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
         const [studentsRes, schoolsRes, wardsRes] = await Promise.all([
           axios.get(`${API_URL}/student`, {
             headers: {
@@ -46,7 +45,8 @@ export const DataProvider = ({ children }) => {
           axios.get(`${API_URL}/all-schools`),
           axios.get(`${API_URL}/wards`),
         ]);
-
+        
+        
         setStudentsData(studentsRes.data.students);
         setSchoolsData(schoolsRes.data.allSchools);
         setWardsData(wardsRes.data.wards);
@@ -64,7 +64,7 @@ export const DataProvider = ({ children }) => {
 
     fetchData();
   }, [API_URL, navigate, token]);
-
+  console.log(studentsData)
   return (
     <StudentsContext.Provider value={{ studentsData, setStudentsData }}>
       <SchoolsContext.Provider value={{ selectedSchool, setSelectedSchool, schoolsData }}>
