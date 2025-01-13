@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
@@ -27,12 +27,42 @@ import { EditEnumerator } from "./scenes/manage-accounts/editEnumeratorData.jsx"
 import { EditPayrollSpecialists } from "./scenes/manage-accounts/editPayrollSpecialists.jsx";
 import { ImportAttendanceSheet } from "./scenes/manage-accounts/importAttendanceSheet.jsx";
 import { ViewAttendance } from "./components/viewAttendance .jsx";
+import { ViewSchoolsInfo } from "./components/viewSchoolsInfo.jsx";
+import { ExportAttendanceSheetPayroll } from "./scenes/manage-accounts/exportAttendanceSheetScore.jsx";
+import { AdminViewAllStudentsDataNoExport } from "./scenes/manage-accounts/adminViewAllStudentsData_noExport.jsx";
+import axios from 'axios';
 
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
   const location = useLocation();
   const subdomain = getSubdomain();
+  const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
+  // const [allschools, setAllSchools] = useState([]);
+  // const [primarySchoolsData, setPrimarySchoolsData] = useState([]);
+  // const [secondarySchoolsData, setSecondarySchoolsData] = useState([]);
+  // const [vocationalData, setVocationalData] = useState([]);
+
+
+
+  // useEffect(() => {
+
+  //   (async () => {
+  //       try {
+  //         const response = await axios.get(`${API_URL}/all-schools`)
+  //         setAllSchools(response.data.allSchools);
+
+
+  //       }
+  //       catch(err) {
+  //         console.log(err)
+  //       }
+  //   })()
+  // }, []);
+
+
+
+  // console.log(allschools);
 
   // console.log(window.location.hostname);
 
@@ -61,7 +91,8 @@ function App() {
                         <Route path="/admin-dashboard/role-selector" element={<RoleSelector />} />
                         <Route path="/admin-dashboard/create-accounts/register-admin" element={<CreateAdmin />} />
                         <Route path="/admin-dashboard/view-all-students-data" element={<AdminViewAllStudentsData />} />
-
+                        <Route path="/admin-dashboard/admin-view-all-students-no-export" element={<AdminViewAllStudentsDataNoExport />} />
+                        <Route path="/view-all-schools-info" element={<ViewSchoolsInfo />} />
                         <Route path="/admin-dashboard/create-accounts/register-enumerator" element={<CreateEnumerator />} />
                         <Route path="/admin-dashboard/create-accounts/register-payroll-specialists" element={<CreatePayrollSpecialist />} />
                         <Route path="/admin-dashboard/manage-accounts/admins" element={<ManageAdmins />} />
@@ -70,6 +101,7 @@ function App() {
                         <Route path="/admin-dashboard/manage-accounts/admins/edit-admin/:id" element={<EditAdmin />} />
                         <Route path="/admin-dashboard/manage-accounts/enumerators/edit-enumerator/:id" element={<EditEnumerator />} />
                         <Route path="/admin-dashboard/manage-accounts/payroll-specialists/edit-payroll-specialists/:id" element={<EditPayrollSpecialists />} />
+                        
                         <Route path="/index.html" element={<Navigate to="/" />} />
                         <Route path="*" element={<Navigate to="/admin-dashboard" />} />
 
@@ -152,11 +184,12 @@ function App() {
                     <DataProvider>
                       <Routes>
                         <Route path="/payroll-specialist-dashboard" element={<Dashboard />} />
-                        <Route path="/payroll-specialist-dashboard/view-attendance" element={<RegistrationSelector />} />
+                        <Route path="/export-attendance-sheet/" element={<ExportAttendanceSheetPayroll/>} />
                         <Route path="/payroll-specialist-dashboard/view-payments" element={<RoleSelector />} />
                         <Route path="payroll-specialist-dashboard/upload-payment" element={<CreateAdmin />} />
                         <Route path="/admin-dashboard/create-accounts/register-enumerator" element={<CreateEnumerator />} />
                         <Route path="/index.html" element={<Navigate to="/" />} />
+
                         <Route path="*" element={<Navigate to="/enumerator-dashboard" />} />
 
                       </Routes>

@@ -15,12 +15,13 @@ import lgasAndWards from '../../Lga&wards.json';
 import { SchoolsContext } from "../../components/dataContext.jsx";
 import DataTable from 'react-data-table-component';
 
+
 // Import context
 
 
 
 
-export const AdminViewAllStudentsData = () => {
+export const AdminViewAllStudentsDataNoExport = () => {
     const { userPermissions } = useAuth();
     const theme = useTheme();
     const colors = tokens(theme.palette.mode)
@@ -44,6 +45,12 @@ export const AdminViewAllStudentsData = () => {
     const [enumeratorsData, setEnumeratorsData] = useState([]);
     const [fetchLoading, setFetchLoading] = useState(false)
     const [enumeratorsLoading, setEnumeratorsLoading] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState(''); // State for search query
+    const [filteredData, setFilteredData] = useState(studentsData); // State for filtered data
+    
+
 
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
     const token = localStorage.getItem('token') || '';
@@ -204,26 +211,43 @@ export const AdminViewAllStudentsData = () => {
     ];
 
 
+    useEffect(() => {
+        (async () => {
+            try {
+                setFetchLoading(true);
+                const response = await axios.get(`${API_URL}/student/admin-view-all-students`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    // params: { ...filteredParams, ...sortParam },
+                    withCredentials: true,
+                })
+
+                console.log(response)
+
+            } catch (error) {
+                console.log(error?.response?.statusText)
+                setFilterError(error?.response?.statusText)
+            }
+        })()
+    }, [])
+
+
     const fetchStudents = async () => {
 
 
         try {
             setFetchLoading(true);
-            const response = await axios.get(`${API_URL}/student/download`, {
+            const response = await axios.get(`${API_URL}/student/admin-view-all-students`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                params: { ...filteredParams, ...sortParam },
-                responseType: "blob",
+                // params: { ...filteredParams, ...sortParam },
                 withCredentials: true,
             })
 
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'students.xlsx'); // Filename
-            document.body.appendChild(link);
-            link.click();
+            console.log(response)
+
         } catch (error) {
             console.log(error?.response?.statusText)
             setFilterError(error?.response?.statusText)
@@ -272,24 +296,135 @@ export const AdminViewAllStudentsData = () => {
             </Box>
         );
 
+    const customStyles = {
+        rows: {
+            style: {
+                marginBottom: '20px', // Adds spacing between rows
+            },
+        },
+
+        header: {
+            style: {
+                justifyContent: 'center', // Centers the title
+                textAlign: 'center',
+                fontWeight: 'bold',
+                fontSize: '20px',
+                color: '#4A4A4A', // Optional styling for the title color
+                padding: '10px',
+                display: "none"
+            },
+        },
+    };
+
 
     const columns = [
         {
-            name: 'Name',
-            selector: row => row.name,
+            name: 'Image',
+            cell: (row) => (
+                <img
+                    src={row.passport} // Placeholder for missing images
+                    alt="Student"
+                    style={{ width: '50px', height: '50px'   }}
+                />
+            ),
+            sortable: false,
+        },
+        {
+            name: 'Surname',
+            selector: row => row.surname,
             sortable: true,
         },
         {
-            name: 'Age',
-            selector: row => row.age,
+            name: 'Firstname',
+            selector: row => row.firstname,
             sortable: true,
         },
         {
-            name: 'Job',
-            selector: row => row.job,
+            name: 'Middlename',
+            selector: row => row.middlename,
             sortable: true,
+        },
+        {
+            name: 'School',
+            selector: row => row.schoolId.schoolName,
+            sortable: true,
+        },
+        {
+            name: 'dob',
+            selector: row => row.dob,
+            sortable: true,
+        },
+        {
+            name: 'LGA of Enrollment',
+            selector: row => row.lgaOfEnrollment,
+            sortable: true,
+        },
+        {
+            name: 'Present Class',
+            selector: row => row.presentClass,
+            sortable: true,
+        },
+        {
+            name: 'Year of Enrollment',
+            selector: row => row.yearOfEnrollment,
+            sortable: true,
+        },
+
+        {
+            name: 'Actions',
+            cell: (row) => (
+                <button
+                    onClick={() => handleViewItem(row)}
+                    style={{
+                        padding: '5px 10px',
+                        backgroundColor: '#196b57',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                    }}
+                >
+                    View student
+                </button>
+            ),
         },
     ];
+
+    const handleViewItem = (item) => {
+        setSelectedItem(item);
+        setIsModalOpen(true);
+    };
+
+    const handleSearch = (event) => {
+        const query = event.target.value.toLowerCase();
+        setSearchQuery(query);
+
+        // Filter data based on search query
+        const filtered = studentsData.filter((item) => {
+            // Include specific fields in the filter logic
+            const valuesToSearch = [
+                item.randomId,
+                item.surname,
+                item.firstname,
+                item.middlename,
+                item.schoolId.schoolName, // Add schoolName explicitly
+                item.lgaOfEnrollment,
+                item.presentClass,
+                item.bankName,
+                item.yearOfEnrollment
+            ];
+
+            // Check if any of these fields include the search query
+            return valuesToSearch.some(
+                (value) => value && String(value).toLowerCase().includes(query)
+            );
+        });
+
+        setFilteredData(filtered);
+    };
+
+    console.log(filteredData);
+    console.log(searchQuery)
 
     return (
         <>
@@ -667,7 +802,7 @@ export const AdminViewAllStudentsData = () => {
                                     background: colors.main['darkGreen'],
                                 }}
                             >
-                                Export Data
+                                Filter Students
                             </Button>
                         </Box>
 
@@ -678,15 +813,89 @@ export const AdminViewAllStudentsData = () => {
                         )}
                     </Box>
 
+                    <Typography variant='h4' sx={{
+                        marginTop: "100px",
+                        marginBottom: "30px",
+                        textAlign: "center",
+                        fontWeight: 800
+}}>
+                                View Registered Students Information
+                        </Typography>
+                    <div>
+                        {/* Search Input */}
+                        <div style={{ marginBottom: '20px', position: 'relative' }}>
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchQuery}
+                                onChange={handleSearch}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px 16px',
+                                    fontSize: '16px',
+                                    color: '#333',
+                                    backgroundColor: '#f9f9f9',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '8px',
+                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                    outline: 'none',
+                                    transition: 'box-shadow 0.2s ease-in-out',
+                                }}
+                                onFocus={(e) => (e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)')}
+                                onBlur={(e) => (e.target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)')}
+                            />
+                          
+                        </div>
+                    </div>
 
-                
-                    {/* <DataTable
-                        title="Employee List"
+
+
+                    <DataTable
+                        title="View Registered Students Information"
                         columns={columns}
-                        data={data}
+                        data={filteredData}
                         pagination
-                        highlightOnHover
-                    /> */}
+                        paginationPosition="top" // Moves pagination to the top
+                        highlightOnHover 
+                        customStyles={customStyles} // Applying the custom styles
+
+
+                    />
+
+
+                    {isModalOpen && (
+                        <div
+                            style={{
+                                position: 'fixed',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                backgroundColor: '#fff',
+                                padding: '20px',
+                                borderRadius: '10px',
+                                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                            }}
+                        >
+                            <h3>Student Details</h3>
+                            <div><img src={`${selectedItem.passport}`} alt="" /></div>
+                            <p><strong>Student ID:</strong> {selectedItem.randomId}</p>
+                            <p><strong>Name:</strong> {`${selectedItem.surname} ${selectedItem.firstname} ${selectedItem.fiddlename || ''}`}</p>
+                            <p><strong>Attendance Score:</strong> {selectedItem.schoolId.schoolName}</p>
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                style={{
+                                    padding: '5px 10px',
+                                    backgroundColor: '#dc3545',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    )}
 
 
                 </Container>

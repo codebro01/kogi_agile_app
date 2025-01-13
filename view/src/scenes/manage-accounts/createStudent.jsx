@@ -283,9 +283,7 @@ export const CreateStudent = () => {
                   fullWidth
                   value={formData.middlename}
                   onChange={handleChange}
-
-                  required
-                />
+               />
               </Grid>
 
 
@@ -668,7 +666,7 @@ export const CreateStudent = () => {
                     onChange={handleChange}
                     label="Bank Name"
                   >
-                    <MenuItem value="Access Bank">FCMB</MenuItem>
+                    <MenuItem value="FCMB">FCMB</MenuItem>
                     <MenuItem value="Polaris Bank">Polaris Bank</MenuItem>
                     <MenuItem value="Zenith Bank">Zenith Bank</MenuItem>
                   </Select>

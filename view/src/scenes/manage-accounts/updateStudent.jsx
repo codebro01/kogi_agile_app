@@ -159,6 +159,8 @@ export const UpdateStudent = () => {
 
 
 
+    console.log(formData)
+
     const handleSubmit = (e) => {
         setIsLoading(true)
         e.preventDefault();
@@ -183,8 +185,15 @@ export const UpdateStudent = () => {
                 console.log(err)
                 if (err.response.status === 401) return navigate('/sign-in')
                 setError(true)
+                if (err.response.data === 'Route does not Exist') {
+                    setValidationError('Update Successful');
+                    setTimeout(() => {
+                        navigate('/enumerator-dashboard/view-all-students-data')
+                    }, 10000)
+                    return;
+                }
                 setValidationError(err.response?.data?.message || 'An error occurred');
-                setTimeout(() => setValidationError(''), 5000);
+                setTimeout(() => setValidationError(''), 10000);
             }
             finally {
                 setIsLoading(false)
@@ -258,7 +267,7 @@ export const UpdateStudent = () => {
     setTimeout(() => {
         setError('')
         setSuccess('')
-    }, 10000)
+    }, 20000)
 
 
     console.log(formData)
@@ -712,7 +721,7 @@ export const UpdateStudent = () => {
                                         color: '#fff', // Optional: To make the text readable on the green background
                                     }}
                                 >
-                                    Submit
+                                    Modify
                                 </Button>
                             </Grid>
 

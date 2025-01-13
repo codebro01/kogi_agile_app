@@ -4,6 +4,7 @@ import { StudentsContext } from "../../components/dataContext";
 import { Grid, Box, MenuItem, Select, InputLabel, Typography } from "@mui/material";
 import { useState } from "react";
 import { ExportSubmitButton } from "../../components/exportButton";
+import { SpinnerLoader } from "../../components/spinnerLoader";
 
 export const ImportAttendanceSheet = () => {
     const { loading, studentsData } = useContext(StudentsContext);
@@ -242,7 +243,10 @@ export const ImportAttendanceSheet = () => {
             </Grid>
 
             <Grid style={{ textAlign: 'center', marginTop: '20px' }}>
-                <ExportSubmitButton label="Upload Attendance Sheet" />
+
+                {!isSubmitting ? (<ExportSubmitButton label="Upload Attendance Sheet" />) : <SpinnerLoader/>}
+            
+                
             </Grid>
 
         {error  && 

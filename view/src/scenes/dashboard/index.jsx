@@ -1,7 +1,7 @@
 
 import { useContext, useEffect, React, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom'
-import { Box, Button, IconButton, Typography, Grid, useTheme, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Box, Button, IconButton, Typography, Grid, useTheme, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Card, CardContent } from "@mui/material";
 import { tokens } from "../../theme";
 import EmailIcon from "@mui/icons-material/Email";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
@@ -97,38 +97,47 @@ const Dashboard = () => {
     }
   }, []);
 
-  const viewSchoolInfos = () => {
-    navigate('/admin-dashboard')
+  const viewSchoolInfos = (link) => {
+    navigate(link)
   }
 
+  const uniqueSchools = Array.from(
+    new Set(
+      studentsData.map(student => JSON.stringify({
+        schoolName: student.schoolId?.schoolName,
+        schoolId: student.schoolId?._id,
+        schoolCategory: student.schoolId?.schoolCategory
+      }))
+    )
+  ).map(item => JSON.parse(item));
 
-console.log(userPermissions.includes('handle_payments'))
-
-
+  console.log(uniqueSchools)
 
 
 const totalPrimarySchool = () => {
-    const ECCDE = schoolsData.filter(school => school.schoolCategory === 'ECCDE').length;
-    const ECCDE_Primary = schoolsData.filter(school => school.schoolCategory === 'ECCDE AND PRIMARY').length;
-    const Primary = schoolsData.filter(school => school.schoolCategory === 'PRIMARY').length;
+    const ECCDE = uniqueSchools.filter(school => school.schoolCategory === 'ECCDE').length;
+  const ECCDE_Primary = uniqueSchools.filter(school => school.schoolCategory === 'ECCDE AND PRIMARY').length;
+  const Primary = uniqueSchools.filter(school => school.schoolCategory === 'PRIMARY').length;
   return ECCDE + ECCDE_Primary + Primary;
   }
 
-console.log(totalPrimarySchool())
+// console.log(totalPrimarySchool())
 
 const totalSecondarySchool = () => {
   
-  const public_JSS = schoolsData.filter(school => school.schoolCategory === 'Public JSS').length;
-  const public_JSS_SSS = schoolsData.filter(school => school.schoolCategory === 'Public JSS/SSS').length;
+  const public_JSS = uniqueSchools.filter(school => school.schoolCategory === 'Public JSS').length;
+  const public_JSS_SSS = uniqueSchools.filter(school => school.schoolCategory === 'Public JSS/SSS').length;
   return public_JSS + public_JSS_SSS;
 }
 
-console.log(totalSecondarySchool());
+// console.log(totalSecondarySchool());
 
-const totalScienceAndVocational = schoolsData.filter(school => school.schoolCategory === 'Science & Vocational').length;
-console.log(totalScienceAndVocational);
+const totalScienceAndVocational = uniqueSchools.filter(school => school.schoolCategory === 'Science & Vocational').length;
+// console.log(totalScienceAndVocational);
 
-const totalSchools = schoolsData.length;
+
+
+const totalSchools = uniqueSchools.length;
 
 
 
@@ -221,7 +230,7 @@ const totalSchools = schoolsData.length;
 
 
 
-console.log(studentsData)
+// console.log(studentsData)
 // ! Payroll Specialist's Dashboard
 
   if(userPermissions.includes('handle_payments'))  {
@@ -505,6 +514,10 @@ console.log(studentsData)
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
+
+
+
+
         <Header sx={{ textTransform: 'capitalize', color: colors.dashboardStatBox['darkGreen'] }} title={`${greetingMessage} ${capitalize(storedUser.fullName.split(' ')[0])}`} />
 
 
@@ -529,250 +542,295 @@ console.log(studentsData)
       {/* GRID & CHARTS */}
 
       {userPermissions.includes("handle_registrars") ? (
-        <Box
-          sx={{
-            display: {
-              xs: 'flex',  // flex layout for extra-small screens
-              sm: 'grid',  // grid layout for medium screens and up
-            },
-            marginTop: "50px",
-            gridAutoRows: '140px', // Set the row height for the grid
-            gap: '10px', // Spacing between grid items
-            gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)', // 1 column for extra-small screens
-              sm: 'repeat(6, 1fr)', // 6 columns for small screens and up
-              md: 'repeat(12, 1fr)', // 12 columns for medium screens and up
-              lg: 'repeat(12, 1fr)', // 12 columns for large screens and up
-            },
-            flexDirection: {
-              xs: 'column', // Flex direction as column for xs (flex)
-            },
-            '& > *': {
-              color: "#fff",
-              borderRadius: '5px', // Apply border-radius to all direct children
-            },
-            paddingBottom: "50px"
-          }}
-        >
-          {/* ROW 1 */}
-
+        <>
           <Box
-            className="statBoxContainer"
             sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.main["darkGreen"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "20vh",
             }}
           >
-            <StatBox
-              title={studentsData?.length || 0}
-              subtitle="Total Students Enrolled"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.main["darkGreen"], fontSize: "26px" }} />}
-            />
+            <Card
+              sx={{
+                backgroundColor: "#f9f9f9",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+                borderRadius: "16px",
+                padding: "20px",
+                width: "100%"
+              }}
+            >
+              <CardContent>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    color: "#196b57",
+                    fontWeight: "bold",
+                    marginBottom: "12px",
+                    textAlign: "center",
+                  }}
+                >
+                  Welcome to the Portal
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#333",
+                    lineHeight: "1.8",
+                    textAlign: "center",
+                  }}
+                >
+                  Here, you can efficiently manage and oversee student data with ease.
+                  The platform is designed to simplify your tasks and provide you with the tools needed
+                  for effective data management.
+                </Typography>
+              </CardContent>
+            </Card>
           </Box>
-
           <Box
-            className="statBoxContainer"
             sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
+              display: {
+                xs: 'flex',  // flex layout for extra-small screens
+                sm: 'grid',  // grid layout for medium screens and up
               },
-              backgroundColor: colors.dashboardStatBox["red"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
+              marginTop: "20px",
+              gridAutoRows: '140px', // Set the row height for the grid
+              gap: '10px', // Spacing between grid items
+              gridTemplateColumns: {
+                xs: 'repeat(1, 1fr)', // 1 column for extra-small screens
+                sm: 'repeat(6, 1fr)', // 6 columns for small screens and up
+                md: 'repeat(12, 1fr)', // 12 columns for medium screens and up
+                lg: 'repeat(12, 1fr)', // 12 columns for large screens and up
+              },
+              flexDirection: {
+                xs: 'column', // Flex direction as column for xs (flex)
+              },
+              '& > *': {
+                color: "#fff",
+                borderRadius: '5px', // Apply border-radius to all direct children
+              },
+              paddingBottom: "50px"
             }}
           >
-            <StatBox
-              title={primary6Students?.length}
-              subtitle="Total Primary 6"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
+            {/* ROW 1 */}
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.dashboardStatBox["yellow"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
-            }}
-          >
-            <StatBox
-              title={jss1Students?.length}
-              subtitle="Total JSS 1"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.main["darkGreen"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={studentsData?.length || 0}
+                subtitle="Total Students Enrolled"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.main["darkGreen"], fontSize: "26px" }} />}
+              />
+            </Box>
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.dashboardStatBox["gold"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
-            }}
-          >
-            <StatBox
-              title={jss3Students?.length}
-              subtitle="Total JSS 3"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.dashboardStatBox["red"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={primary6Students?.length}
+                subtitle="Total Primary 6"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+              />
+            </Box>
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.blueAccent[400],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
-            }}
-          >
-            <StatBox
-              title={ss1Students?.length}
-              subtitle="Total SSS 1"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.dashboardStatBox["yellow"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={jss1Students?.length}
+                subtitle="Total JSS 1"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+              />
+            </Box>
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.dashboardStatBox["grey"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <StatBox
-              title={getNumberOfDistinctSchools(studentsData)}
-              subtitle="Total Schools with Registered Students"
-              progress="0.50"
-              icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.dashboardStatBox["gold"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={jss3Students?.length}
+                subtitle="Total JSS 3"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+              />
+            </Box>
 
-          
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.blueAccent[400],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={ss1Students?.length}
+                subtitle="Total SSS 1"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+              />
+            </Box>
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.dashboardStatBox["lightPurple"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
-            }}
-          >
-            <StatBox
-              title={totalPrimarySchool()}
-              subtitle="Total Pre-Registered Public Primary School"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.dashboardStatBox["grey"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <StatBox
+                title={getNumberOfDistinctSchools(studentsData)}
+                subtitle="Total Schools with Registered Students"
+                progress="0.50"
+                icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+              />
+            </Box>
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.dashboardStatBox["lightGreen"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
-            }}
-          >
-            <StatBox
-              title={totalSecondarySchool()}
-              subtitle="Total Pre-Registered Public Secondary Schools"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.dashboardStatBox["gold"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
-            }}
-          >
-            <StatBox
-              title={totalScienceAndVocational}
-              subtitle="Total Pre-Registered Science and Vocational Schools"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
 
-          <Box
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.dashboardStatBox["lightPurple"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={totalPrimarySchool()}
+                subtitle="Total Registered Public Primary School"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+              />
+            </Box>
+
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.dashboardStatBox["lightGreen"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={totalSecondarySchool()}
+                subtitle="Total Registered Public Secondary Schools"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+              />
+            </Box>
+
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.dashboardStatBox["gold"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={totalScienceAndVocational}
+                subtitle="Total Registered Science and Vocational Schools"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+              />
+            </Box>
+
+            {/* <Box
             className="statBoxContainer"
             sx={{
               gridColumn: {
@@ -796,7 +854,7 @@ console.log(studentsData)
               icon={<EmailIcon sx={{ color: colors.main["darkGreen"], fontSize: "26px" }} />}
             />
 
-            <Box sx = {{ display: 'flex', flexDirection: 'row', cursor:'pointer'}} onClick = {() => viewSchoolInfos()}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', cursor: 'pointer' }} onClick={() => viewSchoolInfos('/view-all-schools-info')}>
 
             <Typography>
                 View all
@@ -804,177 +862,179 @@ console.log(studentsData)
             <ArrowRightIcon/>
             
             </Box>
-          </Box>
+          </Box> */}
 
             <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: 'span 12', // Full width for the last box
-              gridRow: {
-                xs: 'span 7',
-                sm: 'span 5'
-              }, // Take up more vertical space
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              marginTop: {
-                xs: "100px",
-                md: "0px"
-              }
+              className="statBoxContainer"
+              sx={{
+                gridColumn: 'span 12', // Full width for the last box
+                gridRow: {
+                  xs: 'span 7',
+                  sm: 'span 5'
+                }, // Take up more vertical space
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                marginTop: {
+                  xs: "100px",
+                  md: "0px"
+                }
 
-            }}
+              }}
             >
-            {userPermissions.includes("handle_registrars") && (
+              {userPermissions.includes("handle_registrars") && (
 
-              <Box sx={{
-                display: "flex", gridRow: " 10", maxWidth: "100%", flexDirection: {
-                  xs: "column",
-                  md: "row"
-                },
-              }}>
                 <Box sx={{
-                  flexBasis: "50%"
+                  display: "flex", gridRow: " 10", maxWidth: "100%", flexDirection: {
+                    xs: "column",
+                    md: "row"
+                  },
                 }}>
+                  <Box sx={{
+                    flexBasis: "50%"
+                  }}>
 
-                  <ResponsivePieChart />
-                </Box>
-                <Box sx={{
-                  flexBasis: "50%"
-                }}>
+                    <ResponsivePieChart />
+                  </Box>
+                  <Box sx={{
+                    flexBasis: "50%"
+                  }}>
 
-                  <ResponsiveBarChart />
+                    <ResponsiveBarChart />
+                  </Box>
                 </Box>
-              </Box>
-            )}
+              )}
             </Box>
 
 
-          
-        
-
-              
 
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: 'span 12', // Full width for the last box
-              gridRow: {
-                xs: 'span 10',
-                sm: 'span 7'
-              },// Take up more vertical space
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              marginTop: {
-                xs: "50px",
-                md: "0px"
-              }
 
-            }}
-          >
-            <Typography
-              variant="h3"
-              gutterBottom
+
+
+
+            <Box
+              className="statBoxContainer"
               sx={{
-                color: colors.main.darkGreen,
-                background: "linear-gradient(135deg, rgba(224, 224, 224, 1), rgba(200, 200, 200, 1))",
-                fontWeight: "bold",
-                letterSpacing: "1px",
-                textAlign: "center",
-                padding: "20px 15px",
-                borderRadius: "10px",
-                cursor: "pointer",
-                marginBottom: "20px",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                "&:hover": {
-                  transform: "scale(1.05)",
-                  boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.15)",
-                },
-                "&:active": {
-                  transform: "scale(0.98)",
-                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                },
+                gridColumn: 'span 12', // Full width for the last box
+                gridRow: {
+                  xs: 'span 10',
+                  sm: 'span 7'
+                },// Take up more vertical space
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                marginTop: {
+                  xs: "50px",
+                  md: "0px"
+                }
+
               }}
             >
-              20 Recently Registered Students
-            </Typography>
+              <Typography
+                variant="h3"
+                gutterBottom
+                sx={{
+                  color: colors.main.darkGreen,
+                  background: "linear-gradient(135deg, rgba(224, 224, 224, 1), rgba(200, 200, 200, 1))",
+                  fontWeight: "bold",
+                  letterSpacing: "1px",
+                  textAlign: "center",
+                  padding: "20px 15px",
+                  borderRadius: "10px",
+                  cursor: "pointer",
+                  marginBottom: "20px",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.15)",
+                  },
+                  "&:active": {
+                    transform: "scale(0.98)",
+                    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                  },
+                }}
+              >
+                20 Recently Registered Students
+              </Typography>
 
 
 
-            <TableContainer
-              component={Paper}
-              sx={{
-                maxWidth: '100%',
-                overflowX: 'auto',
-                boxShadow: 3,
-                borderRadius: '8px',
-                marginBottom: '20px',
-                minHeight: "320px",
-              }}
-            >
-              <Table sx={{ minWidth: 650 }}>
-                <TableHead>
-                  <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
-                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Surname</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Present Class</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>State of Origin</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>LGA</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Ward</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {last5Students().map((student, index) => (
-                    <TableRow key={index} sx={{
-                      '&:hover': { backgroundColor: '#f9f9f9' },
-                      borderBottom: '1px solid #ddd',
-                    }}>
-                      <TableCell>{student.surname}</TableCell>
-                      <TableCell>{student.presentClass}</TableCell>
-                      <TableCell>{student.stateOfOrigin}</TableCell>
-                      <TableCell>{student.lga}</TableCell>
-                      <TableCell>{student.ward}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
-            <Button
-              component={Link}
-              to="/enumerator-dashboard/view-all-students-data"
-              variant="contained"
-              size="large"
-              color="primary"
-              sx={{
-                textTransform: 'none',
-                fontSize: '1rem',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                boxShadow: 2,
-                '&:hover': {
-                  backgroundColor: '#0D47A1',
+              <TableContainer
+                component={Paper}
+                sx={{
+                  maxWidth: '100%',
+                  overflowX: 'auto',
                   boxShadow: 3,
-                },
-              }}
-            >
-              Click to View All Students Information
-            </Button>
+                  borderRadius: '8px',
+                  marginBottom: '20px',
+                  minHeight: "320px",
+                }}
+              >
+                <Table sx={{ minWidth: 650 }}>
+                  <TableHead>
+                    <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
+                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Surname</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Present Class</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>State of Origin</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>LGA</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Ward</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {last5Students().map((student, index) => (
+                      <TableRow key={index} sx={{
+                        '&:hover': { backgroundColor: '#f9f9f9' },
+                        borderBottom: '1px solid #ddd',
+                      }}>
+                        <TableCell>{student.surname}</TableCell>
+                        <TableCell>{student.presentClass}</TableCell>
+                        <TableCell>{student.stateOfOrigin}</TableCell>
+                        <TableCell>{student.lga}</TableCell>
+                        <TableCell>{student.ward}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              <Button
+                component={Link}
+                to="/enumerator-dashboard/view-all-students-data"
+                variant="contained"
+                size="large"
+                color="primary"
+                sx={{
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  boxShadow: 2,
+                  '&:hover': {
+                    backgroundColor: '#0D47A1',
+                    boxShadow: 3,
+                  },
+                }}
+              >
+                Click to View All Students Information
+              </Button>
 
 
 
-        
 
 
 
 
 
 
+
+            </Box>
           </Box>
-        </Box>
+        </>
+        
       )
 
 

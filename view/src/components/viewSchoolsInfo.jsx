@@ -11,7 +11,7 @@ import {
     Typography,
 } from "@mui/material";
 
-export const CustomTable = ({ header, data }) => {
+export const ViewSchoolsInfo = ({ header, data }) => {
     return (
         <TableContainer component={Paper} sx={{ border: `1px solid #196b57`, borderRadius: "8px" }}>
             <Typography

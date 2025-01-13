@@ -206,6 +206,13 @@ const Sidebar = ({ isSidebar }) => {
               selected={selected}
               setSelected={setSelected}
             />
+            <Item
+              title="View all Students"
+              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-all-students-no-export' : 'enumerator-dashboard/view-all-students-data'}
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
             {userPermissions.includes('handle_admins') && (
               <Item
