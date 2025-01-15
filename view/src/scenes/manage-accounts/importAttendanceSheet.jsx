@@ -50,15 +50,15 @@ export const ImportAttendanceSheet = () => {
             setError(true)
             setIsSubmitting(false);
             console.log(error);
-            setMessage(error?.response?.data?.message);  
+            setMessage(error?.response?.data?.message);
             setTimeout(() => setMessage(''), 7000)
-  
+
         }
     }
 
-    
+
     const weekOptions = [{ name: "week 1", value: 1 }, { name: "week 2", value: 2 }, { name: "week 3", value: 3 }, { name: "week 4", value: 4 }, { name: "week 5", value: 5 }]
-    
+
     const monthOptions = [
         { name: 'January', value: 1 },
         { name: 'February', value: 2 },
@@ -76,7 +76,7 @@ export const ImportAttendanceSheet = () => {
 
     const getCurrentYear = () => new Date().getFullYear();
 
-    
+
     const handleInputChange = (e) => {
         const { name, value, type, files } = e.target;
 
@@ -94,15 +94,15 @@ export const ImportAttendanceSheet = () => {
             });
         }
     };
-    
+
     // const handleFileChange = (event) => {
-        //     const file = event.target.files[0];
-        
-        // };  
-        
-        console.log(formData)
-        
-        console.log(message)
+    //     const file = event.target.files[0];
+
+    // };  
+
+    // console.log(formData)
+
+    // console.log(message)
 
 
 
@@ -244,35 +244,35 @@ export const ImportAttendanceSheet = () => {
 
             <Grid style={{ textAlign: 'center', marginTop: '20px' }}>
 
-                {!isSubmitting ? (<ExportSubmitButton label="Upload Attendance Sheet" />) : <SpinnerLoader/>}
-            
-                
+                {!isSubmitting ? (<ExportSubmitButton label="Upload Attendance Sheet" />) : <SpinnerLoader />}
+
+
             </Grid>
 
-        {error  && 
+            {error &&
                 <Typography
                     sx={{
                         color: "red",
                     }}
                 >
-                <>
+                    <>
 
-                    {message}
-                </>
+                        {message}
+                    </>
                 </Typography>
-        }
-        {success  && 
+            }
+            {success &&
                 <Typography
                     sx={{
                         color: "red",
                     }}
                 >
-                <>
+                    <>
 
-                    {message}
-                </>
+                        {message}
+                    </>
                 </Typography>
-        }
+            }
         </Box>
     )
 }

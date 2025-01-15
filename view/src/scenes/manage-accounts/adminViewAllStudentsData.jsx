@@ -273,23 +273,23 @@ export const AdminViewAllStudentsData = () => {
         );
 
 
-    const columns = [
-        {
-            name: 'Name',
-            selector: row => row.name,
-            sortable: true,
-        },
-        {
-            name: 'Age',
-            selector: row => row.age,
-            sortable: true,
-        },
-        {
-            name: 'Job',
-            selector: row => row.job,
-            sortable: true,
-        },
-    ];
+    // const columns = [
+    //     {
+    //         name: 'Name',
+    //         selector: row => row.name,
+    //         sortable: true,
+    //     },
+    //     {
+    //         name: 'Age',
+    //         selector: row => row.age,
+    //         sortable: true,
+    //     },
+    //     {
+    //         name: 'Job',
+    //         selector: row => row.job,
+    //         sortable: true,
+    //     },
+    // ];
 
     return (
         <>

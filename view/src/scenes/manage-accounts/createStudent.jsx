@@ -19,7 +19,7 @@ export const CreateStudent = () => {
   ]);
 
   const [occupations, setOccupation] = useState([
-    'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser', "Business Person", 'Others'
+    'Farmer', 'Teacher', "Trader", 'Civil Servant', 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser', "Business Person", 'Others'
   ])
 
 
