@@ -30,6 +30,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 
 import { useAuth } from '../auth/authContext.jsx';
+import { ArrowBack, ArrowDropDownCircleRounded, Visibility } from "@mui/icons-material";
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -302,16 +303,19 @@ const Sidebar = ({ isSidebar }) => {
 
                 <Item
                   title="View Attendance"
-                  to={'/view-attendance-sheet'}
-                  icon={<RemoveRedEyeIcon />}
+                  to={'/payroll-specialist-dashboard/upload-payment'}
+                  icon={<FileUploadIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="View Attendance"
+                  to={'/payroll-specialist-dashboard/upload-payment'}
+                  icon={<VisibilityIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
               </>
-
-
-
-
             )}
 
 

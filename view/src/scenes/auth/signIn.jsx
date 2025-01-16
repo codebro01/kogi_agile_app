@@ -60,7 +60,6 @@ export const SignInForm = () => {
                         navigate('/dashboard/sign-in');
                     }
                     setIsLoading(false)
-                    console.log(response)
 
                 }
                 catch (err) {

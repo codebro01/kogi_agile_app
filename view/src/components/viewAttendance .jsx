@@ -82,7 +82,6 @@ export const ViewAttendance = () => {
                     withCredentials: true,
                 });
                 setSuccess('Admin successfully created')
-                console.log(response);
             } catch (err) {
 
                 if (err.response.status === 401) return navigate('/sign-in')
@@ -120,14 +119,12 @@ export const ViewAttendance = () => {
             })
             setFilteredData(response.data.attendance)
 
-            console.log(response)
         }
         catch (err) {
             console.log(err)
         }
     };
 
-    console.log(filter);
 
 
     const isMobile = useMediaQuery('(max-width:600px)'); // Adjust for smaller screens
@@ -182,7 +179,6 @@ export const ViewAttendance = () => {
     ).map(item => JSON.parse(item));
 
 
-    console.log(uniqueSchools)
 
 
 

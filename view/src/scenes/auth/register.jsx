@@ -67,7 +67,6 @@ const SignInForm = () => {
             }
             catch (err) {
                 navigate('/sign-in')
-                console.log(err.response?.data?.message);
                 setValidationError(err.response?.data?.message);
                 setTimeout(() => {
                     setValidationError('');

@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import { StudentsContext, WardsContext } from '../../components/dataContext';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { resolvePath, useNavigate } from 'react-router-dom';
 import EditIcon from "@mui/icons-material/Edit";
 import { tokens } from "../../theme";
 import { PersonLoader } from '../../components/personLoader';
@@ -51,7 +51,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState(''); // State for search query
     const [filteredData, setFilteredData] = useState(studentsData); // State for filtered data
-    
+
 
 
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
@@ -225,10 +225,8 @@ export const AdminViewAllStudentsDataNoExport = () => {
                     withCredentials: true,
                 })
 
-                console.log(response)
 
             } catch (error) {
-                console.log(error?.response?.statusText)
                 setFilterError(error?.response?.statusText)
             }
         })()
@@ -244,14 +242,13 @@ export const AdminViewAllStudentsDataNoExport = () => {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                // params: { ...filteredParams, ...sortParam },
+                params: { ...filteredParams, ...sortParam },
                 withCredentials: true,
-            })
 
-            console.log(response)
+            })
+            setFilteredData(response.data)
 
         } catch (error) {
-            console.log(error?.response?.statusText)
             setFilterError(error?.response?.statusText)
         }
     }
@@ -280,8 +277,8 @@ export const AdminViewAllStudentsDataNoExport = () => {
     //     navigate(`/admin-dashboard/update-student/${student._id}`, { state: student })
     // };
 
-    console.log(statesData);
-    console.log(filters)
+    // console.log(filters);
+
 
 
     if (loading)
@@ -316,7 +313,6 @@ export const AdminViewAllStudentsDataNoExport = () => {
                             },
                             withCredentials: true,
                         });
-                        console.log(response.data.remainingStudents)
                         setStudentsData(response.data.remainingStudents)
                     }
                     catch (err) {
@@ -325,7 +321,6 @@ export const AdminViewAllStudentsDataNoExport = () => {
 
                 })()
 
-                console.log(`Student with ID ${row.randomId} deleted successfully`);
                 // Optionally, you can refresh or re-fetch the data here
             } catch (error) {
                 console.error("Error deleting student:", error);
@@ -366,7 +361,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                 <img
                     src={row.passport} // Placeholder for missing images
                     alt="Student"
-                    style={{ width: '50px', height: '50px'   }}
+                    style={{ width: '50px', height: '50px' }}
                 />
             ),
             sortable: false,
@@ -487,8 +482,6 @@ export const AdminViewAllStudentsDataNoExport = () => {
         setFilteredData(filtered);
     };
 
-    console.log(filteredData);
-    console.log(searchQuery)
 
     return (
         <>
@@ -707,7 +700,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                                 <InputLabel id="enumerator-label" sx={{ marginBottom: 1 }}>All Enumerator</InputLabel>
                                 <Select
                                     name="enumerator"
-                                    value={filters.enumerator}
+                                    value={filters.enumerator || ''}
                                     onChange={handleInputChange}
                                     displayEmpty
                                     fullWidth
@@ -729,7 +722,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                                 <InputLabel id="year-label" sx={{ marginBottom: 1 }}>Year of Enrollment</InputLabel>
                                 <Select
                                     name="yearOfEnrollment"
-                                    value={filters.yearOfEnrollment}
+                                    value={filters.yearOfEnrollment || ''}
                                     onChange={handleInputChange}
                                     displayEmpty
                                     fullWidth
@@ -882,9 +875,9 @@ export const AdminViewAllStudentsDataNoExport = () => {
                         marginBottom: "30px",
                         textAlign: "center",
                         fontWeight: 800
-}}>
-                                View Registered Students Information
-                        </Typography>
+                    }}>
+                        View Registered Students Information
+                    </Typography>
                     <div>
                         {/* Search Input */}
                         <div style={{ marginBottom: '20px', position: 'relative' }}>
@@ -908,7 +901,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                                 onFocus={(e) => (e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)')}
                                 onBlur={(e) => (e.target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)')}
                             />
-                          
+
                         </div>
                     </div>
 
@@ -920,7 +913,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                         data={filteredData}
                         pagination
                         paginationPosition="top" // Moves pagination to the top
-                        highlightOnHover 
+                        highlightOnHover
                         customStyles={customStyles} // Applying the custom styles
 
 
@@ -940,9 +933,9 @@ export const AdminViewAllStudentsDataNoExport = () => {
                                 boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
                                 width: "80%",
                                 display: "flex",
-                                flexDirection: "column", 
-                                alignItems: "center", 
-                                justifyContent:"center",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
                             }}
                         >
                             <h3>Student Details</h3>

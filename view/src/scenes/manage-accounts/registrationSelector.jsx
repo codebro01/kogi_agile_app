@@ -144,7 +144,6 @@ const RegistrationSelector = () => {
                             onChange={(event, value) => {
                                 setSelectedSchool(value);
                                 setSelectedSchoolState(value);
-                                console.log(selectedSchool);
                             }}
                             options={schoolOptions}
                             getOptionLabel={(option) => option?.schoolName || ''}

@@ -169,7 +169,6 @@ export const ExportAttendanceSheetPayroll = () => {
                 responseType: "blob",
                 withCredentials: true,
             });
-            console.log(response)
             setAttendanceData(response.data);
             if (response.statusText === "Not Found") return console.log('no data found')
             const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -183,7 +182,6 @@ export const ExportAttendanceSheetPayroll = () => {
         }
     }
 
-    console.log(filters)
 
     return (
         <Box

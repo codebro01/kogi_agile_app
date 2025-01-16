@@ -97,7 +97,6 @@ export const CreatePayrollSpecialist = () => {
                         withCredentials: true,
                     });
                     setSuccess('New Payroll Specialist Added');
-                    console.log(response);
                     const success = true;
                     if (success) {
                         setFormData({
@@ -119,7 +118,6 @@ export const CreatePayrollSpecialist = () => {
                     setTimeout(() => setSuccess(''), 7000);
 
                 } catch (err) {
-                    console.log(err)
                     if (err.response.data.status === 401) return navigate('/sign-in')
                     setValidationError(err.response?.data?.message || 'An error occurred');
                     setTimeout(() => setValidationError(''), 7000);

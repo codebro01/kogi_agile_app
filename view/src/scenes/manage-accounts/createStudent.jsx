@@ -187,7 +187,6 @@ export const CreateStudent = () => {
         });
         setSuccess(true);
         setSuccessMessage(`Great Job!!! New student registration successful!!!`)
-        console.log(response);
         const formSubmissionSuccess = true;
         if (formSubmissionSuccess) {
           // Clear form fields

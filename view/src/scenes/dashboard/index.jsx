@@ -43,7 +43,6 @@ const Dashboard = () => {
     if (userPermissions.includes('handle_payments')) {
 
       const fetchData = async () => {
-        console.log('about fetching')
         try {
           const [
             getLGAWithTotalPaymentsRes,
@@ -76,11 +75,11 @@ const Dashboard = () => {
               withCredentials: true,
             }),
           ]);
-          console.log('laoding')
-          console.log('Total Amount Paid:', getTotalAmountPaidRes?.data?.totalAmountPaid);
-          console.log('Total Amount Paid Monthly:', getTotalStudentsPaidMonthlyRes?.data);
-          console.log('LGA with Total Payments:', getLGAWithTotalPaymentsRes?.data);
-          console.log('View Payments:', viewPaymentsRes?.data);
+          // console.log('laoding')
+          // console.log('Total Amount Paid:', getTotalAmountPaidRes?.data?.totalAmountPaid);
+          // console.log('Total Amount Paid Monthly:', getTotalStudentsPaidMonthlyRes?.data);
+          // console.log('LGA with Total Payments:', getLGAWithTotalPaymentsRes?.data);
+          // console.log('View Payments:', viewPaymentsRes?.data);
 
           // Set state
           setTotalAmountPaid(getTotalAmountPaidRes?.data?.totalAmountPaid);
@@ -111,7 +110,7 @@ const Dashboard = () => {
     )
   ).map(item => JSON.parse(item));
 
-  console.log(uniqueSchools)
+  // console.log(uniqueSchools)
 
 
 const totalPrimarySchool = () => {
@@ -190,7 +189,6 @@ const totalSchools = uniqueSchools.length;
 
   function getNumberOfDistinctSchools(studentsData) {
     if (!studentsData) {
-      console.log('No student data available.');
       return 0;
     }
 
@@ -230,7 +228,6 @@ const totalSchools = uniqueSchools.length;
 
 
 
-// console.log(studentsData)
 // ! Payroll Specialist's Dashboard
 
   if(userPermissions.includes('handle_payments'))  {

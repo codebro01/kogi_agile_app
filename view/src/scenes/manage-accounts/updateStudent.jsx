@@ -17,7 +17,6 @@ export const UpdateStudent = () => {
     const { wardsData } = useContext(WardsContext);
     const location = useLocation()
     const student = location.state;
-    console.log(student)
 
     const [occupations, setOccupation] = useState([
         'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser', 'Others'
@@ -159,7 +158,6 @@ export const UpdateStudent = () => {
 
 
 
-    console.log(formData)
 
     const handleSubmit = (e) => {
         setIsLoading(true)
@@ -182,7 +180,6 @@ export const UpdateStudent = () => {
                 }, 5000)
             } catch (err) {
                 setIsLoading(false)
-                console.log(err)
                 if (err.response.status === 401) return navigate('/sign-in')
                 setError(true)
                 if (err.response.data === 'Route does not Exist') {
@@ -270,7 +267,6 @@ export const UpdateStudent = () => {
     }, 20000)
 
 
-    console.log(formData)
     const allWards = lgasAndWards.flatMap(ward => ward.wards).sort((a, b) => a.localeCompare(b));;
 
 

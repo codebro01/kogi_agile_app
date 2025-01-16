@@ -225,7 +225,6 @@ export const AdminViewAllStudentsData = () => {
             document.body.appendChild(link);
             link.click();
         } catch (error) {
-            console.log(error?.response?.statusText)
             setFilterError(error?.response?.statusText)
         }
     }
@@ -252,8 +251,6 @@ export const AdminViewAllStudentsData = () => {
     //     navigate(`/admin-dashboard/update-student/${student._id}`, { state: student })
     // };
 
-    console.log(statesData);
-    console.log(filters)
 
 
     if (loading)

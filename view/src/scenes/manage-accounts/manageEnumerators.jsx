@@ -78,7 +78,6 @@ export const ManageEnumerators = () => {
         } catch (err) {
             setMessage(err.response?.data?.message);
             setShowModal(true);
-            console.log(err);
         }
     }, []);  // No data in the dependency array
 
@@ -101,7 +100,6 @@ export const ManageEnumerators = () => {
                 setData(response.data.registrars);
                 setDataFetchLoading(false);
             } catch (err) {
-                console.log(err);
                 setDataFetchLoading(false);
             }
         };

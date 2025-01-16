@@ -6,7 +6,7 @@ import { useState } from "react";
 import { ExportSubmitButton } from "../../components/exportButton";
 import { SpinnerLoader } from "../../components/spinnerLoader";
 
-export const ImportAttendanceSheet = () => {
+export const ImportPaymentSheet = () => {
     const { loading, studentsData } = useContext(StudentsContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
@@ -33,7 +33,7 @@ export const ImportAttendanceSheet = () => {
             setIsSubmitting(true);
             const token = localStorage.getItem('token');
 
-            const response = await axios.post(`${API_URL}/student/upload-attendance-sheet`, formData, {
+            const response = await axios.post(`${API_URL}/student/upload-payment-sheet`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',  // Set the correct content type for file upload
@@ -94,7 +94,14 @@ export const ImportAttendanceSheet = () => {
         }
     };
 
+    // const handleFileChange = (event) => {
+    //     const file = event.target.files[0];
 
+    // };  
+
+    // console.log(formData)
+
+    // console.log(message)
 
 
 
@@ -123,36 +130,8 @@ export const ImportAttendanceSheet = () => {
                     fontWeight: "bold",
                     marginBottom: "20px"
                 }}
-            >Import Students Attendance</Typography>
-            <Grid item xs={12} sm={6} md={4}
-                sx={{
-                    width: {
-                        xs: '90%',
-                        sm: "70%",
-                        md: "40%"
-                    },
-                }}
-            >
-                <InputLabel id="week-label">Select Week</InputLabel>
-                <Select
-                    name="week"
-                    value={formData.week}
-                    onChange={handleInputChange}
-                    displayEmpty
-                    fullWidth
-                    size="small"
-                    labelId="week-label"
-                >
-                    <MenuItem value="">
-                        <em>Select Week</em>
-                    </MenuItem>
-                    {weekOptions.map((week, index) => (
-                        <MenuItem key={index} value={week.value}>
-                            {week.name}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </Grid>
+            >Import Payment Sheet</Typography>
+            
             <Grid item xs={12} sm={6} md={4}
                 sx={{
                     width: {

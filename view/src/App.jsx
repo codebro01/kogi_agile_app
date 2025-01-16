@@ -31,6 +31,7 @@ import { ViewSchoolsInfo } from "./components/viewSchoolsInfo.jsx";
 import { ExportAttendanceSheetPayroll } from "./scenes/manage-accounts/exportAttendanceSheetScore.jsx";
 import { AdminViewAllStudentsDataNoExport } from "./scenes/manage-accounts/adminViewAllStudentsData_noExport.jsx";
 import axios from 'axios';
+import { ImportPaymentSheet } from "./scenes/manage-accounts/importPayment.jsx";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -185,9 +186,9 @@ function App() {
                       <Routes>
                         <Route path="/payroll-specialist-dashboard" element={<Dashboard />} />
                         <Route path="/export-attendance-sheet/" element={<ExportAttendanceSheetPayroll/>} />
-                        <Route path="/payroll-specialist-dashboard/view-payments" element={<RoleSelector />} />
-                        <Route path="payroll-specialist-dashboard/upload-payment" element={<CreateAdmin />} />
-                        <Route path="/admin-dashboard/create-accounts/register-enumerator" element={<CreateEnumerator />} />
+                        {/* <Route path="/payroll-specialist-dashboard/view-payments" element={<RoleSelector />} /> */}
+                        <Route path="payroll-specialist-dashboard/upload-payment" element={<ImportPaymentSheet />} />
+                        {/* <Route path="/payroll-upload-attendance-payment" element={<CreateEnumerator />} /> */}
                         <Route path="/index.html" element={<Navigate to="/" />} />
 
                         <Route path="*" element={<Navigate to="/enumerator-dashboard" />} />

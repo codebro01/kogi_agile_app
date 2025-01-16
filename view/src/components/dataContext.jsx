@@ -64,7 +64,6 @@ export const DataProvider = ({ children }) => {
 
     fetchData();
   }, [API_URL, navigate, token]);
-  console.log(studentsData)
   return (
     <StudentsContext.Provider value={{ studentsData, setStudentsData }}>
       <SchoolsContext.Provider value={{ selectedSchool, setSelectedSchool, schoolsData }}>

@@ -78,8 +78,6 @@ export const ViewAllStudentsData = () => {
         },
         withCredentials: true,
       });
-      console.log(response.data);
-      console.log(queryString)
      setStudentsData(response.data.students);
     } catch (err) {
       console.error(err);
