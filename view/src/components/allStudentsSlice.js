@@ -14,10 +14,8 @@ export const fetchAllStudents = createAsyncThunk('allStudents/fetchAllStudents',
             },
             withCredentials: true,
         });
-        console.log(response.data)
         return response.data;
     } catch (error) {
-        console.log(error)
 
         return thunkAPI.rejectWithValue(error.response?.data || error.response.message || 'Failed to fetch students');
     }

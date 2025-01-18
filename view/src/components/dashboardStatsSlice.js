@@ -13,7 +13,6 @@ export const fetchDashboardStat = createAsyncThunk('dashboardStat/fetchDashboard
             },
             withCredentials: true,
         });
-        console.log(response.data)
         return {
             results: response.data.results,
             schoolCategory: response.data.schoolCategory,

@@ -48,7 +48,6 @@ const navigate = useNavigate();
                 <SpinnerLoader />
             </Box>)
 
-    console.log('data', data)
 
 
     return (
@@ -113,7 +112,7 @@ const navigate = useNavigate();
                                 {editInfo && <TableCell>
                                     <IconButton
                                         color="primary"
-                                        onClick={() => navigate(`${editNav}/${row._id}`)}
+                                        onClick={() => navigate(`${editNav}/${row._id || row.enumeratorId}`)}
                                     >
                                         <EditIcon />
                                     </IconButton>
@@ -121,15 +120,15 @@ const navigate = useNavigate();
                                 <TableCell>
                                     <IconButton
                                         color="secondary"
-                                        onClick={() => handleResetPassword(row._id)}
+                                        onClick={() => handleResetPassword(row._id || row.enumeratorId)}
                                     >
                                         <LockIcon />
                                     </IconButton>
                                 </TableCell>
                                 <TableCell>
                                     <Switch
-                                        checked={row.isActive}
-                                        onChange={() => handleToggle(row._id, row.isActive )}
+                                        checked={row.isActive || row.enumeratorDetails.isActive}
+                                        onChange={() => handleToggle((row._id, row.isActive) || (row.enumeratorId, row.enumeratorDetails.isActive))}
                                         color="secondary"
                                     />
                                 </TableCell>

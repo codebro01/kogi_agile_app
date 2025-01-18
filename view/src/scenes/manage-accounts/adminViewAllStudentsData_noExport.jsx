@@ -46,7 +46,6 @@ export const AdminViewAllStudentsDataNoExport = () => {
 
         dispatch(fetchSchools());
     }, [dispatch]);
-    console.log(data.students)
 
     useEffect(() => {
         dispatch(fetchStudents({ page: currentPage, limit: rowsPerPage }));
@@ -296,8 +295,6 @@ export const AdminViewAllStudentsDataNoExport = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('submitting')
-        console.log(filteredParams)
         dispatch(fetchStudentsFromComponent({filteredParams, sortParam}));
 
     };
@@ -483,14 +480,12 @@ export const AdminViewAllStudentsDataNoExport = () => {
 
     const handleSearch = (event) => {
         const query = event.target.value;
-        console.log(query)
         dispatch(setSearchQuery(query));
     };
     
 
 // console.log(schoolsData)
 // console.log(studentsData)
-console.log(searchQuery)
     
     return (
         <>
@@ -929,13 +924,12 @@ console.log(searchQuery)
                         paginationTotalRows={totalRows} // Total rows from API
                         paginationDefaultPage={currentPage} // Use current page from Redux
                         onChangePage={(page) => {
-                            console.log('page' + page)
                             dispatch(setCurrentPage(page)); // Update Redux state for current page
                             dispatch(fetchStudents({ page, limit: rowsPerPage })); // Fetch data for the selected page
                         }}                       
                          onChangeRowsPerPage={(newLimit) => {
                             // Update rowsPerPage in Redux state and fetch new data
-                            console.log('newLimit' + newLimit)
+                            
                             dispatch(setRowsPerPage(newLimit)); // Update rowsPerPage in Redux
                             dispatch(fetchStudents({ page: 1, limit: newLimit })); // Fetch new data with updated limit
                         }}                        

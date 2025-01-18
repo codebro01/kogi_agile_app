@@ -127,7 +127,7 @@ export const ManageEnumerators = () => {
         }
     };
 
-
+console.log(data)
     return (
         <>
             <Box

@@ -66,7 +66,7 @@ export const SignInForm = () => {
                     navigate('/dashboard/sign-in')
                     setIsLoading(false)
                     console.log(err);
-                    setValidationError(err.response?.message);
+                    setValidationError(err.response?.data?.message);
                     setTimeout(() => {
                         setValidationError('');
                     }, 3000)
@@ -189,7 +189,7 @@ export const SignInForm = () => {
                                     opacity: 0.9, // Slightly transparent on hover
                                 },
                             }}
-                            disabled={isLoading || !!validationError} // Disable butt   on if loading or error exists
+                            disabled={isLoading || validationError} // Disable butt   on if loading or error exists
                         >
                             {isLoading ? <SpinnerLoader /> : "Submit"}
                         </Button>
