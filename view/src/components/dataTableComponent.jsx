@@ -126,9 +126,23 @@ const navigate = useNavigate();
                                     </IconButton>
                                 </TableCell>
                                 <TableCell>
-                                    <Switch
+                                    {/* <Switch
                                         checked={row.isActive || row.enumeratorDetails.isActive}
-                                        onChange={() => handleToggle((row._id, row.isActive) || (row.enumeratorId, row.enumeratorDetails.isActive))}
+                                        onChange={() => {
+                                            if (row.enumeratorDetails) handleToggle(row.enumeratorId, row.enumeratorDetails.isActive);
+                                            else {
+                                                return handleToggle(row._id, row.isActive)
+                                            }
+                                        }}
+                                        color="secondary"
+                                    /> */}
+                                    <Switch
+                                        checked={row.enumeratorDetails?.isActive ?? row.isActive}
+                                        onChange={() => {
+                                            const id = row.enumeratorDetails ? row.enumeratorId : row._id;
+                                            const isActive = row.enumeratorDetails?.isActive ?? row.isActive;
+                                            handleToggle(id, isActive);
+                                        }}
                                         color="secondary"
                                     />
                                 </TableCell>

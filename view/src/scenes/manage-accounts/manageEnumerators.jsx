@@ -53,6 +53,7 @@ export const ManageEnumerators = () => {
 
     const handleToggle = useCallback(async (id, currentStatus) => {
         try {
+            console.log( currentStatus)
             const response = await axios.patch(
                 `${API_URL}/admin-enumerator/toggle-status`,
                 {}, // Body is empty for this request
@@ -76,6 +77,7 @@ export const ManageEnumerators = () => {
             setMessage(response.data?.message);
             setShowModal(true);
         } catch (err) {
+            console.log(err)
             setMessage(err.response?.data?.message);
             setShowModal(true);
         }
