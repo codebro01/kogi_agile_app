@@ -14,10 +14,13 @@ import { ResponsivePieChart } from '../../components/pieChart.jsx';
 import { ResponsiveBarChart } from '../../components/barChart.jsx';
 import { useAuth } from '../auth/authContext.jsx';
 import { StudentsContext, SchoolsContext } from '../../components/dataContext.jsx';
+import { useSelector, useDispatch } from 'react-redux';
 import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { fetchAllStudents } from '../../components/allStudentsSlice.js'
+import { fetchDashboardStat } from '../../components/dashboardStatsSlice.js';
 
-import  axios from 'axios';
+import axios from 'axios';
 
 
 
@@ -26,8 +29,6 @@ const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { userPermissions } = useAuth();
-  const { studentsData, error, loading } = useContext(StudentsContext);
-  const {schoolsData} = useContext(SchoolsContext);
   const storedUser = JSON.parse(localStorage.getItem('userData'));
   const [totalAmountPaid, setTotalAmountPaid] = useState(1); // State to store fetched data
   const [totalAmountPaidMonthly, setTotalAmountPaidMonthly] = useState(1); // State to store fetched data
@@ -37,7 +38,30 @@ const Dashboard = () => {
   const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
 
 
+
+  // ! Redux toolkit consumption
+
+  const dispatch = useDispatch();
+  const allstudentsState = useSelector((state) => state.allStudents);
+  const { data: studentsData, loading: studentsLoading, error: studentsError } = allstudentsState;
+
+
+  const dashboardStat = useSelector((state) => state.dashboardStat);
+  const { data: dashboardData, loading: dashboardStatLoading, error: dashboardStatError } = dashboardStat;
+
+
+
+
   const token = localStorage.getItem('token');
+
+
+  useEffect(() => {
+    if(userPermissions.includes('handle_students') && userPermissions.length === 1) {
+      dispatch(fetchAllStudents());
+      return;
+    }
+    dispatch(fetchDashboardStat())
+  }, [dispatch]);
 
   useEffect(() => {
     if (userPermissions.includes('handle_payments')) {
@@ -95,10 +119,25 @@ const Dashboard = () => {
       fetchData();
     }
   }, []);
-
-  const viewSchoolInfos = (link) => {
-    navigate(link)
+  if (studentsLoading || dashboardStatLoading) {
+    return       <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "80vh",
+                    width: "100%"
+                }}
+            >
+                <SpinnerLoader />
+            </Box>;
   }
+
+  if (studentsError || dashboardStatError) {
+    return <div>Error: {studentsError}</div>;
+  }
+
+  console.log(dashboardData)
 
   const uniqueSchools = Array.from(
     new Set(
@@ -110,56 +149,11 @@ const Dashboard = () => {
     )
   ).map(item => JSON.parse(item));
 
-  // console.log(uniqueSchools)
-
-
-const totalPrimarySchool = () => {
-    const ECCDE = uniqueSchools.filter(school => school.schoolCategory === 'ECCDE').length;
-  const ECCDE_Primary = uniqueSchools.filter(school => school.schoolCategory === 'ECCDE AND PRIMARY').length;
-  const Primary = uniqueSchools.filter(school => school.schoolCategory === 'PRIMARY').length;
-  return ECCDE + ECCDE_Primary + Primary;
-  }
-
-// console.log(totalPrimarySchool())
-
-const totalSecondarySchool = () => {
-  
-  const public_JSS = uniqueSchools.filter(school => school.schoolCategory === 'Public JSS').length;
-  const public_JSS_SSS = uniqueSchools.filter(school => school.schoolCategory === 'Public JSS/SSS').length;
-  return public_JSS + public_JSS_SSS;
-}
-
-// console.log(totalSecondarySchool());
-
-const totalScienceAndVocational = uniqueSchools.filter(school => school.schoolCategory === 'Science & Vocational').length;
-// console.log(totalScienceAndVocational);
-
-
-
-const totalSchools = uniqueSchools.length;
-
-
-
-  if (!studentsData) {
-    return <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
-      }}
-    ><Typography variant='h2'>No data available.</Typography></Box>; // Optional fallback if data isn't fetched properly.
-  }
 
 
 
 
-
-
-
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  // console.log(studentsData);
 
   const last5Students = () => {
     if (Array.isArray(studentsData) && studentsData.length > 0) {
@@ -177,7 +171,34 @@ const totalSchools = uniqueSchools.length;
     return []; // Return an empty array if students is not an array
   };
 
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Dashboard Stat !!!!!!!!!!!!!!!!!!!!!!!!
 
+
+  let totalStudents, distinctSchools, total_primary_6, total_JSS_1, total_JSS_3, total_SSS_1, totalPrimarySchool, totalSecondarySchool, totalScienceAndVocational;
+
+  if (dashboardData) {
+
+    totalStudents = dashboardData?.results?.[0]?.totalStudents[0]?.total;
+    distinctSchools = dashboardData?.results?.[0]?.distinctSchools[0]?.totalDistinctSchools
+    total_primary_6 = dashboardData?.results?.[0]?.studentsByClass?.find((classData) => classData.className === 'Primary 6');
+    total_primary_6 = total_primary_6?.totalStudentsInClass
+    total_JSS_3 = dashboardData?.results?.[0]?.studentsByClass?.find((classData) => classData.className === 'JSS 3')
+    total_JSS_3 = total_JSS_3?.totalStudentsInClass
+
+    total_JSS_1 = dashboardData?.results?.[0]?.studentsByClass?.find((classData) => classData.className === 'JSS 1')
+    total_JSS_1 = total_JSS_1?.totalStudentsInClass
+
+    total_SSS_1 = dashboardData?.results?.[0]?.studentsByClass?.find((classData) => classData.className === 'SSS 1')
+    total_SSS_1 = total_SSS_1?.totalStudentsInClass
+
+    totalPrimarySchool = dashboardData?.schoolCategory?.[0].totalPrimarySchools
+    totalSecondarySchool = dashboardData?.schoolCategory?.[0].totalSecondarySchools
+    totalScienceAndVocational = dashboardData?.schoolCategory?.[0]?.totalScienceAndVocational
+  }
+
+
+
+  console.log(`${dashboardData.recentTwentyStudents}`)
 
 
   // Example usage
@@ -228,20 +249,22 @@ const totalSchools = uniqueSchools.length;
 
 
 
-// ! Payroll Specialist's Dashboard
+  // ! Payroll Specialist's Dashboard
 
-  if(userPermissions.includes('handle_payments'))  {
+  if (userPermissions.includes('handle_payments')) {
 
-  
+
 
 
 
     return (
-      <Box sx={{ padding: {
-        xs: "10px",
-        sm: "20px",
-      }}}>
-                <Header sx={{ textTransform: 'capitalize', color: colors.dashboardStatBox['darkGreen'], }} title={`${greetingMessage} ${capitalize(storedUser.fullName.split(' ')[0])}`} />
+      <Box sx={{
+        padding: {
+          xs: "10px",
+          sm: "20px",
+        }
+      }}>
+        <Header sx={{ textTransform: 'capitalize', color: colors.dashboardStatBox['darkGreen'], }} title={`${greetingMessage} ${capitalize(storedUser.fullName.split(' ')[0])}`} />
         <Box
           sx={{
             display: {
@@ -284,7 +307,7 @@ const totalSchools = uniqueSchools.length;
             }}
           >
             <StatBox
-              title={studentsData?.length}
+              title={totalStudents}
               subtitle="Total Number of Students Enrolled"
               progress="0.75"
               borderRadius="5px"
@@ -340,72 +363,72 @@ const totalSchools = uniqueSchools.length;
             />
           </Box>
 
-        
-          
-        <Box
-          className="statBoxContainer"
-          sx={{
-            gridColumn: {
-              xs: 'span 12', // Full width on xs screens
-              sm: 'span 12',  // Half width on sm screens
-              md: 'span 12',  // Quarter width on md screens
-            },
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: '5px',
-          }}
-        >
-            <Typography variant = 'h3' sx= {{color: "#000000"}}>
+
+
+          <Box
+            className="statBoxContainer"
+            sx={{
+              gridColumn: {
+                xs: 'span 12', // Full width on xs screens
+                sm: 'span 12',  // Half width on sm screens
+                md: 'span 12',  // Quarter width on md screens
+              },
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '5px',
+            }}
+          >
+            <Typography variant='h3' sx={{ color: "#000000" }}>
               Names of LGA's and Amounts Disbursted
             </Typography>
-        </Box>
+          </Box>
 
-        <Box
-          className="statBoxContainer"
-          sx={{
-            gridColumn: {
-              xs: 'span 12', // Full width on xs screens
-              sm: 'span 6',  // Half width on sm screens
-              md: 'span 4',  // Quarter width on md screens
-            },
-            backgroundColor: colors.blueAccent[400],
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: '5px',
-          }}
-        >
-          <StatBox
-            title={0}
-            subtitle=""
-            progress="0.75"
-            borderRadius="5px"
-            icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-          />
-        </Box>
+          <Box
+            className="statBoxContainer"
+            sx={{
+              gridColumn: {
+                xs: 'span 12', // Full width on xs screens
+                sm: 'span 6',  // Half width on sm screens
+                md: 'span 4',  // Quarter width on md screens
+              },
+              backgroundColor: colors.blueAccent[400],
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '5px',
+            }}
+          >
+            <StatBox
+              title={0}
+              subtitle=""
+              progress="0.75"
+              borderRadius="5px"
+              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+            />
+          </Box>
 
-        <Box
-          className="statBoxContainer"
-          sx={{
-            gridColumn: {
-              xs: 'span 12', // Full width on xs screens
-              sm: 'span 6',  // Half width on sm screens
-              md: 'span 4',  // Quarter width on md screens
-            },
-            backgroundColor: colors.dashboardStatBox["grey"],
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <StatBox
-            title={0}
-            subtitle=""
-            progress="0.50"
-            icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-          />
-        </Box> 
+          <Box
+            className="statBoxContainer"
+            sx={{
+              gridColumn: {
+                xs: 'span 12', // Full width on xs screens
+                sm: 'span 6',  // Half width on sm screens
+                md: 'span 4',  // Quarter width on md screens
+              },
+              backgroundColor: colors.dashboardStatBox["grey"],
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <StatBox
+              title={0}
+              subtitle=""
+              progress="0.50"
+              icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+            />
+          </Box>
 
           <Box
             className="statBoxContainer"
@@ -502,8 +525,8 @@ const totalSchools = uniqueSchools.length;
           </Box>
         </Box>
       </Box>
-      
-      
+
+
     )
   }
 
@@ -627,7 +650,7 @@ const totalSchools = uniqueSchools.length;
               }}
             >
               <StatBox
-                title={studentsData?.length || 0}
+                title={totalStudents}
                 subtitle="Total Students Enrolled"
                 progress="0.75"
                 borderRadius="5px"
@@ -651,7 +674,7 @@ const totalSchools = uniqueSchools.length;
               }}
             >
               <StatBox
-                title={primary6Students?.length}
+                title={total_primary_6}
                 subtitle="Total Primary 6"
                 progress="0.75"
                 borderRadius="5px"
@@ -675,7 +698,7 @@ const totalSchools = uniqueSchools.length;
               }}
             >
               <StatBox
-                title={jss1Students?.length}
+                title={total_JSS_1}
                 subtitle="Total JSS 1"
                 progress="0.75"
                 borderRadius="5px"
@@ -699,7 +722,7 @@ const totalSchools = uniqueSchools.length;
               }}
             >
               <StatBox
-                title={jss3Students?.length}
+                title={total_JSS_3}
                 subtitle="Total JSS 3"
                 progress="0.75"
                 borderRadius="5px"
@@ -723,7 +746,7 @@ const totalSchools = uniqueSchools.length;
               }}
             >
               <StatBox
-                title={ss1Students?.length}
+                title={total_SSS_1}
                 subtitle="Total SSS 1"
                 progress="0.75"
                 borderRadius="5px"
@@ -746,7 +769,7 @@ const totalSchools = uniqueSchools.length;
               }}
             >
               <StatBox
-                title={getNumberOfDistinctSchools(studentsData)}
+                title={distinctSchools}
                 subtitle="Total Schools with Registered Students"
                 progress="0.50"
                 icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
@@ -771,7 +794,7 @@ const totalSchools = uniqueSchools.length;
               }}
             >
               <StatBox
-                title={totalPrimarySchool()}
+                title={totalPrimarySchool}
                 subtitle="Total Registered Public Primary School"
                 progress="0.75"
                 borderRadius="5px"
@@ -795,7 +818,7 @@ const totalSchools = uniqueSchools.length;
               }}
             >
               <StatBox
-                title={totalSecondarySchool()}
+                title={totalSecondarySchool}
                 subtitle="Total Registered Public Secondary Schools"
                 progress="0.75"
                 borderRadius="5px"
@@ -819,7 +842,7 @@ const totalSchools = uniqueSchools.length;
               }}
             >
               <StatBox
-                title={totalScienceAndVocational}
+                title={totalScienceAndVocational || 0}
                 subtitle="Total Registered Science and Vocational Schools"
                 progress="0.75"
                 borderRadius="5px"
@@ -982,7 +1005,7 @@ const totalSchools = uniqueSchools.length;
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {last5Students().map((student, index) => (
+                    {dashboardData?.recentTwentyStudents?.map((student, index) => (
                       <TableRow key={index} sx={{
                         '&:hover': { backgroundColor: '#f9f9f9' },
                         borderBottom: '1px solid #ddd',
@@ -1000,7 +1023,7 @@ const totalSchools = uniqueSchools.length;
 
               <Button
                 component={Link}
-                to="/enumerator-dashboard/view-all-students-data"
+                to="/admin-dashboard/admin-view-all-students-no-export"
                 variant="contained"
                 size="large"
                 color="primary"
@@ -1031,7 +1054,7 @@ const totalSchools = uniqueSchools.length;
             </Box>
           </Box>
         </>
-        
+
       )
 
 
@@ -1298,7 +1321,7 @@ const totalSchools = uniqueSchools.length;
         </Box>)}
 
 
-     
+
 
 
     </Box>

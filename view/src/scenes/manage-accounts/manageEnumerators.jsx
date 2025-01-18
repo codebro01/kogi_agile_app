@@ -90,14 +90,14 @@ export const ManageEnumerators = () => {
         const fetchData = async () => {
             try {
                 setDataFetchLoading(true);
-                const response = await axios.get(`${API_URL}/admin-enumerator`, {
+                const response = await axios.get(`${API_URL}/student/total-students-by-enumerators`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                     withCredentials: true,
                 });
-                setData(response.data.registrars);
+                setData(response.data.countStudentsByEnumerators);
                 setDataFetchLoading(false);
             } catch (err) {
                 setDataFetchLoading(false);
@@ -126,6 +126,7 @@ export const ManageEnumerators = () => {
             console.error('Error fetching students:', error);
         }
     };
+
 
     return (
         <>

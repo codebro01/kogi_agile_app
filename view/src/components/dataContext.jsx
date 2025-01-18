@@ -6,18 +6,12 @@ import { Box } from '@mui/material';
 // Create the context
 export const StudentsContext = createContext();
 export const SchoolsContext = createContext();
-export const WardsContext = createContext();
-const chartContext = createContext();
-
-
-
 
 
 // Create the provider component
 export const DataProvider = ({ children }) => {
   const [studentsData, setStudentsData] = useState([]);
   const [schoolsData, setSchoolsData] = useState([]);
-  const [wardsData, setWardsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSchool, setSelectedSchool] = useState(null);
@@ -34,7 +28,7 @@ export const DataProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [studentsRes, schoolsRes, wardsRes] = await Promise.all([
+        const [studentsRes, schoolsRes] = await Promise.all([
           axios.get(`${API_URL}/student`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -43,13 +37,11 @@ export const DataProvider = ({ children }) => {
             withCredentials: true,
           }),
           axios.get(`${API_URL}/all-schools`),
-          axios.get(`${API_URL}/wards`),
         ]);
-        
-        
+
+
         setStudentsData(studentsRes.data.students);
         setSchoolsData(schoolsRes.data.allSchools);
-        setWardsData(wardsRes.data.wards);
       } catch (err) {
         console.error(err);
         if (err.response?.status === 401) {
@@ -67,10 +59,8 @@ export const DataProvider = ({ children }) => {
   return (
     <StudentsContext.Provider value={{ studentsData, setStudentsData }}>
       <SchoolsContext.Provider value={{ selectedSchool, setSelectedSchool, schoolsData }}>
-        <WardsContext.Provider value={{ wardsData }}>
-          {loading ? <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}><SpinnerLoader /></Box> : children}
-          {error && <div>Error: {error.message}</div>}
-        </WardsContext.Provider>
+        {loading ? <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}><SpinnerLoader /></Box> : children}
+        {error && <div>Error: {error.message}</div>}
       </SchoolsContext.Provider>
     </StudentsContext.Provider>
   );

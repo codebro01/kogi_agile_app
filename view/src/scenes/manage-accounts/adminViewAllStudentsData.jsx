@@ -3,7 +3,7 @@ import {
     Container, useTheme, Typography, Table, Button, TableBody, TableCell,
     Select, MenuItem, TableContainer, TableHead, TableRow, Paper, Box, TextField, IconButton, Grid, InputLabel, Autocomplete,
 } from '@mui/material';
-import { StudentsContext, WardsContext } from '../../components/dataContext';
+import { StudentsContext } from '../../components/dataContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import EditIcon from "@mui/icons-material/Edit";
@@ -12,8 +12,10 @@ import { PersonLoader } from '../../components/personLoader';
 import { useAuth } from '../auth/authContext';
 import { getNigeriaStates } from 'geo-ng';
 import lgasAndWards from '../../Lga&wards.json';
-import { SchoolsContext } from "../../components/dataContext.jsx";
-import DataTable from 'react-data-table-component';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchStudents, filterStudents } from '../../components/studentsSlice.js';
+import { fetchSchools } from '../../components/schoolsSlice.js';
+import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
 
 // Import context
 
@@ -25,16 +27,11 @@ export const AdminViewAllStudentsData = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode)
     const navigate = useNavigate();
-    // const [filterLoading, setFilterLoading] = useState(false);
-    const { studentsData, setStudentsData } = useContext(StudentsContext);
-    const { setSelectedSchool, loading, selectedSchool, schoolsData } = useContext(SchoolsContext); // Access context
-    const schools = schoolsData;
     const [selectedSchoolState, setSelectedSchoolState] = useState(null); // State to hold the selected school object
     const [schoolOptions, setSchoolOptions] = useState([]); // Start with an empty array
     const [hasMore, setHasMore] = useState(true); // To check if more data is available
     const [loadingSchools, setLoadingSchools] = useState(false); // Loading state for schools
     const [page, setPage] = useState(1); // Kee
-    const { wardsData } = useContext(WardsContext);
     const [yearsOfAdmissionData, setYearsOfAdmissionData] = useState([]);
     const [filterError, setFilterError] = useState(null);
     const [statesData, setStatesData] = useState([]);
@@ -63,11 +60,27 @@ export const AdminViewAllStudentsData = () => {
         yearOfAdmission: "",
     });
 
+    // ! Redux toolkit consumption
+
+    const dispatch = useDispatch();
+    const schoolsState = useSelector((state) => state.schools);
+    const { data: schoolsData, loading: schoolsLoading, error: schoolsError } = schoolsState;
+    useEffect(() => {
+        dispatch(fetchStudents());
+        dispatch(fetchSchools());
+    }, [dispatch]);
+
+    const schools = schoolsData;
+
     useEffect(() => {
         if (schools && schools.length > 0) {
             setSchoolOptions(schools); // Set schools if available
         }
     }, [schools]); // Re-run whenever schools change
+
+
+
+
     const loadMoreSchools = async () => {
         if (loadingSchools || !hasMore) return;
 
@@ -192,8 +205,15 @@ export const AdminViewAllStudentsData = () => {
             sortBy: '',
             lga: '',
             schoolId: '',
+            enumerator: '',
+            dateFrom: '',
+            dateTo: '',
+            yearOfEnrollment: '',
+    
         });
-        setStudentsData(studentsData);
+        // setStudentsData(studentsData);
+        // dispatch(filterStudents(studentsData));
+
     };
 
     const classOptions = [
@@ -204,7 +224,7 @@ export const AdminViewAllStudentsData = () => {
     ];
 
 
-    const fetchStudents = async () => {
+    const fetchStudentsByFilter = async () => {
 
 
         try {
@@ -217,7 +237,7 @@ export const AdminViewAllStudentsData = () => {
                 responseType: "blob",
                 withCredentials: true,
             })
-
+            setFetchLoading(false)
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -225,7 +245,8 @@ export const AdminViewAllStudentsData = () => {
             document.body.appendChild(link);
             link.click();
         } catch (error) {
-            setFilterError(error?.response?.statusText)
+            setFilterError(error?.response?.statusText);
+            setFetchLoading(false)
         }
     }
 
@@ -244,30 +265,13 @@ export const AdminViewAllStudentsData = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetchStudents();
+        fetchStudentsByFilter();
     };
 
     // const handleEdit = (student) => {
     //     navigate(`/admin-dashboard/update-student/${student._id}`, { state: student })
     // };
 
-
-
-    if (loading)
-        return (
-            <Box
-                sx={{
-                    display: "flex", // Corrected from 'dispflex'
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "50vh",
-                    width: "90vw"
-                }}
-            >
-                <PersonLoader />
-            </Box>
-        );
 
 
     // const columns = [
@@ -287,6 +291,23 @@ export const AdminViewAllStudentsData = () => {
     //         sortable: true,
     //     },
     // ];
+    if (schoolsLoading) {
+       return  <Box
+            sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "80vh",
+                width: "100%"
+            }}
+        >
+            <SpinnerLoader />
+        </Box>    }
+
+    if (schoolsError) {
+        return <div>Error: {schoolsError}</div>;
+    }
+
 
     return (
         <>
@@ -647,13 +668,19 @@ export const AdminViewAllStudentsData = () => {
                                 variant="outlined"
                                 color="secondary"
                                 size="large"
-                                sx={{ textTransform: "none", width: '48%' }}
+                                sx={{ textTransform: "none", width: '100%' }}
                                 onClick={clearFilters}
                             >
                                 Reset Filters
                             </Button>
 
-                            <Button
+                            {fetchLoading ? (<Box
+                                sx={{
+                                    width: "100%",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}
+                            ><SpinnerLoader /></Box>) : <Button
                                 type="submit"
                                 variant="contained"
                                 size="large"
@@ -665,7 +692,9 @@ export const AdminViewAllStudentsData = () => {
                                 }}
                             >
                                 Export Data
-                            </Button>
+                            </Button>}
+
+
                         </Box>
 
                         {filterError && (
@@ -676,7 +705,7 @@ export const AdminViewAllStudentsData = () => {
                     </Box>
 
 
-                
+
                     {/* <DataTable
                         title="Employee List"
                         columns={columns}

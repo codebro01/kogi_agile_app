@@ -12,7 +12,7 @@ const styles = {
     borderTop: "1px solid transparent",
     borderRadius: "50%",
   },
-  animation: "spin 1s linear infinite",
+  animation: "spin .2s linear infinite",
 };
 
 // Define the keyframes using the CSSStyleSheet API

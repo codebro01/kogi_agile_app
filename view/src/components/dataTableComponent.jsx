@@ -20,6 +20,7 @@ import AddIcon from "@mui/icons-material/Add";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../scenes/auth/authContext";
+import { SpinnerLoader } from "./spinnerLoader";
 
 
 
@@ -34,7 +35,21 @@ const navigate = useNavigate();
 
    
 
-    if (fetchDataLoading) return (<p>Loading data.....</p>)
+    if (fetchDataLoading) return (<Box
+                sx={{
+                    display: "flex", // Corrected from 'dispflex'
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "50vh",
+                    width: "90vw"
+                }}
+            >
+                <SpinnerLoader />
+            </Box>)
+
+    console.log('data', data)
+
 
     return (
         <Paper elevation={3} sx={{ padding: "16px" }}>
@@ -75,6 +90,7 @@ const navigate = useNavigate();
                     <TableHead>
                         <TableRow>
                             <TableCell>ID</TableCell>
+                            <TableCell>S/N</TableCell>
                             <TableCell>Name</TableCell>
                             <TableCell>Email</TableCell>
                             {showTotalStudentsRegistered && <TableCell>Total Registered Students</TableCell>} 
@@ -85,12 +101,15 @@ const navigate = useNavigate();
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((row) => (
-                            <TableRow key={row.randomId}>
-                                <TableCell>{row.randomId}</TableCell>
-                                <TableCell>{row.fullName}</TableCell>
-                                <TableCell>{row.email}</TableCell>
-                                {showTotalStudentsRegistered && <TableCell>0</TableCell>} 
+                        {data.map((row, index) => (
+                           
+                            <TableRow key={ row.randomId || row.enumeratorDetails.randomId}>
+
+                                <TableCell>{index+1}</TableCell>
+                                <TableCell>{row.randomId || row.enumeratorDetails.randomId}</TableCell>
+                                <TableCell>{row.fullName || row.enumeratorDetails.fullName}</TableCell>
+                                <TableCell>{row.email  || row.enumeratorDetails.email}</TableCell>
+                                {showTotalStudentsRegistered && <TableCell>{row?.totalStudents || 0}</TableCell>} 
                                 {editInfo && <TableCell>
                                     <IconButton
                                         color="primary"

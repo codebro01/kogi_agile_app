@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect, useCallback } from 'react';
+import React, { useState, useContext, useEffect, useCallback, memo } from 'react';
 import {
     Container, useTheme, Typography, Table, Button, TableBody, TableCell,
     Select, MenuItem, TableContainer, TableHead, TableRow, Paper, Box, TextField, IconButton, Grid, InputLabel, Autocomplete,
 } from '@mui/material';
-import { StudentsContext, WardsContext } from '../../components/dataContext';
+import { StudentsContext } from '../../components/dataContext';
 import axios from 'axios';
 import { resolvePath, useNavigate } from 'react-router-dom';
 import EditIcon from "@mui/icons-material/Edit";
@@ -15,6 +15,12 @@ import lgasAndWards from '../../Lga&wards.json';
 import { SchoolsContext } from "../../components/dataContext.jsx";
 import DataTable from 'react-data-table-component';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteStudent, fetchStudents, fetchStudentsFromComponent, filterStudents, resetStudentsData, setRowsPerPage, setPage, setCurrentPage, setSearchQuery, setStudents } from '../../components/studentsSlice.js';
+import { fetchSchools } from '../../components/schoolsSlice.js';
+import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
+
+
 
 
 
@@ -27,30 +33,45 @@ export const AdminViewAllStudentsDataNoExport = () => {
     const { userPermissions } = useAuth();
     const theme = useTheme();
     const colors = tokens(theme.palette.mode)
+    // const [currentPage, setCurrentPage] = useState(1);
+    const [perPage, setPerPage] = useState(100); // Number of students per page
     const navigate = useNavigate();
+
+    const dispatch = useDispatch();
+    const schoolsState = useSelector((state) => state.schools);
+    const studentsState = useSelector((state) => state.students);
+    const { data: schoolsData, loading: schoolsLoading, error: schoolsError } = schoolsState;
+    const { currentPage, totalRows, rowsPerPage, data, filteredStudents: studentsData, loading: studentsLoading, error: studentsError, searchQuery  } = studentsState;
+    useEffect(() => {
+
+        dispatch(fetchSchools());
+    }, [dispatch]);
+    console.log(data.students)
+
+    useEffect(() => {
+        dispatch(fetchStudents({ page: currentPage, limit: rowsPerPage }));
+    }, [dispatch, currentPage, rowsPerPage]);
+
     // const [filterLoading, setFilterLoading] = useState(false);
-    const { studentsData, setStudentsData } = useContext(StudentsContext);
-    const { setSelectedSchool, loading, selectedSchool, schoolsData } = useContext(SchoolsContext); // Access context
     const schools = schoolsData;
-    const [selectedSchoolState, setSelectedSchoolState] = useState(null); // State to hold the selected school object
     const [schoolOptions, setSchoolOptions] = useState([]); // Start with an empty array
     const [hasMore, setHasMore] = useState(true); // To check if more data is available
     const [loadingSchools, setLoadingSchools] = useState(false); // Loading state for schools
     const [page, setPage] = useState(1); // Kee
-    const { wardsData } = useContext(WardsContext);
-    const [yearsOfAdmissionData, setYearsOfAdmissionData] = useState([]);
     const [filterError, setFilterError] = useState(null);
     const [statesData, setStatesData] = useState([]);
-    const [countriesData, SetCountriesData] = useState([]);
-    const [yearsData, setYearData] = useState([]);
     const [lgasData, setLgasData] = useState([]);
     const [enumeratorsData, setEnumeratorsData] = useState([]);
     const [fetchLoading, setFetchLoading] = useState(false)
     const [enumeratorsLoading, setEnumeratorsLoading] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState(''); // State for search query
-    const [filteredData, setFilteredData] = useState(studentsData); // State for filtered data
+  const [filteredData, setFilteredData] = useState([]); // State for filtered data
+    const [allStudentsData, setAllStudentsData] = useState([]); // State for filtered data
+
+
+
+
 
 
 
@@ -202,8 +223,12 @@ export const AdminViewAllStudentsDataNoExport = () => {
             lga: '',
             schoolId: '',
         });
-        setStudentsData(studentsData);
+        // setStudentsData(studentsData);
     };
+
+    // useEffect(() => {
+    //     dispatch(resetStudentsData())
+    // }, [clearFilters])
 
     const classOptions = [
         { class: "Primary 6", id: 1 },
@@ -233,25 +258,26 @@ export const AdminViewAllStudentsDataNoExport = () => {
     }, [])
 
 
-    const fetchStudents = async () => {
+    // const fetchStudentsFromComponent = async () => {
 
 
-        try {
-            setFetchLoading(true);
-            const response = await axios.get(`${API_URL}/student/admin-view-all-students`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                params: { ...filteredParams, ...sortParam },
-                withCredentials: true,
+    //     try {
+    //         setFetchLoading(true);
+    //         const response = await axios.get(`${API_URL}/student/admin-view-all-students`, {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`,
+    //             },
+    //             params: { ...filteredParams, ...sortParam },
+    //             withCredentials: true,
 
-            })
-            setFilteredData(response.data)
+    //         })
+    //         console.log(response);
+    //         dispatch(setStudents(response.data.students))
 
-        } catch (error) {
-            setFilterError(error?.response?.statusText)
-        }
-    }
+    //     } catch (error) {
+    //         setFilterError(error?.response?.statusText)
+    //     }
+    // }
 
 
 
@@ -270,7 +296,10 @@ export const AdminViewAllStudentsDataNoExport = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetchStudents();
+        console.log('submitting')
+        console.log(filteredParams)
+        dispatch(fetchStudentsFromComponent({filteredParams, sortParam}));
+
     };
 
     // const handleEdit = (student) => {
@@ -281,21 +310,27 @@ export const AdminViewAllStudentsDataNoExport = () => {
 
 
 
-    if (loading)
-        return (
-            <Box
-                sx={{
-                    display: "flex", // Corrected from 'dispflex'
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "50vh",
-                    width: "90vw"
-                }}
-            >
-                <PersonLoader />
-            </Box>
-        );
+
+
+
+    if (schoolsLoading || studentsLoading) {
+        return <Box
+            sx={{
+                display: "flex", // Corrected from 'dispflex'
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "50vh",
+                width: "90vw"
+            }}
+        >
+            <SpinnerLoader />
+        </Box>;
+    }
+
+    if (schoolsError || studentsError) {
+        return <div>Error: {schoolsError} {studentsError}</div>;
+    }
 
     const handleDelete = (row) => {
         // Replace this with your actual delete logic, such as making an API request to delete the record
@@ -305,15 +340,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
             try {
                 (async () => {
                     try {
-                        const token = localStorage.getItem('token');
-                        setEnumeratorsLoading(true);
-                        const response = await axios.delete(`${API_URL}/student/${row.randomId}`, {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
-                            withCredentials: true,
-                        });
-                        setStudentsData(response.data.remainingStudents)
+                        dispatch(deleteStudent(row.randomId)).unwrap();
                     }
                     catch (err) {
                         console.log(err)
@@ -455,34 +482,16 @@ export const AdminViewAllStudentsDataNoExport = () => {
     };
 
     const handleSearch = (event) => {
-        const query = event.target.value.toLowerCase();
-        setSearchQuery(query);
-
-        // Filter data based on search query
-        const filtered = studentsData.filter((item) => {
-            // Include specific fields in the filter logic
-            const valuesToSearch = [
-                item.randomId,
-                item.surname,
-                item.firstname,
-                item.middlename,
-                item.schoolId.schoolName, // Add schoolName explicitly
-                item.lgaOfEnrollment,
-                item.presentClass,
-                item.bankName,
-                item.yearOfEnrollment
-            ];
-
-            // Check if any of these fields include the search query
-            return valuesToSearch.some(
-                (value) => value && String(value).toLowerCase().includes(query)
-            );
-        });
-
-        setFilteredData(filtered);
+        const query = event.target.value;
+        console.log(query)
+        dispatch(setSearchQuery(query));
     };
+    
 
-
+// console.log(schoolsData)
+// console.log(studentsData)
+console.log(searchQuery)
+    
     return (
         <>
             {userPermissions.includes('handle_registrars') ? (
@@ -910,10 +919,27 @@ export const AdminViewAllStudentsDataNoExport = () => {
                     <DataTable
                         title="View Registered Students Information"
                         columns={columns}
-                        data={filteredData}
+                        data={studentsData}
+                        progressPending={studentsLoading} // Show loading spinner
                         pagination
-                        paginationPosition="top" // Moves pagination to the top
+                        paginationServer
                         highlightOnHover
+                        paginationRowsPerPageOptions={[100, 200, 500]} // Custom options
+
+                        paginationTotalRows={totalRows} // Total rows from API
+                        paginationDefaultPage={currentPage} // Use current page from Redux
+                        onChangePage={(page) => {
+                            console.log('page' + page)
+                            dispatch(setCurrentPage(page)); // Update Redux state for current page
+                            dispatch(fetchStudents({ page, limit: rowsPerPage })); // Fetch data for the selected page
+                        }}                       
+                         onChangeRowsPerPage={(newLimit) => {
+                            // Update rowsPerPage in Redux state and fetch new data
+                            console.log('newLimit' + newLimit)
+                            dispatch(setRowsPerPage(newLimit)); // Update rowsPerPage in Redux
+                            dispatch(fetchStudents({ page: 1, limit: newLimit })); // Fetch new data with updated limit
+                        }}                        
+                        paginationPerPage={rowsPerPage} // Override default rows per page
                         customStyles={customStyles} // Applying the custom styles
 
 

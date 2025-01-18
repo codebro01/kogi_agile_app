@@ -4,7 +4,7 @@ import { TextField, Button, Grid, Container, Autocomplete, Typography, Box, Icon
 // import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { getNigeriaStates } from 'geo-ng';
-import { SchoolsContext, WardsContext } from "../../components/dataContext.jsx";
+import { SchoolsContext } from "../../components/dataContext.jsx";
 import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
 import lgasAndWards from '../../Lga&wards.json';
 
@@ -244,7 +244,6 @@ export const CreateStudent = () => {
   //   setSuccess('')
   // }, 10000)
 
-  // const wards = wardsData.map(ward => ward.name.toString());
   return (
     <>
       <Container maxWidth="sm" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', paddingTop: '16px', paddingBottom: '16px', marginTop: '32px', marginBottom: '50px' }}>

@@ -3,7 +3,7 @@ import {
   Container, useTheme, Typography, Table, Button, TableBody, TableCell,
   Select, MenuItem, TableContainer, TableHead, TableRow, Paper, Box, TextField, IconButton, Grid, InputLabel
 } from '@mui/material';
-import { StudentsContext, WardsContext } from '../../components/dataContext';
+import { StudentsContext } from '../../components/dataContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,7 +16,6 @@ export const ViewAllStudentsData = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode)
   const { studentsData, loading, setStudentsData } = useContext(StudentsContext);
-  const { wardsData } = useContext(WardsContext);
   const navigate = useNavigate();
   const [filters, setFilters] = useState({
     ward: '',

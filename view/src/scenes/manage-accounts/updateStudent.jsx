@@ -4,7 +4,7 @@ import { TextField, Button, Grid, Container, Autocomplete, Typography, Box, Menu
 // import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { getNigeriaStates } from 'geo-ng';
-import { SchoolsContext, WardsContext } from "../../components/dataContext.jsx";
+import { SchoolsContext } from "../../components/dataContext.jsx";
 import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
 import lgasAndWards from '../../Lga&wards.json';
 
@@ -14,7 +14,6 @@ axios.defaults.withCredentials = true;
 export const UpdateStudent = () => {
 
     const { loading, schoolsData } = useContext(SchoolsContext);
-    const { wardsData } = useContext(WardsContext);
     const location = useLocation()
     const student = location.state;
 
