@@ -29,6 +29,9 @@ import FileUploadIcon from '@mui/icons-material/FileUpload'; // For export
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import MenuIcon from "@mui/icons-material/Menu"; // Horizontal bars icon
 import CloseIcon from "@mui/icons-material/Close"; // Cancel icon
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+
 
 
 import { useAuth } from '../auth/authContext.jsx';
@@ -205,26 +208,40 @@ const Sidebar = ({ isSidebar }) => {
               selected={selected}
               setSelected={setSelected}
             />
-       
+
 
             {userPermissions.includes('handle_admins') && (
-              <>  
-                     <Item
-              title="View all Students"
-              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-all-students-no-export' : 'enumerator-dashboard/view-all-students-data'}
+              <>
+                <Item
+                  title="View all Students"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-all-students-no-export' : 'enumerator-dashboard/view-all-students-data'}
                   icon={<VisibilityIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />  
-            <Item
-                title="Manage Admins"
-                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/admins' : 'enumerator-dashboard/view-all-students-data'}
-                icon={<AdminPanelSettingsIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              />
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="View Payments Record"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-payments' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<AttachMoneyIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Manage Duplicate Students Record"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/manage-accounts/manage-duplicate-records' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<ContentCopyIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Manage Admins"
+                  to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/admins' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<AdminPanelSettingsIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
               </>
-            
+
             )}
 
             {userPermissions.includes('handle_registrars') &&
@@ -246,12 +263,12 @@ const Sidebar = ({ isSidebar }) => {
                 />
 
                 <Item
-                title="Manage School"
-                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/schools' : 'enumerator-dashboard/view-all-students-data'}
-                icon={<SchoolIcon />}
-                selected={selected}
-                setSelected={setSelected}
-              /> 
+                  title="Manage School"
+                  to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/schools' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<SchoolIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
               </>
             }
 

@@ -10,7 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { tokens } from "../../theme";
 import { PersonLoader } from '../../components/personLoader';
 import lgasAndWards from '../../Lga&wards.json';
-import {fetchStudents} from '../../components/studentsSlice'
+import {fetchStudents, fetchStudentsFromComponent} from '../../components/studentsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 import {SpinnerLoader} from '../../components/spinnerLoader'
 
@@ -19,9 +19,10 @@ export const ViewAllStudentsData = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode)
   const dispatch = useDispatch();
- const studentsState = useSelector(state => state.allStudents);
- const {data: filteredStudents, loading, error} = studentsState;
+ const studentsState = useSelector(state => state.students);
+  const { filteredStudents: studentsData, loading, error} = studentsState;
   const navigate = useNavigate();
+
 
 
 
@@ -33,9 +34,23 @@ export const ViewAllStudentsData = () => {
   const [filters, setFilters] = useState({
     ward: '',
     presentClass: '',
-    lgaOfEnrollment: '',
+    lga: '',
     schoolId: '',
   });
+
+
+  const params = {
+    ward: filters.ward,
+    presentClass: filters.presentClass,
+    lga: filters.lga,
+    schoolId: filters.schoolId,
+  }
+  const filteredParams = Object.entries(params)
+    .filter(([_, value]) => value != null && value !== '') // Filter out empty values
+    .reduce((acc, [key, value]) => {
+      acc[key] = value;  // Directly add each key-value pair to the accumulator
+      return acc;
+    }, {})
 
   // const clearFilters = async () => {
   //   setFilters({
@@ -61,7 +76,7 @@ export const ViewAllStudentsData = () => {
   const allWards = lgasAndWards.flatMap(ward => ward.wards).sort((a, b) => a.localeCompare(b));;
 
   useEffect(() => {
-    dispatch (fetchStudents());
+    dispatch (fetchStudents({page: 1, limit: 3000}));
   }, [dispatch])
 
 
@@ -72,16 +87,16 @@ export const ViewAllStudentsData = () => {
     { class: "SSS 1", id: 4 },
   ];
 
-  const buildQueryString = () => {
-    const query = new URLSearchParams();
-    const { schoolId, presentClass, lgaOfEnrollment, ward } = filters;
+  // const buildQueryString = () => {
+  //   const query = new URLSearchParams();
+  //   const { schoolId, presentClass, lgaOfEnrollment, ward } = filters;
 
-    if (schoolId) query.append('schoolId', schoolId);
-    if (ward) query.append('ward', ward);
-    if (lgaOfEnrollment) query.append('lgaOfEnrollment', lgaOfEnrollment);
-    if (presentClass) query.append('presentClass', presentClass);
-    return query.toString();
-  };
+  //   if (schoolId) query.append('schoolId', schoolId);
+  //   if (ward) query.append('ward', ward);
+  //   if (lgaOfEnrollment) query.append('lgaOfEnrollment', lgaOfEnrollment);
+  //   if (presentClass) query.append('presentClass', presentClass);
+  //   return query.toString();
+  // };
 
   // const fetchFilteredStudents = async () => {
   //   const queryString = buildQueryString();
@@ -120,8 +135,12 @@ export const ViewAllStudentsData = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+            e.preventDefault();
+            dispatch(fetchStudentsFromComponent({filteredParams, sortParam : {}}));
+    console.log(filteredStudents)
   };
+
+  console.log(filters)
 
   if (loading)
     return (
@@ -148,7 +167,7 @@ export const ViewAllStudentsData = () => {
 
   const uniqueSchools = Array.from(
     new Set(
-      filteredStudents.map(student => JSON.stringify({
+      studentsData.map(student => JSON.stringify({
         schoolName: student.schoolId?.schoolName,
         schoolId: student.schoolId?._id,
       }))
@@ -225,8 +244,8 @@ export const ViewAllStudentsData = () => {
           <Grid item xs={12} sm={6} md={4}>
             <InputLabel id="ward-label">Select LGA of Enrollment</InputLabel>
             <Select
-              name="lgaOfEnrollment"
-              value={filters.lgaOfEnrollment}
+              name="lga"
+              value={filters.lga}
               onChange={handleInputChange}
               displayEmpty
               fullWidth
@@ -312,8 +331,8 @@ export const ViewAllStudentsData = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredStudents && filteredStudents.length > 0 ? (
-              filteredStudents.map((student, index) => (
+            {studentsData && studentsData.length > 0 ? (
+              studentsData.map((student, index) => (
                 <TableRow key={index}>
                   <TableCell>{index+1}</TableCell>
                   <TableCell>

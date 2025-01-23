@@ -37,6 +37,7 @@ import { store } from './components/store.js';
 import { CreateSchool } from "./scenes/manage-accounts/createSchool.jsx";
 import { ManageSchools } from "./scenes/manage-accounts/manageSchools.jsx";
 import { ViewPaymentsRecords } from "./components/viewPaymentsRecords.jsx";
+import { ManageDuplicateRecords } from "./scenes/manage-accounts/manageDuplicateRecords.jsx";
 
 
 
@@ -102,6 +103,7 @@ function App() {
                         <Route path="/admin-dashboard/role-selector" element={<RoleSelector />} />
                         <Route path="/admin-dashboard/create-accounts/register-admin" element={<CreateAdmin />} />
                         <Route path="/admin-dashboard/view-all-students-data" element={<AdminViewAllStudentsData />} />
+                        <Route path="/admin-dashboard/admin-view-payments" element={<ViewPaymentsRecords />} />
                         <Route path="/admin-dashboard/admin-view-all-students-no-export" element={<AdminViewAllStudentsDataNoExport />} />
                         <Route path="/view-all-schools-info" element={<ViewSchoolsInfo />} />
                         <Route path="/admin-dashboard/create-accounts/register-enumerator" element={<CreateEnumerator />} />
@@ -114,6 +116,7 @@ function App() {
                         <Route path="/admin-dashboard/manage-accounts/enumerators/edit-enumerator/:id" element={<EditEnumerator />} />
                         <Route path="/admin-dashboard/manage-accounts/payroll-specialists/edit-payroll-specialists/:id" element={<EditPayrollSpecialists />} />
                         <Route path="/admin-dashboard/manage-accounts/schools" element={<ManageSchools />} />
+                        <Route path="/admin-dashboard/manage-accounts/manage-duplicate-records" element={<ManageDuplicateRecords />} />
 
                         <Route path="/index.html" element={<Navigate to="/" />} />
                         <Route path="*" element={<Navigate to="/admin-dashboard" />} />

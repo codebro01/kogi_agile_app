@@ -236,24 +236,24 @@ export const AdminViewAllStudentsDataNoExport = () => {
     ];
 
 
-    useEffect(() => {
-        (async () => {
-            try {
-                setFetchLoading(true);
-                const response = await axios.get(`${API_URL}/student/admin-view-all-students`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    // params: { ...filteredParams, ...sortParam },
-                    withCredentials: true,
-                })
+    // useEffect(() => {
+    //     (async () => {
+    //         try {
+    //             setFetchLoading(true);
+    //             const response = await axios.get(`${API_URL}/student/admin-view-all-students`, {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //                 // params: { ...filteredParams, ...sortParam },
+    //                 withCredentials: true,
+    //             })
 
 
-            } catch (error) {
-                setFilterError(error?.response?.statusText)
-            }
-        })()
-    }, [])
+    //         } catch (error) {
+    //             setFilterError(error?.response?.statusText)
+    //         }
+    //     })()
+    // }, [])
 
 
     // const fetchStudentsFromComponent = async () => {

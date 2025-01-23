@@ -938,7 +938,7 @@ export const ViewPaymentsRecords = () => {
                             flexDirection: "row",
                         }}>
                             <Typography variant='h4' sx={{ fontWeight: 700, color: "#196b57" }}>
-                                Total Amount Disbursed by Filter:
+                                Total Amount Disbursed based on Filter:
                             </Typography>
                             <Typography variant='h4' sx={{ fontWeight: 700, color: "#196b57" }}>
                                 {`\u20A6 ${formatWithCommas(totalAmountPaid)}`}
