@@ -19,7 +19,8 @@ import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { fetchAllStudents } from '../../components/allStudentsSlice.js'
 import { fetchDashboardStat } from '../../components/dashboardStatsSlice.js';
-import lgasAndWards from '../../Lga&wards.json';  
+import lgasAndWards from '../../Lga&wards.json';
+import { ResponsiveBarChartForPayment } from '../../components/barChartForPayment.jsx';
 
 import axios from 'axios';
 
@@ -53,12 +54,11 @@ const Dashboard = () => {
 
 
 
-
   const token = localStorage.getItem('token');
 
 
   useEffect(() => {
-    if(userPermissions.includes('handle_students') && userPermissions.length === 1) {
+    if (userPermissions.includes('handle_students') && userPermissions.length === 1) {
       dispatch(fetchAllStudents());
       return;
     }
@@ -80,7 +80,7 @@ const Dashboard = () => {
               },
               withCredentials: true,
             }),
-         
+
             axios.get(`${API_URL}/payments/get-total-student-paid`, {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -88,10 +88,10 @@ const Dashboard = () => {
               withCredentials: true,
             }),
           ]);
-console.log(getTotalStudentsPaid)
+          console.log(getTotalStudentsPaid)
           setLgaWithTotalPayments(getLGAWithTotalPaymentsRes.data.paymentByLGA);
           setTotalStudentsPaid(getTotalStudentsPaid.data.totalStudentPaid)
-      
+
         }
         catch (err) {
           console.error('Error fetching data:', err);
@@ -103,17 +103,17 @@ console.log(getTotalStudentsPaid)
     }
   }, []);
   if (studentsLoading || dashboardStatLoading) {
-    return       <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "80vh",
-                    width: "100%"
-                }}
-            >
-                <SpinnerLoader />
-            </Box>;
+    return <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "80vh",
+        width: "100%"
+      }}
+    >
+      <SpinnerLoader />
+    </Box>;
   }
 
   if (studentsError || dashboardStatError) {
@@ -252,6 +252,15 @@ console.log(getTotalStudentsPaid)
       });
     }
 
+    else {
+       mergedResults = lgasAndWards.map((lga) => {
+        return {
+          LGA: lga.name.toUpperCase(),
+          totalAmount: 0
+        }
+       })
+    }
+
     // Log or return the mergedResults
     // console.log(mergedResults);
 
@@ -262,7 +271,7 @@ console.log(getTotalStudentsPaid)
     }
 
 
-    function formatWithCommas(number=0) {
+    function formatWithCommas(number = 0) {
       return number.toLocaleString();
     }
 
@@ -397,8 +406,13 @@ console.log(getTotalStudentsPaid)
                 borderRadius: '5px',
               }}
             >
-              <Typography variant='h3' sx={{ color: "#000000", fontWeight: "800" }}>
-               Total Amount Disbursed Based on LGA of Enrollment
+              <Typography variant='h3' sx={{
+                color: "#196b57", fontWeight: "800", fontSize: {
+                  xs: "1.3rem",
+                  sm: "1.7rem"
+                }
+              }}>
+                Total Amount Disbursed Based on LGA of Enrollment
               </Typography>
             </Box>
 
@@ -462,93 +476,34 @@ console.log(getTotalStudentsPaid)
                 alignItems: 'center',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                width: "100%",
+                height: "100%"
+
               }}
             >
-              {userPermissions.length === 1 && (
-                <>
-                  <Typography
-                    variant="h3"
-                    gutterBottom
-                    sx={{
-                      color: colors.main["darkGreen"],
-                      background: "rgba(224, 224, 224, 1)",
-                      fontWeight: 'bold',
-                      letterSpacing: '0.5px',
-                      textAlign: 'center',
-                      padding: '20px 0',
-                      marginTop: "100px",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Information of Last 5 Registered Students
-                  </Typography>
 
-                  <TableContainer
-                    component={Paper}
-                    sx={{
-                      maxWidth: '100%',
-                      overflowX: 'auto',
-                      boxShadow: 3,
-                      borderRadius: '8px',
-                      marginBottom: '20px',
-                      minHeight: "320px",
-                    }}
-                  >
-                    <Table sx={{ minWidth: 650 }}>
-                      <TableHead>
-                        <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
-                          <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Surname</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Present Class</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>State of Origin</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>LGA</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Ward</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {last5Students().map((student, index) => (
-                          <TableRow key={index} sx={{
-                            '&:hover': { backgroundColor: '#f9f9f9' },
-                            borderBottom: '1px solid #ddd',
-                          }}>
-                            <TableCell>{student.surname}</TableCell>
-                            <TableCell>{student.presentClass}</TableCell>
-                            <TableCell>{student.stateOfOrigin}</TableCell>
-                            <TableCell>{student.lga}</TableCell>
-                            <TableCell>{student.ward}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+              <Box sx={{
+                overflowX: "auto",
 
-                  <Button
-                    component={Link}
-                    to="/enumerator-dashboard/view-all-students-data"
-                    variant="contained"
-                    size="large"
-                    color="primary"
-                    sx={{
-                      textTransform: 'none',
-                      fontSize: '1rem',
-                      padding: '12px 24px',
-                      borderRadius: '8px',
-                      boxShadow: 2,
-                      marginBottom: '100px',
-                      '&:hover': {
-                        backgroundColor: '#0D47A1',
-                        boxShadow: 3,
-                      },
-                    }}
-                  >
-                    Click to View All Students Information
-                  </Button>
-                </>
-              )}
+                width: "100%",
+                flexBasis: "100%",
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: '#ffffff',
+                borderRadius: '8px',
+                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                transition: 'background-color 0.3s ease',
+                height: '100%'
+              }}>
+
+                <ResponsiveBarChartForPayment />
+              </Box>
+
             </Box>
           </Box>
         </Box>)
-  
+
         }
       </>
 

@@ -7,27 +7,29 @@ import { SpinnerLoader } from './spinnerLoader';
 // Register Chart.js components and plugins
 ChartJS.register(BarElement, Tooltip, Legend, CategoryScale, LinearScale, ChartDataLabels);
 
-export const ResponsiveBarChart = () => {
+export const ResponsiveBarChartForPayment = () => {
     // Data for the Bar Chart
     const [apiDataLoading, setApiDataLoading] = useState(false)
     const [apiData, setApiData] = useState([]);
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
     const token = localStorage.getItem('token');
+  
     useEffect(() => {
         (async () => {
 
             try {
                 setApiDataLoading(true)
-                const response = await axios.get(`${API_URL}/student/enumerators-student-count`, {
+                const response = await axios.get(`${API_URL}/payments/view-payments-by-lga`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                     withCredentials: true,
                 })
-
+                console.log(response)
+                console.log(response)
                 setApiDataLoading(false)
-                setApiData(response.data)
+                setApiData(response.data.paymentByLGA)
             }
             catch (err) {
                 console.log(err)
@@ -38,11 +40,11 @@ export const ResponsiveBarChart = () => {
 
 
     const data = {
-        labels: apiData.map(oneApiData => oneApiData.enumeratorName.split(' ')[0]), // Label each slice by the enumerator's name
+        labels: apiData.map(oneApiData => oneApiData._id), // Label each slice by the enumerator's name
         datasets: [
             {
-                label: 'Top 5 Enumerators', // Title for the dataset
-                data: apiData.map(oneApiData => oneApiData.totalStudents), // Get total students for each enumerator
+                label: 'Payment by LGA', // Title for the dataset
+                data: apiData.map(oneApiData => oneApiData.totalAmount), // Get total students for each enumerator
                 backgroundColor: [
                     'rgba(255, 99, 132, 1)',
                     'rgba(54, 162, 235, 1)',
@@ -98,7 +100,7 @@ export const ResponsiveBarChart = () => {
             y: {
                 beginAtZero: true,
                 ticks: {
-                    stepSize: 5,
+                    stepSize: 1000000,
                 },
                 grid: {
                     color: 'rgba(200, 200, 200, 0.5)',
@@ -108,11 +110,11 @@ export const ResponsiveBarChart = () => {
     };
 
 
-    if (apiDataLoading) return (<SpinnerLoader/>)
+    if (apiDataLoading) return (<SpinnerLoader />)
 
 
     return (
-        <div style={{ width: '100%', height: '450px', padding: '20px', textAlign: 'center' }}>
+        <div style={{ width: '100%', height: '450px', padding: '0 20px ', textAlign: 'center' }}>
 
             <h3
                 style={{
@@ -125,7 +127,7 @@ export const ResponsiveBarChart = () => {
                     fontSize: 'clamp(0.8rem, 1.9vw, 1.5rem)', // Better scaling for all screens
                 }}
             >
-                Enumerators by highest students Registered
+                Local Governments by Higest Payment
             </h3>
 
             <Bar data={data} options={options} />

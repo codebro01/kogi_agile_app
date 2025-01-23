@@ -258,7 +258,7 @@ const Sidebar = ({ isSidebar }) => {
             {userPermissions.length === 1 && (
               <>
                 <Item
-                  title="Export Sheet"
+                  title="Export Attendance Sheet"
                   to={'/export-attendance-sheet'}
                   icon={<DescriptionIcon />}
                   selected={selected}
@@ -266,7 +266,7 @@ const Sidebar = ({ isSidebar }) => {
                 />
 
                 <Item
-                  title="Import Sheet"
+                  title="Import Attendance Sheet"
                   to={'/import-attendance-sheet'}
                   icon={<FileUploadIcon />}
                   selected={selected}

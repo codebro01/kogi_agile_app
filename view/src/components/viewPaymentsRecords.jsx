@@ -67,6 +67,11 @@ export const ViewPaymentsRecords = () => {
     const [filteredData, setFilteredData] = useState([]); // State for filtered data
     const [paymentsData, setPaymentData] = useState([]); // State for filtered data
     const [totalRows, setTotalRows] = useState([]); // State for filtered data
+    const [apiResp, setApiResp] = useState([]); // State for filtered data
+    const [fetchAttendanceLoading, setFetchAttendanceLoading] = useState(false);
+    const [totalAmountPaid, setTotalAmountPaid] = useState(0);
+    const [totalStudentsPaidByFilter, setTotalStudentsPaidByFilter] = useState(0);
+
     
 
 
@@ -85,11 +90,14 @@ export const ViewPaymentsRecords = () => {
         year: "",
         month: "",
         paymentStatus: "",
+        paymentType: "",
         totalAttendanceScore: "",
         bankName: "",
         amount: "",
         limit: '',
-        page: ''
+        page: '',
+        dateFrom: '', 
+        dateTo: '',
     });
 
 
@@ -106,10 +114,14 @@ export const ViewPaymentsRecords = () => {
         schoolName: filters.schoolName,
         bankName: filters.bankName,
         paymentStatus: filters.paymentStatus,
+        paymentType: filters.paymentType,
         amount: filters.amount,
         year: filters.year,
         month: filters.month,
         totalAttendanceScore: filters.totalAttendanceScore,
+        dateFrom: filters.dateFrom,
+        dateTo: filters.dateTo,
+
     }
     const filteredParams = Object.entries(params)
         .filter(([_, value]) => value != null && value !== '') // Filter out empty values
@@ -146,6 +158,7 @@ export const ViewPaymentsRecords = () => {
         try {
             const token = localStorage.getItem('token');
             setEnumeratorsLoading(true);
+            setFetchAttendanceLoading(true)
             const response = await axios.get(`${API_URL}/payments/view-payments`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -154,17 +167,27 @@ export const ViewPaymentsRecords = () => {
                 params: { ...filteredParams },
                 withCredentials: true,
             });
-            const { getAllPaymentsRecords } = response.data;
-            console.log(getAllPaymentsRecords)
+            const { getAllPaymentsRecords, totalPayments, amountSum } = response.data;
             setPaymentData(getAllPaymentsRecords);
+            setTotalAmountPaid(amountSum[0]?.totalAmount)
+            setTotalStudentsPaidByFilter(totalPayments)
             setTotalRows(response.data.totalPayments)
+            setFetchAttendanceLoading(false)            
+            setTimeout(() => setApiResp(''), 6000)
+
         }
         catch (err) {
             console.log(err)
+            setFetchAttendanceLoading(false);
+            setApiResp(err.response?.message || err.response?.data?.message)
+            setTimeout(()=> setApiResp(''), 6000)
         }
 
     }
 
+    function formatWithCommas(number = 0) {
+        return number.toLocaleString();
+    }
    
 
   
@@ -193,6 +216,14 @@ export const ViewPaymentsRecords = () => {
         { class: "JSS 3", id: 3 },
         { class: "SSS 1", id: 4 },
     ];
+
+    const paymentTypeOption = [
+        { name: "Registration", value: "Registration" },
+        { name: "Transition", value: "Transition" },
+        { name: "Registration + Transition", value: "Registration and Transition" },
+        { name: "Second Term", value: "Second Term" },
+        { name: "Third Term", value: "Third Term" },
+    ]
 
 
     // useEffect(() => {
@@ -262,7 +293,6 @@ export const ViewPaymentsRecords = () => {
     // };
 
     // console.log(filters);
-
 
 
 
@@ -455,10 +485,8 @@ export const ViewPaymentsRecords = () => {
     const currentYear = getCurrentYear();
 
 
-    console.log(currentYear)
 
 
-    console.log(filters)
     // console.log(studentsData)
 
     return (
@@ -673,7 +701,9 @@ export const ViewPaymentsRecords = () => {
 
                                 </Select>
                             </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
+
+
+                            {/* <Grid item xs={12} sm={6} md={4}>
                                 <InputLabel id="paymentStatus-label" sx={{ marginBottom: 1 }}>Payment Status</InputLabel>
                                 <Select
                                     name="paymentStatus"
@@ -693,6 +723,30 @@ export const ViewPaymentsRecords = () => {
                                     <MenuItem value='0'>
                                         Not Paid
                                     </MenuItem>
+
+                                </Select>
+                            </Grid> */}
+
+
+                            <Grid item xs={12} sm={6} md={4}>
+                                <InputLabel id="paymentType-label" sx={{ marginBottom: 1 }}>Payment Type</InputLabel>
+                                <Select
+                                    name="paymentType"
+                                    value={filters.paymentType}
+                                    onChange={handleInputChange}
+                                    displayEmpty
+                                    fullWidth
+                                    size="small"
+                                    labelId="paymentType-label"
+                                >
+                                    <MenuItem value=''>
+                                        All Payment Type
+                                    </MenuItem>
+                                    {paymentTypeOption.map((paymentType, index) =>( 
+                                    <MenuItem value= {paymentType.value} key = {index+1}>
+                                        {paymentType.name}
+                                    </MenuItem>
+                                    ))}
 
                                 </Select>
                             </Grid>
@@ -754,7 +808,54 @@ export const ViewPaymentsRecords = () => {
                                     }}
                                 />
                             </Grid>
+                            <Grid item xs={12} sm={6} md = {4}>
+                                <InputLabel id="date-label" sx={{ marginBottom: 1 }}>Start Date</InputLabel>
 
+                                <TextField
+                                    label="Date From"
+                                    name="dateFrom"
+                                    type="date"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={filters.dateFrom}
+                                    onChange={handleInputChange}
+                                    InputLabelProps={{ shrink: true }}
+                                    InputProps={{
+                                        sx: {
+                                            height: "38px", // Controls the height of the inner input field
+                                        },
+                                    }}
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            height: "38px", // Adjusts the overall height of the input box
+                                        },
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6} md = {4}>
+                                <InputLabel id="date-label" sx={{ marginBottom: 1 }}>End Date</InputLabel>
+
+                                <TextField
+                                    label="Date To"
+                                    name="dateTo"
+                                    type="date"
+                                    variant="outlined"
+                                    fullWidth
+                                    value={filters.dateTo}
+                                    onChange={handleInputChange}
+                                    InputLabelProps={{ shrink: true }}
+                                    InputProps={{
+                                        sx: {
+                                            height: "38px", // Controls the height of the inner input field
+                                        },
+                                    }}
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            height: "38px", // Adjusts the overall height of the input box
+                                        },
+                                    }}
+                                />
+                            </Grid>
 
 
 
@@ -772,8 +873,7 @@ export const ViewPaymentsRecords = () => {
                             >
                                 Reset Filters
                             </Button>
-
-                            <Button
+                            {!fetchAttendanceLoading ? (<Button
                                 type="submit"
                                 variant="contained"
                                 size="large"
@@ -785,7 +885,9 @@ export const ViewPaymentsRecords = () => {
                                 }}
                             >
                                 Filter Payment Records
-                            </Button>
+                            </Button>) : <SpinnerLoader/>}
+
+                            
                             { paymentsData.length > 0 && (
                                 <Button
                                     onClick={() => exportToCSV(paymentsData, 'Students Payment Record')}
@@ -810,6 +912,55 @@ export const ViewPaymentsRecords = () => {
                             </Typography>
                         )}
                     </Box>
+
+                    <Grid item xs={12} sm={6} md={4} sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: "50px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        boxShadow: "0 4px 8px rgba(25, 107, 87, 0.3)",
+                        backgroundColor: "white",
+                        padding: "20px",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        transition: "box-shadow 0.3s ease, transform 0.3s ease",
+                        "&:hover": {
+                            boxShadow: "0 6px 12px rgba(25, 107, 87, 0.4)",
+                            transform: "translateY(-5px)"
+                        }
+                    }}>
+                        <Box sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "row",
+                        }}>
+                            <Typography variant='h4' sx={{ fontWeight: 700, color: "#196b57" }}>
+                                Total Amount Disbursed by Filter:
+                            </Typography>
+                            <Typography variant='h4' sx={{ fontWeight: 700, color: "#196b57" }}>
+                                {`\u20A6 ${formatWithCommas(totalAmountPaid)}`}
+                            </Typography>
+                        </Box>
+
+                        <Box sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "row",
+                            gap: "10px"
+                        }}>
+                            <Typography variant='h4' sx={{ fontWeight: 700, color: "#196b57" }}>
+                                Total Students:
+                            </Typography>
+                            <Typography variant='h4' sx={{ fontWeight: 700, color: "#196b57" }}>
+                                {totalStudentsPaidByFilter}
+                            </Typography>
+                        </Box>
+                    </Grid>
+
 
                     <Typography variant='h4' sx={{
                         marginTop: "100px",
@@ -945,6 +1096,8 @@ export const ViewPaymentsRecords = () => {
                             </div>
                         </div>
                     )}
+
+                   
 
 
 

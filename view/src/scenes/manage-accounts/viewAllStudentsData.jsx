@@ -20,7 +20,7 @@ export const ViewAllStudentsData = () => {
   const colors = tokens(theme.palette.mode)
   const dispatch = useDispatch();
  const studentsState = useSelector(state => state.allStudents);
- const {data: studentsData, loading, error} = studentsState;
+ const {data: filteredStudents, loading, error} = studentsState;
   const navigate = useNavigate();
 
 
@@ -48,7 +48,7 @@ export const ViewAllStudentsData = () => {
   //     const response = await axios.get(`${API_URL}/student`, {
   //       headers: { Authorization: `Bearer ${token}` },
   //     });
-  //     setStudentsData(response.data.students);
+  //     setfilteredStudents(response.data.students);
   //   } catch (err) {
   //     console.error("Failed to fetch students data:", err);
   //   }  };
@@ -94,7 +94,7 @@ export const ViewAllStudentsData = () => {
   //       },
   //       withCredentials: true,
   //     });
-  //    setStudentsData(response.data.students);
+  //    setfilteredStudents(response.data.students);
   //   } catch (err) {
   //     console.error(err);
   //     if (err.response?.status === 401) {
@@ -119,10 +119,9 @@ export const ViewAllStudentsData = () => {
     navigate(`/enumerator-dashboard/update-student/${student._id}`, { state: student })
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   fetchFilteredStudents();
-  // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
 
   if (loading)
     return (
@@ -149,7 +148,7 @@ export const ViewAllStudentsData = () => {
 
   const uniqueSchools = Array.from(
     new Set(
-      studentsData.map(student => JSON.stringify({
+      filteredStudents.map(student => JSON.stringify({
         schoolName: student.schoolId?.schoolName,
         schoolId: student.schoolId?._id,
       }))
@@ -165,7 +164,7 @@ export const ViewAllStudentsData = () => {
       {/* Filter Form */}
       <Box
         component="form"
-        // onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
         display="flex"
         flexDirection="column"
         gap={2}
@@ -313,8 +312,8 @@ export const ViewAllStudentsData = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {studentsData && studentsData.length > 0 ? (
-              studentsData.map((student, index) => (
+            {filteredStudents && filteredStudents.length > 0 ? (
+              filteredStudents.map((student, index) => (
                 <TableRow key={index}>
                   <TableCell>{index+1}</TableCell>
                   <TableCell>

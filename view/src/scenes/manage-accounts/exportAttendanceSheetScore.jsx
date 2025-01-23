@@ -10,18 +10,23 @@ import { fetchAllStudents } from "../../components/allStudentsSlice";
 import { fetchSchools } from "../../components/schoolsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { SpinnerLoader } from "../../components/spinnerLoader";
+import { fetchDashboardStat } from "../../components/dashboardStatsSlice";
 
 export const ExportAttendanceSheetPayroll = () => {
     const studentsState = useSelector(state => state.allStudents)
     const schoolState = useSelector(state => state.schools)
+    const dashboardStatState = useSelector(state => state.dashboardStat);
 
     const { data: studentsData, loading: studentsLoading, error: studentsError } = studentsState;
     const { data: schoolsData, loading: schoolsLoading, error: schoolsError } = schoolState;
-
+    const { data: dashboardData, loading: dashboardStatLoading, error: dashboardStatError } = dashboardStatState
 
     // const { loading, studentsData } = useContext(StudentsContext);
     // const {schoolsData} = useContext(SchoolsContext);
     const schools = schoolsData;
+    
+    
+   
 
     const dispatch = useDispatch();
     const [schoolId, setSchoolId] = useState(''); // Correctly destructured
@@ -88,6 +93,7 @@ export const ExportAttendanceSheetPayroll = () => {
     useEffect(() => {
         dispatch(fetchAllStudents())
         dispatch(fetchSchools());
+        dispatch(fetchDashboardStat());
     }, [dispatch])
 
     useEffect(() => {
@@ -187,7 +193,7 @@ export const ExportAttendanceSheetPayroll = () => {
 
 
 
-    if (studentsLoading || schoolsLoading) {
+    if (dashboardStatLoading || schoolsLoading) {
         return <Box
             sx={{
                 display: "flex",
@@ -198,15 +204,14 @@ export const ExportAttendanceSheetPayroll = () => {
             }}
         ><SpinnerLoader /></Box>
     }
-
-    const uniqueSchools = Array.from(
-        new Set(
-            studentsData.map(student => JSON.stringify({
-                schoolName: student.schoolId?.schoolName,
-                schoolId: student.schoolId?._id,
-            }))
-        )
-    ).map(item => JSON.parse(item));
+    // const uniqueSchools = Array.from(
+    //     new Set(
+    //         studentsData.map(student => JSON.stringify({
+    //             schoolName: student.schoolId?.schoolName,
+    //             schoolId: student.schoolId?._id,
+    //         }))
+    //     )
+    // ).map(item => JSON.parse(item));
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -243,14 +248,15 @@ export const ExportAttendanceSheetPayroll = () => {
             setTimeout(() => setApiResp(''), 6000)
 
         } catch (error) {
+            console.log(error)
             setIsSubmitting(false)
             if (error.response.status === 404) return setApiResp('No record for filter, please try filtering something else!')
             setApiResp(error.response?.message || error.response.data.message || "File proccessin failed Please try again")
             setTimeout(() => setApiResp(''), 6000)
-            console.log(error)
         }
     }
 
+    const uniqueSchools = dashboardData?.results?.[0]?.distinctSchoolsDetails || []
     console.log(filters)
 
 
