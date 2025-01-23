@@ -4,15 +4,30 @@ import { StudentsContext } from "../../components/dataContext";
 import { Grid, Box, MenuItem, Select, InputLabel } from "@mui/material";
 import { useState } from "react";
 import { ExportSubmitButton } from "../../components/exportButton";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllStudents } from "../../components/allStudentsSlice";
+import { SpinnerLoader } from "../../components/spinnerLoader";
 
 export const ExportAttendanceSheet = () => {
-    const { loading, studentsData } = useContext(StudentsContext);
+    const studentsState = useSelector(state => state.allStudents);
+    const { data: studentsData, loading, error } = studentsState;
     const [schoolId, setSchoolId] = useState(''); // Correctly destructured
     const [isSubmitting, setIsSubmitting] = useState(false)
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
 
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(fetchAllStudents());
+    }, [])
+
     if (loading) {
-        return <h4>...loading</h4>
+        <Box
+            sx={{
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center"
+            }}
+        ><SpinnerLoader /></Box>
     }
 
     const uniqueSchools = Array.from(

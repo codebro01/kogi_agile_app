@@ -53,7 +53,6 @@ export const ManageEnumerators = () => {
 
     const handleToggle = useCallback(async (id, currentStatus) => {
         try {
-            console.log( currentStatus)
             const response = await axios.patch(
                 `${API_URL}/admin-enumerator/toggle-status`,
                 {}, // Body is empty for this request
@@ -70,7 +69,7 @@ export const ManageEnumerators = () => {
             // Update the status in the parent state
             setData((prevData) =>
                 prevData.map((item) =>
-                    item._id === id ? { ...item, isActive: !currentStatus } : item
+                    item.enumeratorId === id ? { ...item, isActive: !currentStatus } : item
                 )
             );
 
@@ -129,7 +128,6 @@ export const ManageEnumerators = () => {
         }
     };
 
-console.log(data)
     return (
         <>
             <Box

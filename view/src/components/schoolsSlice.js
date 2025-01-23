@@ -12,6 +12,24 @@ export const fetchSchools = createAsyncThunk('schools/fetchSchools', async (_, t
         return thunkAPI.rejectWithValue(error.response?.data || error.response?.message || 'Failed to fetch students');
     }
 });
+export const deleteSchool = createAsyncThunk('school/deleteSchool', async (id, thunkAPI) => {
+    const API_URL = `${import.meta.env.VITE_API_URL}/api/v1/schools`;
+    const token = localStorage.getItem('token');
+    try {
+        const response = await axios.delete(`${API_URL}/${id}`, {
+            headers: {  
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        console.log(error)
+        return thunkAPI.rejectWithValue(error.response?.data || error.response?.message || 'Failed to fetch students');
+    }
+});
 
 const schoolsSlice = createSlice({
     name: 'schools',
@@ -19,11 +37,13 @@ const schoolsSlice = createSlice({
         data: [],
         loading: false,
         error: null,
+        selectedSchool: null,
     },
     reducers: {
-        clearError: (state) => {
-            state.error = null;
-        },
+        setSelectedSchool: (state, action) => {
+            console.log(action.payload)
+            state.selectedSchool = action.payload
+        }
     },
 
     extraReducers: (builder) => {
@@ -39,9 +59,22 @@ const schoolsSlice = createSlice({
             .addCase(fetchSchools.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            .addCase(deleteSchool.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(deleteSchool.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = state.data.filter(school => school._id !== action.payload.id);
+            })
+            .addCase(deleteSchool.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
+
     },
 });
 
-export const { clearError } = schoolsSlice.actions;
+export const { setSelectedSchool } = schoolsSlice.actions;
 export default schoolsSlice.reducer;

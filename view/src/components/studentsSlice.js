@@ -28,6 +28,34 @@ export const fetchStudents = createAsyncThunk('students/fetchStudents', async ({
         return thunkAPI.rejectWithValue(error.response?.data || error.response.message || 'Failed to fetch students');
     }
 });
+// export const fetchAllStudents = createAsyncThunk('students/fetchAllStudents', async (_, thunkAPI) => {
+//     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1/student`;
+//     const token = localStorage.getItem('token') || '';
+
+//     try {
+//         const response = await axios.get(API_URL, {
+//             headers: {
+//                 Authorization: `Bearer ${token}`,
+//                 'Content-Type': 'application/json',
+//             },
+//             params: { page, limit },
+//             withCredentials: true,
+//         });
+//         return {
+//             students: response.data,
+//             total: response.data.total,
+//             totalRows: response.data.totalRows,
+//             currentPage: page,
+//             rowsPerPage: limit,
+//         };
+//     } catch (error) {
+//         console.log(error)
+
+//         return thunkAPI.rejectWithValue(error.response?.data || error.response.message || 'Failed to fetch students');
+//     }
+// });
+
+
 
 // Async thunk for deleting a student
 export const deleteStudent = createAsyncThunk(
@@ -52,30 +80,30 @@ export const deleteStudent = createAsyncThunk(
     }
 );
 
-    export const fetchStudentsFromComponent = createAsyncThunk(
-        'students/fetchStudentsFromComponent',
-        async ({filteredParams, sortParam}, thunkAPI) => {
-            const API_URL = `${import.meta.env.VITE_API_URL}/api/v1/student/admin-view-all-students`;
-            const token = localStorage.getItem('token') || '';
-   
-            try {
+export const fetchStudentsFromComponent = createAsyncThunk(
+    'students/fetchStudentsFromComponent',
+    async ({ filteredParams, sortParam }, thunkAPI) => {
+        const API_URL = `${import.meta.env.VITE_API_URL}/api/v1/student/admin-view-all-students`;
+        const token = localStorage.getItem('token') || '';
 
-                const response = await axios.get(API_URL, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    params: { ...filteredParams, ...sortParam },
-                    withCredentials: true,
-                });
-                console.log(response.data)
-                return response.data;  // Optionally return data if needed elsewhere
-            } catch (error) {
-                console.error('Error fetching students from component:', error);
-                thunkAPI.rejectWithValue('error occured')
-                throw error;  // Optionally return an error
-            }
+        try {
+
+            const response = await axios.get(API_URL, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: { ...filteredParams, ...sortParam },
+                withCredentials: true,
+            });
+            console.log(response.data)
+            return response.data;  // Optionally return data if needed elsewhere
+        } catch (error) {
+            console.error('Error fetching students from component:', error);
+            thunkAPI.rejectWithValue('error occured')
+            throw error;  // Optionally return an error
         }
-    );
+    }
+);
 
 
 const studentsSlice = createSlice({

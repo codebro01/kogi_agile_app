@@ -7,7 +7,6 @@ import { ExportSubmitButton } from "../../components/exportButton";
 import { SpinnerLoader } from "../../components/spinnerLoader";
 
 export const ImportPaymentSheet = () => {
-    const { loading, studentsData } = useContext(StudentsContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
@@ -22,9 +21,7 @@ export const ImportPaymentSheet = () => {
         year: '',
     });
 
-    if (loading) {
-        return <h4>...loading</h4>
-    }
+
 
 
     const handleSubmit = async (e) => {
@@ -131,7 +128,7 @@ export const ImportPaymentSheet = () => {
                     marginBottom: "20px"
                 }}
             >Import Payment Sheet</Typography>
-            
+
             <Grid item xs={12} sm={6} md={4}
                 sx={{
                     width: {
@@ -149,6 +146,7 @@ export const ImportPaymentSheet = () => {
                     displayEmpty
                     fullWidth
                     size="small"
+                    requird
                     labelId="month-label"
                 >
                     <MenuItem value="">
@@ -179,6 +177,7 @@ export const ImportPaymentSheet = () => {
                     onChange={handleInputChange}
                     displayEmpty
                     fullWidth
+                    required
                     size="small"
                     labelId="attendanceSheet-label"
                 >
@@ -207,6 +206,7 @@ export const ImportPaymentSheet = () => {
                     type="file"
                     id="file"
                     name="file"
+                    accept=".xlsx, .xls" // Restricts to Excel files
                     required
                     onChange={handleInputChange} // Function to handle the selected file
                     style={{ display: 'block', marginTop: '8px', width: '100%' }}

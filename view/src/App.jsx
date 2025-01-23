@@ -34,6 +34,11 @@ import axios from 'axios';
 import { ImportPaymentSheet } from "./scenes/manage-accounts/importPayment.jsx";
 import { Provider } from 'react-redux';
 import { store } from './components/store.js';
+import { CreateSchool } from "./scenes/manage-accounts/createSchool.jsx";
+import { ManageSchools } from "./scenes/manage-accounts/manageSchools.jsx";
+import { ViewPaymentsRecords } from "./components/viewPaymentsRecords.jsx";
+
+
 
 
 
@@ -101,12 +106,14 @@ function App() {
                         <Route path="/view-all-schools-info" element={<ViewSchoolsInfo />} />
                         <Route path="/admin-dashboard/create-accounts/register-enumerator" element={<CreateEnumerator />} />
                         <Route path="/admin-dashboard/create-accounts/register-payroll-specialists" element={<CreatePayrollSpecialist />} />
+                        <Route path="/admin-dashboard/create-accounts/register-school" element={<CreateSchool />} />
                         <Route path="/admin-dashboard/manage-accounts/admins" element={<ManageAdmins />} />
                         <Route path="/admin-dashboard/manage-accounts/enumerators" element={<ManageEnumerators />} />
                         <Route path="/admin-dashboard/manage-accounts/payroll-specialists" element={<ManagePayrollSpecialists />} />
                         <Route path="/admin-dashboard/manage-accounts/admins/edit-admin/:id" element={<EditAdmin />} />
                         <Route path="/admin-dashboard/manage-accounts/enumerators/edit-enumerator/:id" element={<EditEnumerator />} />
                         <Route path="/admin-dashboard/manage-accounts/payroll-specialists/edit-payroll-specialists/:id" element={<EditPayrollSpecialists />} />
+                        <Route path="/admin-dashboard/manage-accounts/schools" element={<ManageSchools />} />
 
                         <Route path="/index.html" element={<Navigate to="/" />} />
                         <Route path="*" element={<Navigate to="/admin-dashboard" />} />
@@ -150,9 +157,9 @@ function App() {
                         <Route path="/enumerator-dashboard/view-all-students-data" element={<ViewAllStudentsData />} />
                         <Route path="/export-attendance-sheet" element={<ExportAttendanceSheet />} />
                         <Route path="/import-attendance-sheet" element={<ImportAttendanceSheet />} />
-                        <Route path="/admin-dashboard/create-student-school-selector" element={<RegistrationSelector />} />
-                        <Route path="/admin-dashboard/create-accounts/register-student" element={<CreateStudent />} />
-                        <Route path="/admin-dashboard/update-student/:id" element={<UpdateStudent />} />
+                        <Route path="/enumerator-dashboard/create-student-school-selector" element={<RegistrationSelector />} />
+                        <Route path="/enumerator-dashboard/create-accounts/register-student" element={<CreateStudent />} />
+                        <Route path="/enumerator-dashboard/update-student/:id" element={<UpdateStudent />} />
                         <Route path="/view-attendance-sheet" element={<ViewAttendance />} />
                         <Route path="/index.html" element={<Navigate to="/" />} />
                         <Route path="*" element={<Navigate to="/enumerator-dashboard" />} />
@@ -187,19 +194,19 @@ function App() {
                 <Route
                   path="/*"
                   element={
-                    <DataProvider>
+                    <Provider store={store}>
                       <Routes>
                         <Route path="/payroll-specialist-dashboard" element={<Dashboard />} />
                         <Route path="/export-attendance-sheet/" element={<ExportAttendanceSheetPayroll />} />
-                        {/* <Route path="/payroll-specialist-dashboard/view-payments" element={<RoleSelector />} /> */}
+                        <Route path="/payroll-specialist-dashboard/view-students" element={<AdminViewAllStudentsDataNoExport />} />
                         <Route path="payroll-specialist-dashboard/upload-payment" element={<ImportPaymentSheet />} />
-                        {/* <Route path="/payroll-upload-attendance-payment" element={<CreateEnumerator />} /> */}
+                        <Route path="/payroll-specialist-dashboard/view-payments-records" element={<ViewPaymentsRecords />} />
                         <Route path="/index.html" element={<Navigate to="/" />} />
 
-                        <Route path="*" element={<Navigate to="/enumerator-dashboard" />} />
+                        <Route path="*" element={<Navigate to="/payroll-specialist-dashboard" />} />
 
                       </Routes>
-                    </DataProvider>
+                    </Provider>
                   }
                 />
               </Routes>

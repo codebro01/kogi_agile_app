@@ -36,7 +36,6 @@ export const AdminViewAllStudentsDataNoExport = () => {
     // const [currentPage, setCurrentPage] = useState(1);
     const [perPage, setPerPage] = useState(100); // Number of students per page
     const navigate = useNavigate();
-
     const dispatch = useDispatch();
     const schoolsState = useSelector((state) => state.schools);
     const studentsState = useSelector((state) => state.students);
@@ -432,8 +431,9 @@ export const AdminViewAllStudentsDataNoExport = () => {
             sortable: true,
         },
 
+
         {
-            name: 'Actions',
+            name: 'View',
             cell: (row) => (
                 <button
                     onClick={() => handleViewItem(row)}
@@ -451,8 +451,8 @@ export const AdminViewAllStudentsDataNoExport = () => {
             ),
         },
 
-        {
-            name: 'Actions',
+        (userPermissions.includes('handle_registrars')) && {
+            name: 'Delete',
             cell: (row) => (
                 <button
                     onClick={() => handleDelete(row)}
@@ -471,6 +471,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                 </button>
             ),
         },
+
     ];
 
     const handleViewItem = (item) => {
@@ -489,7 +490,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
     
     return (
         <>
-            {userPermissions.includes('handle_registrars') ? (
+            {userPermissions.includes('handle_registrars') || userPermissions.includes('handle_payments') ? (
                 <Container maxWidth="lg" sx={{ marginTop: 4, marginBottom: "50px" }}>
                     <Typography
                         variant="h3"
@@ -919,7 +920,9 @@ export const AdminViewAllStudentsDataNoExport = () => {
                         pagination
                         paginationServer
                         highlightOnHover
-                        paginationRowsPerPageOptions={[100, 200, 500]} // Custom options
+                        paginationPerPage={rowsPerPage} // Override default rows per page
+                        
+                        paginationRowsPerPageOptions={[10, 100, 200, 500]} // Custom options
 
                         paginationTotalRows={totalRows} // Total rows from API
                         paginationDefaultPage={currentPage} // Use current page from Redux
@@ -933,7 +936,6 @@ export const AdminViewAllStudentsDataNoExport = () => {
                             dispatch(setRowsPerPage(newLimit)); // Update rowsPerPage in Redux
                             dispatch(fetchStudents({ page: 1, limit: newLimit })); // Fetch new data with updated limit
                         }}                        
-                        paginationPerPage={rowsPerPage} // Override default rows per page
                         customStyles={customStyles} // Applying the custom styles
 
 

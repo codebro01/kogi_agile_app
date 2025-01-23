@@ -11,32 +11,36 @@ import {
 import { useAuth } from '../auth/authContext.jsx';
 import { SchoolsContext } from "../../components/dataContext.jsx"; // Import context
 import { SpinnerLoader } from "../../components/spinnerLoader.jsx";
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchSchools, setSelectedSchool } from '../../components/schoolsSlice.js';
 
 
 const RegistrationSelector = () => {
-    const { setSelectedSchool, loading, selectedSchool, schoolsData } = useContext(SchoolsContext); // Access context
+
+    const dispatch = useDispatch();
+    const schoolState = useSelector(state => state.schools);
+    const { data: schoolsData, selectedSchool, loading } = schoolState;
+
     const schools = schoolsData;
-    const { userPermissions } = useAuth();
     const [selectedSchoolState, setSelectedSchoolState] = useState(null); // State to hold the selected school object
     const [schoolOptions, setSchoolOptions] = useState([]); // Start with an empty array
     const [hasMore, setHasMore] = useState(true); // To check if more data is available
     const [loadingSchools, setLoadingSchools] = useState(false); // Loading state for schools
     const [page, setPage] = useState(1); // Keep track of the current page
-    const navigate = useNavigate();
 
     // Fetch schools once the component mounts or the schools array changes
+
+    useEffect(() => {
+        dispatch(fetchSchools());
+    }, [dispatch])
+
     useEffect(() => {
         if (schools && schools.length > 0) {
             setSchoolOptions(schools); // Set schools if available
         }
     }, [schools]); // Re-run whenever schools change
 
-    // Handle change in school selection
-    const handleSchoolChange = (event, value) => {
-        setSelectedSchoolState(value); // Set the full school object
-        setSelectedSchool(value); // Store the school in context
 
-    };
 
     // Function to load more schools when the user scrolls to the end
     const loadMoreSchools = async () => {
@@ -75,11 +79,24 @@ const RegistrationSelector = () => {
             return;
         }
         sessionStorage.setItem('selectedSchool', JSON.stringify(selectedSchool));
-        window.location.href = '/admin-dashboard/create-accounts/register-student' // Reload the page after navigation
+        window.location.href = '/enumerator-dashboard/create-accounts/register-student' // Reload the page after navigation
 
     };
 
 
+    if (loading) {
+        return <Box sx={{
+            display: "flex", // Corrected from 'dispflex'
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "50vh",
+            width: "90vw"
+        }}
+        >
+            <SpinnerLoader />
+        </Box>
+    }
 
 
     return (
@@ -142,8 +159,9 @@ const RegistrationSelector = () => {
                             id="school-select"
                             value={selectedSchoolState}
                             onChange={(event, value) => {
-                                setSelectedSchool(value);
+                                dispatch(setSelectedSchool(value))
                                 setSelectedSchoolState(value);
+
                             }}
                             options={schoolOptions}
                             getOptionLabel={(option) => option?.schoolName || ''}

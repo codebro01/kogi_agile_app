@@ -10,13 +10,26 @@ import EditIcon from "@mui/icons-material/Edit";
 import { tokens } from "../../theme";
 import { PersonLoader } from '../../components/personLoader';
 import lgasAndWards from '../../Lga&wards.json';
+import {fetchStudents} from '../../components/studentsSlice'
+import { useSelector, useDispatch } from 'react-redux';
+import {SpinnerLoader} from '../../components/spinnerLoader'
 
 
 export const ViewAllStudentsData = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode)
-  const { studentsData, loading, setStudentsData } = useContext(StudentsContext);
+  const dispatch = useDispatch();
+ const studentsState = useSelector(state => state.allStudents);
+ const {data: studentsData, loading, error} = studentsState;
   const navigate = useNavigate();
+
+
+
+
+
+
+
+
   const [filters, setFilters] = useState({
     ward: '',
     presentClass: '',
@@ -24,21 +37,21 @@ export const ViewAllStudentsData = () => {
     schoolId: '',
   });
 
-  const clearFilters = async () => {
-    setFilters({
-      ward: '',
-      presentClass: '',
-      lgaOfEnrollment: '',
-      schoolId: '',
-    });
-    try {
-      const response = await axios.get(`${API_URL}/student`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setStudentsData(response.data.students);
-    } catch (err) {
-      console.error("Failed to fetch students data:", err);
-    }  };
+  // const clearFilters = async () => {
+  //   setFilters({
+  //     ward: '',
+  //     presentClass: '',
+  //     lgaOfEnrollment: '',
+  //     schoolId: '',
+  //   });
+  //   try {
+  //     const response = await axios.get(`${API_URL}/student`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //     setStudentsData(response.data.students);
+  //   } catch (err) {
+  //     console.error("Failed to fetch students data:", err);
+  //   }  };
 
   const [filterLoading, setFilterLoading] = useState(false);
   const [filterError, setFilterError] = useState(null);
@@ -46,6 +59,10 @@ export const ViewAllStudentsData = () => {
   const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
   const token = localStorage.getItem('token') || '';
   const allWards = lgasAndWards.flatMap(ward => ward.wards).sort((a, b) => a.localeCompare(b));;
+
+  useEffect(() => {
+    dispatch (fetchStudents());
+  }, [dispatch])
 
 
   const classOptions = [
@@ -66,29 +83,29 @@ export const ViewAllStudentsData = () => {
     return query.toString();
   };
 
-  const fetchFilteredStudents = async () => {
-    const queryString = buildQueryString();
-    try {
-      setFilterLoading(true);
-      const response = await axios.get(`${API_URL}/student?${queryString}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        withCredentials: true,
-      });
-     setStudentsData(response.data.students);
-    } catch (err) {
-      console.error(err);
-      if (err.response?.status === 401) {
-        navigate('/sign-in');
-      } else {
-        setFilterError(err);
-      }
-    } finally {
-      setFilterLoading(false);
-    }
-  };
+  // const fetchFilteredStudents = async () => {
+  //   const queryString = buildQueryString();
+  //   try {
+  //     setFilterLoading(true);
+  //     const response = await axios.get(`${API_URL}/student?${queryString}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       withCredentials: true,
+  //     });
+  //    setStudentsData(response.data.students);
+  //   } catch (err) {
+  //     console.error(err);
+  //     if (err.response?.status === 401) {
+  //       navigate('/sign-in');
+  //     } else {
+  //       setFilterError(err);
+  //     }
+  //   } finally {
+  //     setFilterLoading(false);
+  //   }
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -99,13 +116,13 @@ export const ViewAllStudentsData = () => {
   };
 
   const handleEdit = (student) => {
-    navigate(`/admin-dashboard/update-student/${student._id}`, { state: student })
+    navigate(`/enumerator-dashboard/update-student/${student._id}`, { state: student })
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetchFilteredStudents();
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   fetchFilteredStudents();
+  // };
 
   if (loading)
     return (
@@ -119,9 +136,15 @@ export const ViewAllStudentsData = () => {
           width: "90vw"
         }}
       >
-        <PersonLoader />
+        <SpinnerLoader />
       </Box>
     );
+
+  if (error) {
+    return <Typography color="error">Failed to load students data: {error.message}</Typography>;
+  }
+
+
 
 
   const uniqueSchools = Array.from(
@@ -142,7 +165,7 @@ export const ViewAllStudentsData = () => {
       {/* Filter Form */}
       <Box
         component="form"
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
         display="flex"
         flexDirection="column"
         gap={2}
@@ -251,7 +274,7 @@ export const ViewAllStudentsData = () => {
             color="secondary"
             size="large"
             sx={{ textTransform: "none", width: '48%' }}
-            onClick={clearFilters}
+            // onClick={clearFilters}
           >
             Reset Filters
           </Button>

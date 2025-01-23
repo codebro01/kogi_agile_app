@@ -7,7 +7,6 @@ import { ExportSubmitButton } from "../../components/exportButton";
 import { SpinnerLoader } from "../../components/spinnerLoader";
 
 export const ImportAttendanceSheet = () => {
-    const { loading, studentsData } = useContext(StudentsContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
@@ -22,9 +21,7 @@ export const ImportAttendanceSheet = () => {
         year: '',
     });
 
-    if (loading) {
-        return <h4>...loading</h4>
-    }
+
 
 
     const handleSubmit = async (e) => {

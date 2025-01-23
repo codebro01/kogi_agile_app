@@ -19,6 +19,7 @@ import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { fetchAllStudents } from '../../components/allStudentsSlice.js'
 import { fetchDashboardStat } from '../../components/dashboardStatsSlice.js';
+import lgasAndWards from '../../Lga&wards.json';  
 
 import axios from 'axios';
 
@@ -32,10 +33,11 @@ const Dashboard = () => {
   const storedUser = JSON.parse(localStorage.getItem('userData'));
   const [totalAmountPaid, setTotalAmountPaid] = useState(1); // State to store fetched data
   const [totalAmountPaidMonthly, setTotalAmountPaidMonthly] = useState(1); // State to store fetched data
-  const [lgaWithTotalPayments, setLgaWithTotalPayments] = useState(1); // State to store fetched data
+  const [lgaWithTotalPayments, setLgaWithTotalPayments] = useState([]); // State to store fetched data
   const [viewPayments, setViewPayments] = useState(1); // State to store fetched data
   const [shouldFetch, setShouldFetch] = useState(true); // Condition for fetchi
   const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
+  const [totalStudentsPaid, setTotalStudentsPaid] = useState([])
 
 
 
@@ -70,52 +72,33 @@ const Dashboard = () => {
         try {
           const [
             getLGAWithTotalPaymentsRes,
-            viewPaymentsRes,
-            getTotalAmountPaidRes,
-            getTotalStudentsPaidMonthlyRes,
+            getTotalStudentsPaid,
           ] = await Promise.all([
-            axios.get(`${API_URL}/payment/get-lga-with-total-payments`, {
+            axios.get(`${API_URL}/payments/view-payments-by-lga`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
               withCredentials: true,
             }),
-            axios.get(`${API_URL}/payment/view-payments`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-              withCredentials: true,
-            }),
-            axios.get(`${API_URL}/payment/get-total-amount-paid`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-              withCredentials: true,
-            }),
-            axios.get(`${API_URL}/payment/get-total-amount-paid-monthly`, {
+         
+            axios.get(`${API_URL}/payments/get-total-student-paid`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
               withCredentials: true,
             }),
           ]);
-          // console.log('laoding')
-          // console.log('Total Amount Paid:', getTotalAmountPaidRes?.data?.totalAmountPaid);
-          // console.log('Total Amount Paid Monthly:', getTotalStudentsPaidMonthlyRes?.data);
-          // console.log('LGA with Total Payments:', getLGAWithTotalPaymentsRes?.data);
-          // console.log('View Payments:', viewPaymentsRes?.data);
-
-          // Set state
-          setTotalAmountPaid(getTotalAmountPaidRes?.data?.totalAmountPaid);
-          setTotalAmountPaidMonthly(getTotalStudentsPaidMonthlyRes?.data);
-          setLgaWithTotalPayments(getLGAWithTotalPaymentsRes?.data);
-          setViewPayments(viewPaymentsRes?.data);
+console.log(getTotalStudentsPaid)
+          setLgaWithTotalPayments(getLGAWithTotalPaymentsRes.data.paymentByLGA);
+          setTotalStudentsPaid(getTotalStudentsPaid.data.totalStudentPaid)
+      
         }
         catch (err) {
           console.error('Error fetching data:', err);
         }
       };
 
+      console.log('totalstudents', totalStudentsPaid)
       fetchData();
     }
   }, []);
@@ -137,7 +120,6 @@ const Dashboard = () => {
     return <div>Error: {studentsError}</div>;
   }
 
-  console.log(dashboardData)
 
   const uniqueSchools = Array.from(
     new Set(
@@ -198,7 +180,6 @@ const Dashboard = () => {
 
 
 
-  console.log(`${dashboardData.recentTwentyStudents}`)
 
 
   // Example usage
@@ -253,278 +234,323 @@ const Dashboard = () => {
 
   if (userPermissions.includes('handle_payments')) {
 
+    let mergedResults;
+
+    if (lgaWithTotalPayments.length > 0) {
+      mergedResults = lgasAndWards.map((lga) => {
+        // Convert both LGA and payment._id to uppercase for a case-insensitive match
+        console.log(lga.name);
+        const payment = lgaWithTotalPayments.find(
+          (payment) => payment._id.toUpperCase() === lga.name.toUpperCase()
+        );
+
+        // Return the LGA and its total amount (or 0 if not found) as a plain object
+        return {
+          LGA: lga.name.toUpperCase(), // Ensure the result is also in uppercase for consistency
+          totalAmount: payment ? payment.totalAmount : 0,
+        };
+      });
+    }
+
+    // Log or return the mergedResults
+    // console.log(mergedResults);
+
+    let sumTotalAmount = 0;
+
+    for (const payment of lgaWithTotalPayments) {
+      sumTotalAmount += parseInt(payment.totalAmount, 10); // Ensure `amount` is parsed as an integer
+    }
+
+
+    function formatWithCommas(number=0) {
+      return number.toLocaleString();
+    }
+
+
+
 
 
 
 
     return (
-      <Box sx={{
-        padding: {
-          xs: "10px",
-          sm: "20px",
-        }
-      }}>
-        <Header sx={{ textTransform: 'capitalize', color: colors.dashboardStatBox['darkGreen'], }} title={`${greetingMessage} ${capitalize(storedUser.fullName.split(' ')[0])}`} />
-        <Box
-          sx={{
-            display: {
-              xs: 'flex',  // flex layout for extra-small screens
-              sm: 'grid',  // grid layout for medium screens and up
-              padding: "10px"
-            },
-            marginTop: "50px",
-            gridAutoRows: '140px', // Set the row height for the grid
-            gap: '20px', // Spacing between grid items
-            gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)', // 1 column for extra-small screens
-              sm: 'repeat(6, 1fr)', // 6 columns for small screens and up
-              md: 'repeat(12, 1fr)', // 12 columns for medium screens and up
-              lg: 'repeat(12, 1fr)', // 12 columns for large screens and up
-            },
-            flexDirection: {
-              xs: 'column', // Flex direction as column for xs (flex)
-            },
-            '& > *': {
-              color: "#fff",
-              borderRadius: '5px', // Apply border-radius to all direct children
-            },
-          }}
-        >
 
+      <>
+
+        {lgaWithTotalPayments && totalStudentsPaid && (<Box sx={{
+          padding: {
+            xs: "10px",
+            sm: "20px",
+          }
+        }}>
+          <Header sx={{ textTransform: 'capitalize', color: colors.dashboardStatBox['darkGreen'], }} title={`${greetingMessage} ${capitalize(storedUser.fullName.split(' ')[0])}`} />
           <Box
-            className="statBoxContainer"
             sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
+              display: {
+                xs: 'flex',  // flex layout for extra-small screens
+                sm: 'grid',  // grid layout for medium screens and up
+                padding: "10px"
               },
-              backgroundColor: colors.main["darkGreen"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
-            }}
-          >
-            <StatBox
-              title={totalStudents}
-              subtitle="Total Number of Students Enrolled"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.main["darkGreen"], fontSize: "26px" }} />}
-            />
-          </Box>
-
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
+              marginTop: "50px",
+              gridAutoRows: '140px', // Set the row height for the grid
+              gap: '20px', // Spacing between grid items
+              gridTemplateColumns: {
+                xs: 'repeat(1, 1fr)', // 1 column for extra-small screens
+                sm: 'repeat(6, 1fr)', // 6 columns for small screens and up
+                md: 'repeat(12, 1fr)', // 12 columns for medium screens and up
+                lg: 'repeat(12, 1fr)', // 12 columns for large screens and up
               },
-              backgroundColor: colors.dashboardStatBox["red"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
-            }}
-          >
-            <StatBox
-              title={totalAmountPaid}
-              subtitle="Total Disbursted Funds"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
-
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
+              flexDirection: {
+                xs: 'column', // Flex direction as column for xs (flex)
               },
-              backgroundColor: colors.dashboardStatBox["yellow"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
-            }}
-          >
-            <StatBox
-              title={totalAmountPaid}
-              subtitle="Total Students Paid"
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
-
-
-
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 12',  // Half width on sm screens
-                md: 'span 12',  // Quarter width on md screens
+              '& > *': {
+                color: "#fff",
+                borderRadius: '5px', // Apply border-radius to all direct children
               },
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
             }}
           >
-            <Typography variant='h3' sx={{ color: "#000000" }}>
-              Names of LGA's and Amounts Disbursted
-            </Typography>
-          </Box>
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.blueAccent[400],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '5px',
-            }}
-          >
-            <StatBox
-              title={0}
-              subtitle=""
-              progress="0.75"
-              borderRadius="5px"
-              icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.main["darkGreen"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={formatWithCommas(totalStudents)}
+                subtitle="Total Number of Students Enrolled"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.main["darkGreen"], fontSize: "26px" }} />}
+              />
+            </Box>
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: {
-                xs: 'span 12', // Full width on xs screens
-                sm: 'span 6',  // Half width on sm screens
-                md: 'span 4',  // Quarter width on md screens
-              },
-              backgroundColor: colors.dashboardStatBox["grey"],
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <StatBox
-              title={0}
-              subtitle=""
-              progress="0.50"
-              icon={<PointOfSaleIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
-            />
-          </Box>
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.dashboardStatBox["red"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={`\u20A6 ${formatWithCommas(sumTotalAmount)}`}
+                subtitle="Total Disbursed Funds"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+              />
+            </Box>
 
-          <Box
-            className="statBoxContainer"
-            sx={{
-              gridColumn: 'span 12', // Full width for the last box
-              gridRow: 'span 3', // Take up more vertical space
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'column',
-              justifyContent: 'center',
-            }}
-          >
-            {userPermissions.length === 1 && (
-              <>
-                <Typography
-                  variant="h3"
-                  gutterBottom
-                  sx={{
-                    color: colors.main["darkGreen"],
-                    background: "rgba(224, 224, 224, 1)",
-                    fontWeight: 'bold',
-                    letterSpacing: '0.5px',
-                    textAlign: 'center',
-                    padding: '20px 0',
-                    marginTop: "100px",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Information of Last 5 Registered Students
-                </Typography>
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 6',  // Half width on sm screens
+                  md: 'span 4',  // Quarter width on md screens
+                },
+                backgroundColor: colors.dashboardStatBox["yellow"],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <StatBox
+                title={`${formatWithCommas(totalStudentsPaid.length)}`}
+                subtitle="Total Students Paid"
+                progress="0.75"
+                borderRadius="5px"
+                icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+              />
+            </Box>
 
-                <TableContainer
-                  component={Paper}
-                  sx={{
-                    maxWidth: '100%',
-                    overflowX: 'auto',
-                    boxShadow: 3,
-                    borderRadius: '8px',
-                    marginBottom: '20px',
-                    minHeight: "320px",
-                  }}
-                >
-                  <Table sx={{ minWidth: 650 }}>
-                    <TableHead>
-                      <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
-                        <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Surname</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Present Class</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>State of Origin</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>LGA</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Ward</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {last5Students().map((student, index) => (
-                        <TableRow key={index} sx={{
-                          '&:hover': { backgroundColor: '#f9f9f9' },
-                          borderBottom: '1px solid #ddd',
-                        }}>
-                          <TableCell>{student.surname}</TableCell>
-                          <TableCell>{student.presentClass}</TableCell>
-                          <TableCell>{student.stateOfOrigin}</TableCell>
-                          <TableCell>{student.lga}</TableCell>
-                          <TableCell>{student.ward}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
 
-                <Button
-                  component={Link}
-                  to="/enumerator-dashboard/view-all-students-data"
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  sx={{
-                    textTransform: 'none',
-                    fontSize: '1rem',
-                    padding: '12px 24px',
-                    borderRadius: '8px',
-                    boxShadow: 2,
-                    marginBottom: '100px',
-                    '&:hover': {
-                      backgroundColor: '#0D47A1',
-                      boxShadow: 3,
-                    },
-                  }}
-                >
-                  Click to View All Students Information
-                </Button>
-              </>
+
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: {
+                  xs: 'span 12', // Full width on xs screens
+                  sm: 'span 12',  // Half width on sm screens
+                  md: 'span 12',  // Quarter width on md screens
+                },
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '5px',
+              }}
+            >
+              <Typography variant='h3' sx={{ color: "#000000", fontWeight: "800" }}>
+               Total Amount Disbursed Based on LGA of Enrollment
+              </Typography>
+            </Box>
+
+
+            {mergedResults && (
+              mergedResults.map((lga, index) => {
+                // Array of colors to cycle through
+                const colorArray = [
+                  colors.dashboardStatBox['purple'],
+                  colors.dashboardStatBox['red'],
+                  colors.dashboardStatBox['gold'],
+                  colors.dashboardStatBox['grey'],
+                  colors.dashboardStatBox['green'],
+                  colors.dashboardStatBox['brown'],
+                  colors.dashboardStatBox['lightPurple'],
+                  colors.dashboardStatBox['yellow'],
+                  colors.dashboardStatBox['lightGreen'],
+
+                ];
+
+                // Select a color based on the current index
+                const backgroundColor = colorArray[index % colorArray.length];
+
+                return (
+                  <Box
+                    key={index} // Always provide a unique key for list items
+                    className="statBoxContainer"
+                    sx={{
+                      gridColumn: {
+                        xs: 'span 12', // Full width on xs screens
+                        sm: 'span 6',  // Half width on sm screens
+                        md: 'span 4',  // Quarter width on md screens
+                      },
+                      backgroundColor: backgroundColor, // Use the selected color
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '5px',
+                    }}
+                  >
+                    <StatBox
+                      title={`\u20A6  ${formatWithCommas(lga.totalAmount)}`} // Example: Display total amount for the LGA
+                      subtitle={lga.LGA} // Example: Display the LGA name as subtitle
+                      progress="0.75"
+                      borderRadius="5px"
+                      icon={<EmailIcon sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />}
+                    />
+                  </Box>
+                );
+              })
             )}
+
+
+
+            <Box
+              className="statBoxContainer"
+              sx={{
+                gridColumn: 'span 12', // Full width for the last box
+                gridRow: 'span 3', // Take up more vertical space
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
+              {userPermissions.length === 1 && (
+                <>
+                  <Typography
+                    variant="h3"
+                    gutterBottom
+                    sx={{
+                      color: colors.main["darkGreen"],
+                      background: "rgba(224, 224, 224, 1)",
+                      fontWeight: 'bold',
+                      letterSpacing: '0.5px',
+                      textAlign: 'center',
+                      padding: '20px 0',
+                      marginTop: "100px",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Information of Last 5 Registered Students
+                  </Typography>
+
+                  <TableContainer
+                    component={Paper}
+                    sx={{
+                      maxWidth: '100%',
+                      overflowX: 'auto',
+                      boxShadow: 3,
+                      borderRadius: '8px',
+                      marginBottom: '20px',
+                      minHeight: "320px",
+                    }}
+                  >
+                    <Table sx={{ minWidth: 650 }}>
+                      <TableHead>
+                        <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
+                          <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Surname</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Present Class</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>State of Origin</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>LGA</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Ward</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {last5Students().map((student, index) => (
+                          <TableRow key={index} sx={{
+                            '&:hover': { backgroundColor: '#f9f9f9' },
+                            borderBottom: '1px solid #ddd',
+                          }}>
+                            <TableCell>{student.surname}</TableCell>
+                            <TableCell>{student.presentClass}</TableCell>
+                            <TableCell>{student.stateOfOrigin}</TableCell>
+                            <TableCell>{student.lga}</TableCell>
+                            <TableCell>{student.ward}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+
+                  <Button
+                    component={Link}
+                    to="/enumerator-dashboard/view-all-students-data"
+                    variant="contained"
+                    size="large"
+                    color="primary"
+                    sx={{
+                      textTransform: 'none',
+                      fontSize: '1rem',
+                      padding: '12px 24px',
+                      borderRadius: '8px',
+                      boxShadow: 2,
+                      marginBottom: '100px',
+                      '&:hover': {
+                        backgroundColor: '#0D47A1',
+                        boxShadow: 3,
+                      },
+                    }}
+                  >
+                    Click to View All Students Information
+                  </Button>
+                </>
+              )}
+            </Box>
           </Box>
-        </Box>
-      </Box>
+        </Box>)
+  
+        }
+      </>
 
 
     )
@@ -1099,7 +1125,7 @@ const Dashboard = () => {
             }}
           >
             <StatBox
-              title={studentsData?.length || 0}
+              title={(studentsData?.length || 0)} // Formats the number with commas
               subtitle="Total Number of Students Enrolled"
               progress="0.75"
               borderRadius="5px"
@@ -1286,7 +1312,7 @@ const Dashboard = () => {
                           <TableCell>{student.surname}</TableCell>
                           <TableCell>{student.presentClass}</TableCell>
                           <TableCell>{student.stateOfOrigin}</TableCell>
-                          <TableCell>{student.lga}</TableCell>
+                          <TableCell>{student.lgaOfEnrollment}</TableCell>
                           <TableCell>{student.ward}</TableCell>
                         </TableRow>
                       ))}

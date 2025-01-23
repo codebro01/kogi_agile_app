@@ -27,6 +27,8 @@ import { ExportSubmitButton } from "../../components/exportButton.jsx";
 import ImportContactsIcon from '@mui/icons-material/ImportContacts'; // For import
 import FileUploadIcon from '@mui/icons-material/FileUpload'; // For export
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import MenuIcon from "@mui/icons-material/Menu"; // Horizontal bars icon
+import CloseIcon from "@mui/icons-material/Close"; // Cancel icon
 
 
 import { useAuth } from '../auth/authContext.jsx';
@@ -109,24 +111,18 @@ const Sidebar = ({ isSidebar }) => {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            <Switch
-              checked={isCollapsed}
+            <IconButton
               onClick={() => setIsCollapsed(!isCollapsed)}
               sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#',  // Color of the switch when checked
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#',  // Color of the track when checked
-                },
-                '& .MuiSwitch-switchBase': {
-                  color: '#',  // Color of the switch when unchecked
-                },
-                '& .MuiSwitch-switchBase + .MuiSwitch-track': {
-                  backgroundColor: '#',  // Color of the track when unchecked
+                color: "#196b57", // Icon color
+                "&:hover": {
+                  backgroundColor: "#196b57", // Background color on hover
+                  color: "#fff"
                 },
               }}
-            />
+            >
+              {isCollapsed ? <MenuIcon /> : <CloseIcon />}
+            </IconButton>
           </Box>
 
           {!isCollapsed && (
@@ -196,7 +192,7 @@ const Sidebar = ({ isSidebar }) => {
 
             {!userPermissions.includes('handle_payments') && (<Item
               title={userPermissions.includes('handle_registrars') ? 'Register Account' : 'Register Student'}
-              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/role-selector' : '/admin-dashboard/create-student-school-selector'}
+              to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/role-selector' : '/enumerator-dashboard/create-student-school-selector'}
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -204,7 +200,7 @@ const Sidebar = ({ isSidebar }) => {
 
             <Item
               title="Manage Students"
-              to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : 'enumerator-dashboard/view-all-students-data'}
+              to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : userPermissions.includes('handle_students') && userPermissions.length < 2 ? 'enumerator-dashboard/view-all-students-data' : '/payroll-specialist-dashboard/view-students'}
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -249,13 +245,13 @@ const Sidebar = ({ isSidebar }) => {
                   setSelected={setSelected}
                 />
 
-                {/* <Item
+                <Item
                 title="Manage School"
-                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/view-all-students-data' : 'enumerator-dashboard/view-all-students-data'}
+                to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/schools' : 'enumerator-dashboard/view-all-students-data'}
                 icon={<SchoolIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              /> */}
+              /> 
               </>
             }
 
@@ -302,15 +298,15 @@ const Sidebar = ({ isSidebar }) => {
 
 
                 <Item
-                  title="View Attendance"
+                  title="Upload Payments Records"
                   to={'/payroll-specialist-dashboard/upload-payment'}
                   icon={<FileUploadIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
                 <Item
-                  title="View Attendance"
-                  to={'/payroll-specialist-dashboard/upload-payment'}
+                  title="View Payments"
+                  to={'/payroll-specialist-dashboard/view-payments-records'}
                   icon={<VisibilityIcon />}
                   selected={selected}
                   setSelected={setSelected}

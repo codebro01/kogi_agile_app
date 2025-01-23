@@ -21,7 +21,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useContext } from 'react';
-import { StudentsContext } from '../components/dataContext';
+import { fetchAllStudents } from './allStudentsSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const ViewAttendance = () => {
     const [filter, setFilter] = useState({
@@ -30,12 +31,12 @@ export const ViewAttendance = () => {
         year: '',
         school: '',
     });
+    const studentsState = useSelector(state => state.allStudents);
+    const {data: studentsData, loading, error} = studentsState;
     const [fetchLoading, setFetchLoading] = useState(false)
     const [success, setSuccess] = useState('')
-    const [error, setError] = useState('')
     const [filteredData, setFilteredData] = useState([]);
     const navigate = useNavigate();
-    const { studentsData, loading } = useContext(StudentsContext);
     
 
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
@@ -85,8 +86,8 @@ export const ViewAttendance = () => {
             } catch (err) {
 
                 if (err.response.status === 401) return navigate('/sign-in')
-                setError(err.response?.data?.message || 'An error occurred');
-                setTimeout(() => setError(''), 3000); console.log(err)
+                // setError(err.response?.data?.message || 'An error occurred');
+                // setTimeout(() => setError(''), 3000); console.log(err)
             }
         })()
 
@@ -107,6 +108,8 @@ export const ViewAttendance = () => {
             return acc;
         }, {})
 
+        console.log(filteredParams)
+
 
     const handleSubmit = async () => {
         try {
@@ -117,6 +120,7 @@ export const ViewAttendance = () => {
                 params: { ...filteredParams },
                 withCredentials: true,
             })
+            console.log(response)
             setFilteredData(response.data.attendance)
 
         }

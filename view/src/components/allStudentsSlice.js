@@ -52,7 +52,7 @@ const allStudentsSlice = createSlice({
             })
             .addCase(fetchAllStudents.fulfilled, (state, action) => {
                 state.loading = false;
-                state.data = action.payload?.students || [];
+                state.data = action.payload?.students;
 
 
 

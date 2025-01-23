@@ -12,7 +12,6 @@ axios.defaults.withCredentials = true;
 
 export const CreateStudent = () => {
   // const theme = useTheme();
-  const { loading } = useContext(SchoolsContext);
 
   const [bankList, setBankList] = useState([
     'FCMB', 'Polaris Bank', 'Zenith Bank'
