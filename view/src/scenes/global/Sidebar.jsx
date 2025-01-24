@@ -61,6 +61,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
+
 const Sidebar = ({ isSidebar }) => {
   const { userPermissions } = useAuth();
   const theme = useTheme();
@@ -73,7 +74,8 @@ const Sidebar = ({ isSidebar }) => {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  
+  console.log(userPermissions)
   return (
     <Box className={`sidebark ${isSidebar ? "" : "collapsed"}`}
       sx={{
@@ -194,14 +196,34 @@ const Sidebar = ({ isSidebar }) => {
             >
               
             </Typography>} */}
-
-            {!userPermissions.includes('handle_payments') && (<Item
-              title={userPermissions.includes('handle_registrars') ? 'Register Account' : 'Register Student'}
+{/* 
+            {(!userPermissions.includes('handle_payments') || (userPermissions.includes('handle_students') && userPermissions.includes('handle_students'))  && (<Item
+              title={
+                (userPermissions.includes('handle_admins') && userPermissions.length > 3)
+                  ? 'Register Account' : 'Register Account'
+                 
+              }
               to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/role-selector' : '/enumerator-dashboard/create-student-school-selector'}
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />)}
+            />)} */}
+
+            {(!userPermissions.includes('handle_payments') &&
+              (!(userPermissions.includes('handle_students') && userPermissions.length === 2))) && (
+                <Item
+                  title="Register Account"
+                  to={
+                    userPermissions.includes('handle_registrars')
+                      ? '/admin-dashboard/role-selector'
+                      : '/enumerator-dashboard/create-student-school-selector'
+                  }
+                  icon={<PeopleOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              )}
+
 
             <Item
               title="Manage Students"
@@ -260,35 +282,74 @@ const Sidebar = ({ isSidebar }) => {
                   selected={selected}
                   setSelected={setSelected}
                 />
+
+                <>
+                  <Item
+                    title="Manage Enumerators"
+                    to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/enumerators' : 'enumerator-dashboard/view-all-students-data'}
+                    icon={<FormatListNumberedIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Item
+                    title="Manage Payroll Specialists"
+                    to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/payroll-specialists' : 'enumerator-dashboard/view-all-students-data'}
+                    icon={<PaymentIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+
+                  <Item
+                    title="Manage School"
+                    to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/schools' : 'enumerator-dashboard/view-all-students-data'}
+                    icon={<SchoolIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </>
               </>
 
             )}
 
-            {userPermissions.includes('handle_registrars') &&
+            {(userPermissions.includes('handle_registrars') && userPermissions.length === 2) &&
 
               <>
                 <Item
-                  title="Manage Enumerators"
-                  to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/enumerators' : 'enumerator-dashboard/view-all-students-data'}
-                  icon={<FormatListNumberedIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
-                <Item
-                  title="Manage Payroll Specialists"
-                  to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/payroll-specialists' : 'enumerator-dashboard/view-all-students-data'}
-                  icon={<PaymentIcon />}
+                  title="View all Students"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-all-students-no-export' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<VisibilityIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
 
+
+
                 <Item
-                  title="Manage School"
-                  to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/schools' : 'enumerator-dashboard/view-all-students-data'}
-                  icon={<SchoolIcon />}
+                  title="View Payments Record"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-payments' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<AttachMoneyIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
+                {/* <Item
+                  title="View Attendance"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-attendance' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<EventNoteIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                /> */}
+                <Item
+                  title="Export Attendance"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-export-attendance' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<EventNoteIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+
+
+                <>
+
+                </>
               </>
             }
 

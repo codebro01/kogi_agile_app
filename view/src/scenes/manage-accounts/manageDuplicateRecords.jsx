@@ -143,6 +143,8 @@ export const ManageDuplicateRecords = () => {
                 params: { ...filteredParams },
                 withCredentials: true,
             });
+
+            console.log(response)
             setStudents(response.data.students);
             setDataFetchLoading(false);
             if(response.data.students.length < 1) return setMessage("No Similar students Found")

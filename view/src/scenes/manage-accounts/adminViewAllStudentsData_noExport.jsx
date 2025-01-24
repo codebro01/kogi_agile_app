@@ -451,7 +451,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
             ),
         },
 
-        (userPermissions.includes('handle_registrars')) && {
+        (userPermissions.includes('handle_admins')) && {
             name: 'Delete',
             cell: (row) => (
                 <button

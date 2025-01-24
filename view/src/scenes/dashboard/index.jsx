@@ -889,17 +889,20 @@ const Dashboard = () => {
                     md: "row"
                   },
                 }}>
-                  <Box sx={{
+                {/*
+                 <Box sx={{
                     flexBasis: "50%"
+                  }}>
+                    <ResponsiveBarChart />
+
+                  </Box>
+                */} 
+
+                  <Box sx={{
+                    flexBasis: "100%"
                   }}>
 
                     <ResponsivePieChart />
-                  </Box>
-                  <Box sx={{
-                    flexBasis: "50%"
-                  }}>
-
-                    <ResponsiveBarChart />
                   </Box>
                 </Box>
               )}
