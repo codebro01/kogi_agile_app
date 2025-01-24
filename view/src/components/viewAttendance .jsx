@@ -108,7 +108,6 @@ export const ViewAttendance = () => {
             return acc;
         }, {})
 
-        console.log(filteredParams)
 
 
     const handleSubmit = async () => {
@@ -120,7 +119,6 @@ export const ViewAttendance = () => {
                 params: { ...filteredParams },
                 withCredentials: true,
             })
-            console.log(response)
             setFilteredData(response.data.attendance)
 
         }

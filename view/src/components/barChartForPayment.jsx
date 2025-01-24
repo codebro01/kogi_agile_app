@@ -26,8 +26,7 @@ export const ResponsiveBarChartForPayment = () => {
                     },
                     withCredentials: true,
                 })
-                console.log(response)
-                console.log(response)
+              
                 setApiDataLoading(false)
                 setApiData(response.data.paymentByLGA)
             }

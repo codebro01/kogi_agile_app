@@ -72,7 +72,6 @@ export const deleteStudent = createAsyncThunk(
                 },
                 withCredentials: true,
             });
-            console.log(response)
             return studentId; // returning the new students data after deletion
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data || error.response?.message || 'Failed to delete student');
@@ -95,7 +94,6 @@ export const fetchStudentsFromComponent = createAsyncThunk(
                 params: { ...filteredParams, ...sortParam },
                 withCredentials: true,
             });
-            console.log(response.data)
             return response.data;  // Optionally return data if needed elsewhere
         } catch (error) {
             console.error('Error fetching students from component:', error);
@@ -147,7 +145,6 @@ const studentsSlice = createSlice({
                         item.yearOfEnrollment,
                     ];
                     // console.log(item.bankName);
-                    console.log(item.firstname)
                     return valuesToSearch.some(
                         (value) =>
                             value &&
@@ -159,7 +156,6 @@ const studentsSlice = createSlice({
             }
         },
         setStudents: (state, action) => {
-            console.log(action.payload)
             state.data.students = action.payload;
             // state.filteredStudents = action.payload;
             // state.searchQuery = '';
@@ -194,7 +190,6 @@ const studentsSlice = createSlice({
                 state.totalRows = action.payload.total;
                 state.currentPage = action.payload.currentPage;  // Update currentPage from API response
 
-                console.log(state.filteredStudents)
             })
             .addCase(fetchStudents.rejected, (state, action) => {
                 state.loading = false;
@@ -250,7 +245,6 @@ const studentsSlice = createSlice({
             .addCase(fetchStudentsFromComponent.fulfilled, (state, action) => {
                 state.loading = false;
                 state.filteredStudents = action.payload
-                console.log('Fetched students:', action.payload);  // Verify fetched data
             })
             .addCase(fetchStudentsFromComponent.rejected, (state, action) => {
                 state.loading = false;

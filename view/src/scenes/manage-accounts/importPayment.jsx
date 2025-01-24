@@ -146,7 +146,7 @@ export const ImportPaymentSheet = () => {
                     displayEmpty
                     fullWidth
                     size="small"
-                    requird
+                    required
                     labelId="month-label"
                 >
                     <MenuItem value="">

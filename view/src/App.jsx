@@ -103,6 +103,8 @@ function App() {
                         <Route path="/admin-dashboard/role-selector" element={<RoleSelector />} />
                         <Route path="/admin-dashboard/create-accounts/register-admin" element={<CreateAdmin />} />
                         <Route path="/admin-dashboard/view-all-students-data" element={<AdminViewAllStudentsData />} />
+                        <Route path="/admin-dashboard/admin-export-attendance" element={<ExportAttendanceSheetPayroll />} />
+                        <Route path="/admin-dashboard/admin-view-attendance" element={<ViewPaymentsRecords />} />
                         <Route path="/admin-dashboard/admin-view-payments" element={<ViewPaymentsRecords />} />
                         <Route path="/admin-dashboard/admin-view-all-students-no-export" element={<AdminViewAllStudentsDataNoExport />} />
                         <Route path="/view-all-schools-info" element={<ViewSchoolsInfo />} />

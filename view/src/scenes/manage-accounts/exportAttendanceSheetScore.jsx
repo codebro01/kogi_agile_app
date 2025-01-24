@@ -8,9 +8,9 @@ import { ExportSubmitButton } from "../../components/exportButton";
 import lgasAndWards from '../../Lga&wards.json';
 import { fetchAllStudents } from "../../components/allStudentsSlice";
 import { fetchSchools } from "../../components/schoolsSlice";
+import { fetchDashboardStat } from "../../components/dashboardStatsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { SpinnerLoader } from "../../components/spinnerLoader";
-import { fetchDashboardStat } from "../../components/dashboardStatsSlice";
 
 export const ExportAttendanceSheetPayroll = () => {
     const studentsState = useSelector(state => state.allStudents)
@@ -257,7 +257,6 @@ export const ExportAttendanceSheetPayroll = () => {
     }
 
     const uniqueSchools = dashboardData?.results?.[0]?.distinctSchoolsDetails || []
-    console.log(filters)
 
 
     return (

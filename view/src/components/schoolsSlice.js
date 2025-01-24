@@ -23,7 +23,6 @@ export const deleteSchool = createAsyncThunk('school/deleteSchool', async (id, t
             },
             withCredentials: true,
         });
-        console.log(response)
         return response.data;
     } catch (error) {
         console.log(error)
@@ -41,7 +40,6 @@ const schoolsSlice = createSlice({
     },
     reducers: {
         setSelectedSchool: (state, action) => {
-            console.log(action.payload)
             state.selectedSchool = action.payload
         }
     },

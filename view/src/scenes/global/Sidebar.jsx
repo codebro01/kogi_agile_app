@@ -31,6 +31,8 @@ import MenuIcon from "@mui/icons-material/Menu"; // Horizontal bars icon
 import CloseIcon from "@mui/icons-material/Close"; // Cancel icon
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 
 
 
@@ -219,13 +221,7 @@ const Sidebar = ({ isSidebar }) => {
                   selected={selected}
                   setSelected={setSelected}
                 />
-                <Item
-                  title="View Payments Record"
-                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-payments' : 'enumerator-dashboard/view-all-students-data'}
-                  icon={<AttachMoneyIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
+
                 <Item
                   title="Manage Duplicate Students Record"
                   to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/manage-accounts/manage-duplicate-records' : 'enumerator-dashboard/view-all-students-data'}
@@ -233,6 +229,30 @@ const Sidebar = ({ isSidebar }) => {
                   selected={selected}
                   setSelected={setSelected}
                 />
+
+                <Item
+                  title="View Payments Record"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-payments' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<AttachMoneyIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                {/* <Item
+                  title="View Attendance"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-view-attendance' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<EventNoteIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                /> */}
+                <Item
+                  title="Export Attendance"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-export-attendance' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<EventNoteIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+
+         
                 <Item
                   title="Manage Admins"
                   to={userPermissions.includes('handle_registrars') ? 'admin-dashboard/manage-accounts/admins' : 'enumerator-dashboard/view-all-students-data'}

@@ -183,10 +183,18 @@ export const ManageEnumerators = () => {
                         variant="contained"
                         color="primary"
                         onClick={handleFilter}
-                        sx={{ height: '56px', alignSelf: 'stretch' }} // Aligns with input height
+                        sx={{
+                            height: '56px',
+                            alignSelf: 'stretch', // Aligns with input height
+                            background: "#196b57", // Set the initial background color
+                            "&:hover": {
+                                background: "#196b57", // Keeps the hover background the same
+                            },
+                        }}
                     >
                         Filter
                     </Button>
+
                 </Box>
 
                 <Typography variant="subtitle1" component="h2" align="center" gutterBottom>

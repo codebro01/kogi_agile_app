@@ -88,7 +88,6 @@ const Dashboard = () => {
               withCredentials: true,
             }),
           ]);
-          console.log(getTotalStudentsPaid)
           setLgaWithTotalPayments(getLGAWithTotalPaymentsRes.data.paymentByLGA);
           setTotalStudentsPaid(getTotalStudentsPaid.data.totalStudentPaid)
 
@@ -98,7 +97,6 @@ const Dashboard = () => {
         }
       };
 
-      console.log('totalstudents', totalStudentsPaid)
       fetchData();
     }
   }, []);
@@ -239,7 +237,6 @@ const Dashboard = () => {
     if (lgaWithTotalPayments.length > 0) {
       mergedResults = lgasAndWards.map((lga) => {
         // Convert both LGA and payment._id to uppercase for a case-insensitive match
-        console.log(lga.name);
         const payment = lgaWithTotalPayments.find(
           (payment) => payment._id.toUpperCase() === lga.name.toUpperCase()
         );

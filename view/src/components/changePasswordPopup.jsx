@@ -74,7 +74,7 @@ export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
     return (
         <div>
             {/* Button to open the form */}
-            <Button
+            {/* <Button
                 variant="contained"
                 color="primary"
                 onClick={handleOpen}
@@ -83,7 +83,21 @@ export const ChangePasswordForm = ({ open, handleOpen, handleClose }) => {
                 }}
             >
                 Change Password
+            </Button> */}
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOpen}
+                sx={{
+                    background: "#196b57",
+                    "&:hover": {
+                        background: "#196b57", // Keeps the hover background the same
+                    },
+                }}
+            >
+                Change Password
             </Button>
+
 
             {/* Popup Modal */}
             <Modal open={open} onClose={handleClose}>

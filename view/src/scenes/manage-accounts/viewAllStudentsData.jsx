@@ -137,10 +137,8 @@ export const ViewAllStudentsData = () => {
   const handleSubmit = (e) => {
             e.preventDefault();
             dispatch(fetchStudentsFromComponent({filteredParams, sortParam : {}}));
-    console.log(filteredStudents)
   };
 
-  console.log(filters)
 
   if (loading)
     return (
