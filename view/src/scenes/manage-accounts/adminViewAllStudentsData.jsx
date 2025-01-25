@@ -689,6 +689,9 @@ export const AdminViewAllStudentsData = () => {
                                     width: '48%',
                                     color: "#fff",
                                     background: colors.main['darkGreen'],
+                                    '&:hover': {
+                                        backgroundColor: '#145943', // Slightly darker shade on hover
+                                    },
                                 }}
                             >
                                 Export Data

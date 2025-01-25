@@ -378,6 +378,26 @@ export const AdminViewAllStudentsDataNoExport = () => {
             selector: (row, index) => index + 1, // Calculate serial number (starting from 1)
             sortable: true,
         },
+
+        {
+            name: 'View',
+            cell: (row) => (
+                <Typography
+                    onClick={() => handleViewItem(row)}
+                    sx={{
+                        padding: '5px 10px',
+                        backgroundColor: '#196b57',
+                        color: '#fff',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontSize: "12px",
+                    }}
+                >
+                    View
+                </Typography>
+            ),
+        },
+
         {
             name: 'Image',
             cell: (row) => (
@@ -432,25 +452,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
         },
 
 
-        {
-            name: 'View',
-            cell: (row) => (
-                <button
-                    onClick={() => handleViewItem(row)}
-                    style={{
-                        padding: '5px 10px',
-                        backgroundColor: '#196b57',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                    }}
-                >
-                    View student
-                </button>
-            ),
-        },
-
+       
         (userPermissions.includes('handle_admins')) && {
             name: 'Delete',
             cell: (row) => (
@@ -485,8 +487,8 @@ export const AdminViewAllStudentsDataNoExport = () => {
     };
     
 
-// console.log(schoolsData)
-// console.log(studentsData)
+
+
     
     return (
         <>
@@ -943,49 +945,66 @@ export const AdminViewAllStudentsDataNoExport = () => {
 
 
                     {isModalOpen && (
+
+
                         <div
                             style={{
-                                position: 'fixed',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                backgroundColor: '#fff',
-                                padding: '20px',
-                                borderRadius: '10px',
-                                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-                                width: "80%",
+                                position: "fixed",
+                                top: 0,
+                                left: 0,
+                                width: "100vw",
+                                height: "100vh",
+                                backgroundColor: "rgba(0, 0, 0, 0.52)", // Semi-transparent black overlay
+                                zIndex: 9999,
                                 display: "flex",
-                                flexDirection: "column",
                                 alignItems: "center",
                                 justifyContent: "center",
                             }}
                         >
-                            <h3>Student Details</h3>
-                            <div><img src={`${selectedItem.passport}`} alt="" /></div>
-                            <p><strong>Student ID:</strong> {selectedItem.randomId}</p>
-                            <p><strong>Name:</strong> {`${selectedItem.surname} ${selectedItem.firstname} ${selectedItem.fiddlename || ''}`}</p>
-                            <p><strong>School name:</strong> {selectedItem.schoolId.schoolName}</p>
-                            <p><strong>Date of Birth</strong> {selectedItem.dob}</p>
-                            <p><strong>LGA of Enrollment</strong> {selectedItem.lgaOfEnrollment}</p>
-                            <p><strong>Ward:</strong> {selectedItem.ward}</p>
-                            <p><strong>Present Class:</strong> {selectedItem.presentClass}</p>
-                            {/* <p><strong>Attendance Score:</strong> {selectedItem.schoolId.schoolName}</p>
-                            <p><strong>Attendance Score:</strong> {selectedItem.schoolId.schoolName}</p>
-                            <p><strong>Attendance Score:</strong> {selectedItem.schoolId.schoolName}</p> */}
-                            <button
-                                onClick={() => setIsModalOpen(false)}
+                            <div
                                 style={{
-                                    padding: '5px 10px',
-                                    backgroundColor: '#dc3545',
-                                    color: '#fff',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
+                                    position: 'fixed',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    backgroundColor: '#fff',
+                                    padding: '20px',
+                                    borderRadius: '10px',
+                                    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                                    width: "80%",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "flex-start",
+                                    justifyContent: "flex-start",
                                 }}
                             >
-                                Close
-                            </button>
+                                <h3>Student Details</h3>
+                                <div style={{alignSelf: "center"}}><img src={`${selectedItem.passport}`} alt="" /></div>
+                                <p><strong>Student ID:</strong> {selectedItem.randomId}</p>
+                                <p><strong>Name:</strong> {`${selectedItem.surname} ${selectedItem.firstname} ${selectedItem.fiddlename || ''}`}</p>
+                                <p><strong>School name:</strong> {selectedItem.schoolId.schoolName}</p>
+                                <p><strong>Date of Birth:</strong> {selectedItem.dob}</p>
+                                <p><strong>stateOfOrigin:</strong> {selectedItem.schoolId.schoolName}</p>
+                                <p><strong>LGA of Enrollment:</strong> {selectedItem.lgaOfEnrollment}</p>
+                                <p><strong>Ward:</strong> {selectedItem.ward}</p>
+                                <p><strong>Present Class:</strong> {selectedItem.presentClass}</p>
+                            <p><strong>Year of Enrollment:</strong> {selectedItem.yearOfEnrollment}</p>
+                                <button
+                                    onClick={() => setIsModalOpen(false)}
+                                    style={{
+                                        padding: '5px 10px',
+                                        backgroundColor: '#dc3545',
+                                        color: '#fff',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    Close
+                                </button>
+                            </div>
                         </div>
+                        
                     )}
 
 

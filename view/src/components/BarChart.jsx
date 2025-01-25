@@ -36,7 +36,6 @@ export const ResponsiveBarChart = () => {
         })()
     }, []);
 
-    console.log(apiData);
 
     const data = {
         labels: apiData.map(oneApiData => oneApiData.enumeratorName.split(' ')[0]), // Label each slice by the enumerator's name
@@ -99,7 +98,7 @@ export const ResponsiveBarChart = () => {
             y: {
                 beginAtZero: true,
                 ticks: {
-                    stepSize: 5,
+                    stepSize: 200,
                 },
                 grid: {
                     color: 'rgba(200, 200, 200, 0.5)',

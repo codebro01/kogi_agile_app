@@ -357,6 +357,24 @@ export const ViewPaymentsRecords = () => {
         //     ),
         //     sortable: false,
         // },
+        {
+            name: 'View',
+            cell: (row) => (
+                <Typography
+                    onClick={() => handleViewItem(row)}
+                    sx={{
+                        padding: '5px 10px',
+                        backgroundColor: '#196b57',
+                        color: '#fff',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontWeight: 700,
+                    }}
+                >
+                    View
+                </Typography>
+            ),
+        },
 
         {
             name: 'Surname',
@@ -420,24 +438,7 @@ export const ViewPaymentsRecords = () => {
         },
 
 
-        {
-            name: 'View',
-            cell: (row) => (
-                <button
-                    onClick={() => handleViewItem(row)}
-                    style={{
-                        padding: '5px 10px',
-                        backgroundColor: '#196b57',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                    }}
-                >
-                    View student
-                </button>
-            ),
-        },
+      
 
         // (userPermissions.includes('handle_registrars')) && {
         //     name: 'Delete',
@@ -882,6 +883,9 @@ export const ViewPaymentsRecords = () => {
                                     width: '48%',
                                     color: "#fff",
                                     background: colors.main['darkGreen'],
+                                    '&:hover': {
+                                        backgroundColor: '#145943', // Slightly darker shade on hover
+                                    },
                                 }}
                             >
                                 Filter Payment Records
@@ -898,6 +902,9 @@ export const ViewPaymentsRecords = () => {
                                         width: '48%',
                                         color: "#fff",
                                         background: colors.main['darkGreen'],
+                                        '&:hover': {
+                                            backgroundColor: '#145943', // Slightly darker shade on hover
+                                        },
                                     }}
                                 >
                                     Export Records

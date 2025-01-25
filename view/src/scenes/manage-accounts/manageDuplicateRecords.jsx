@@ -117,7 +117,6 @@ export const ManageDuplicateRecords = () => {
             setSelectedStudents([]);
             setMessage(response.data.messaage)
 
-            console.log(response)
             setDeleteLoading(false)
             setTimeout(() => {
                 setMessage('')
@@ -219,7 +218,6 @@ export const ManageDuplicateRecords = () => {
         fetchDuplicate();
     }, [])
 
-console.log(selectedStudents)
     return (
         <Box
 
@@ -265,7 +263,14 @@ console.log(selectedStudents)
                     padding: "50px"
                 }}>{message}</Typography>} {/* Replace with actual field */}
 
-
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleBulkDelete}
+                    disabled={selectedStudents.length === 0}
+                >
+                    Delete Selected
+                </Button>
 
                 {fetchDataLoading ? (<Box
                     sx={{
@@ -277,14 +282,7 @@ console.log(selectedStudents)
                     }}
                 ><SpinnerLoader /></Box>) : (
                     <Box sx={{ overflowX: "scroll", maxHeight: "700px", width: "100%" }}>
-                            <Button
-                                variant="contained"
-                                color="error"
-                                onClick={handleBulkDelete}
-                                disabled={selectedStudents.length === 0}
-                            >
-                                Delete Selected
-                            </Button>
+                            
                         {students.length > 0 ? (
                             <Table sx={{ overflowX: "scroll", maxHeight: "700px" }} aria-label="student table">
                                 <TableHead>

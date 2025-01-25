@@ -245,6 +245,18 @@ export const CreateEnumerator = () => {
                                 fullWidth
                                 error={errors.image}
                                 helperText={errors.image && 'image is required'}
+                                sx = {{
+                                    backgroundColor: '#196b57', // Default background color
+                                    color: '#ffffff', // Text color
+                                    padding: '10px 20px', // Add some padding for better appearance
+                                    borderRadius: '8px', // Rounded corners
+                                    fontWeight: 'bold', // Bold text
+                                    textTransform: 'uppercase', // Make text uppercase
+                                    transition: 'all 0.3s ease', // Smooth transition for hover effect
+                                    '&:hover': {
+                                        backgroundColor: '#145943', // Slightly darker shade on hover
+                                    },
+                                }}
                             >
                                 Upload image
                                 <input
@@ -259,7 +271,18 @@ export const CreateEnumerator = () => {
 
                         <Grid item xs={12}>
                             <Box textAlign="center">
-                                <Button type="submit" variant="contained" color="primary" size="large">
+                                <Button type="submit" variant="contained" color="primary" size="large" sx = {{
+                                    backgroundColor: '#196b57', // Default background color
+                                    color: '#ffffff', // Text color
+                                    padding: '10px 20px', // Add some padding for better appearance
+                                    borderRadius: '8px', // Rounded corners
+                                    fontWeight: 'bold', // Bold text
+                                    textTransform: 'uppercase', // Make text uppercase
+                                    transition: 'all 0.3s ease', // Smooth transition for hover effect
+                                    '&:hover': {
+                                        backgroundColor: '#145943', // Slightly darker shade on hover
+                                    },
+                                }}>
                                     Submit
                                 </Button>
                             </Box>

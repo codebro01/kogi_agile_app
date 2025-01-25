@@ -889,17 +889,17 @@ const Dashboard = () => {
                     md: "row"
                   },
                 }}>
-                {/*
+                
                  <Box sx={{
                     flexBasis: "50%"
                   }}>
                     <ResponsiveBarChart />
 
                   </Box>
-                */} 
+                 
 
                   <Box sx={{
-                    flexBasis: "100%"
+                    flexBasis: "50%"
                   }}>
 
                     <ResponsivePieChart />
@@ -1009,14 +1009,15 @@ const Dashboard = () => {
                 size="large"
                 color="primary"
                 sx={{
-                  textTransform: 'none',
-                  fontSize: '1rem',
-                  padding: '12px 24px',
-                  borderRadius: '8px',
-                  boxShadow: 2,
+                  backgroundColor: '#196b57', // Default background color
+                  color: '#ffffff', // Text color
+                  padding: '10px 20px', // Add some padding for better appearance
+                  borderRadius: '8px', // Rounded corners
+                  fontWeight: 'bold', // Bold text
+                  textTransform: 'uppercase', // Make text uppercase
+                  transition: 'all 0.3s ease', // Smooth transition for hover effect
                   '&:hover': {
-                    backgroundColor: '#0D47A1',
-                    boxShadow: 3,
+                    backgroundColor: '#145943', // Slightly darker shade on hover
                   },
                 }}
               >
@@ -1282,15 +1283,15 @@ const Dashboard = () => {
                   size="large"
                   color="primary"
                   sx={{
-                    textTransform: 'none',
-                    fontSize: '1rem',
-                    padding: '12px 24px',
-                    borderRadius: '8px',
-                    boxShadow: 2,
-                    marginBottom: '100px',
+                    backgroundColor: '#196b57', // Default background color
+                    color: '#ffffff', // Text color
+                    padding: '10px 20px', // Add some padding for better appearance
+                    borderRadius: '8px', // Rounded corners
+                    fontWeight: 'bold', // Bold text
+                    textTransform: 'uppercase', // Make text uppercase
+                    transition: 'all 0.3s ease', // Smooth transition for hover effect
                     '&:hover': {
-                      backgroundColor: '#0D47A1',
-                      boxShadow: 3,
+                      backgroundColor: '#145943', // Slightly darker shade on hover
                     },
                   }}
                 >

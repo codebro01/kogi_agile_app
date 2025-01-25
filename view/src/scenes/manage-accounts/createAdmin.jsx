@@ -73,7 +73,7 @@ export const CreateAdmin = () => {
                 boxShadow: 1,
             }}
         >
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h4" gutterBottom  sx = {{fontWeight: 700, textAlign: "center"}}>
                 Register Admin
             </Typography>
             <form onSubmit={handleSubmit}>
@@ -120,7 +120,17 @@ export const CreateAdmin = () => {
                     variant="contained"
                     color="primary"
                     fullWidth
-                    sx={{ mt: 2 }}
+                    sx={{
+                        backgroundColor: '#196b57', // Default background color
+                        color: '#ffffff', // Text color
+                        padding: '10px 20px', // Add some padding for better appearance
+                        borderRadius: '8px', // Rounded corners
+                        fontWeight: 'bold', // Bold text
+                        textTransform: 'uppercase', // Make text uppercase
+                        transition: 'all 0.3s ease', // Smooth transition for hover effect
+                        '&:hover': {
+                            backgroundColor: '#145943', // Slightly darker shade on hover
+                        }, }}
                 >
                     Register
                 </Button>

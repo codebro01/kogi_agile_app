@@ -9,7 +9,8 @@ export const fetchSchools = createAsyncThunk('schools/fetchSchools', async (_, t
         return response.data.allSchools;
     } catch (error) {
         console.log(error)
-        return thunkAPI.rejectWithValue(error.response?.data || error.response?.message || 'Failed to fetch students');
+        if (error.response.status === 500 || error.status === 500 || error.response.statusText === "Internal Server Error") return thunkAPI.rejectWithValue('An error has occued, please try again ')
+        return thunkAPI.rejectWithValue(error.response?.data || error.response?.message || 'Failed to fetch schools');
     }
 });
 export const deleteSchool = createAsyncThunk('school/deleteSchool', async (id, thunkAPI) => {

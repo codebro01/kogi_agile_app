@@ -23,6 +23,7 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { fetchAllStudents } from './allStudentsSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { SpinnerLoader } from './spinnerLoader';
 
 export const ViewAttendance = () => {
     const [filter, setFilter] = useState({
@@ -34,9 +35,11 @@ export const ViewAttendance = () => {
     const studentsState = useSelector(state => state.allStudents);
     const {data: studentsData, loading, error} = studentsState;
     const [fetchLoading, setFetchLoading] = useState(false)
-    const [success, setSuccess] = useState('')
+    const [fetchError, setFetchError] = useState(false)
     const [filteredData, setFilteredData] = useState([]);
     const navigate = useNavigate();
+    const [message, setMessage] = useState('')
+
     
 
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`
@@ -82,7 +85,7 @@ export const ViewAttendance = () => {
                     },
                     withCredentials: true,
                 });
-                setSuccess('Admin successfully created')
+
             } catch (err) {
 
                 if (err.response.status === 401) return navigate('/sign-in')
@@ -112,6 +115,8 @@ export const ViewAttendance = () => {
 
     const handleSubmit = async () => {
         try {
+            setMessage('')
+            setFetchLoading(true)
             const response = await axios.get(`${API_URL}/student/view-attendance-sheet`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -119,10 +124,18 @@ export const ViewAttendance = () => {
                 params: { ...filteredParams },
                 withCredentials: true,
             })
+            console.log(response)
             setFilteredData(response.data.attendance)
-
+            setFetchLoading(false)
         }
         catch (err) {
+            setFetchError(true)
+            setFetchLoading(false)
+            if(err.response.status === 404 || err.status === 404 || err.response.statusText === 'Not Found') {
+                setMessage(err.response.message || "No Data found")
+                setFilteredData([]);
+                return;
+            }
             console.log(err)
         }
     };
@@ -284,15 +297,45 @@ export const ViewAttendance = () => {
 
                     {/* Submit Button */}
                     <Grid item xs={12} sm={12} display="flex" justifyContent="flex-end">
-                        <Button variant="contained" color="primary" onClick={handleSubmit}>
+                        <Button variant="contained" color="primary" onClick={handleSubmit}  sx = {{
+                            backgroundColor: '#196b57', // Default background color
+                            color: '#ffffff', // Text color
+                            padding: '10px 20px', // Add some padding for better appearance
+                            borderRadius: '8px', // Rounded corners
+                            fontWeight: 'bold', // Bold text
+                            textTransform: 'uppercase', // Make text uppercase
+                            transition: 'all 0.3s ease', // Smooth transition for hover effect
+                            '&:hover': {
+                                backgroundColor: '#145943', // Slightly darker shade on hover
+                            },
+                        }}>
                             Filter
                         </Button>
                     </Grid>
                 </Grid>
             </Box>
 
-            {/* Display filtered data (space below) */}
-          { filteredData && <Paper elevation={3} sx={{ padding: 2, marginTop: 2 }}>
+            {fetchError && <Box
+                sx={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                    marginTop: "30px",
+
+                }}
+            ><Typography>{message}</Typography></Box>}
+
+            {fetchLoading ? <Box
+                sx={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%"
+                }}
+            ><SpinnerLoader /></Box> : <Paper elevation={3} sx={{ padding: 2, marginTop: 2 }}>
                 <Typography variant="h6" gutterBottom>
                     Student Attendance Table
                 </Typography>
@@ -325,6 +368,8 @@ export const ViewAttendance = () => {
                     </Table>
                 </TableContainer>
             </Paper>}
+
+        
         </Container>
     );
 };
