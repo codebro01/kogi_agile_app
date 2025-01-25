@@ -9,7 +9,7 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Paper, Table, TableHead, TableRow, TableCell, TableBody, Typography
+    Paper, Table, TableHead, TableRow, TableCell, TableBody, Typography, Checkbox
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { fetchDashboardStat } from "../../components/dashboardStatsSlice";
@@ -21,8 +21,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { SpinnerLoader } from '../../components/spinnerLoader';
 
 export const ManageDuplicateRecords = () => {
-    const dashboardStatState = useSelector(state => state.dashboardStat);
-    const { data: dashboardData, loading: dashboardStatLoading, error: dashboardStatError } = dashboardStatState
+    // const dashboardStatState = useSelector(state => state.dashboardStat);
+    // const { data: dashboardData, loading: dashboardStatLoading, error: dashboardStatError } = dashboardStatState
     const [enumeratorId, setEnumeratorId] = useState('');
     const [endDate, setEndDate] = useState('');
     const [students, setStudents] = useState([]);
@@ -35,6 +35,8 @@ export const ManageDuplicateRecords = () => {
     const token = localStorage.getItem('token');
     const location = useLocation();
     const navigate = useNavigate();
+    const [selectedStudents, setSelectedStudents] = useState([]);
+
 
     const dispatch = useDispatch();
 
@@ -80,15 +82,81 @@ export const ManageDuplicateRecords = () => {
             return acc;
         }, {})
 
+    const handleCheckboxChange = (id) => {
+        setSelectedStudents((prevSelected) =>
+            prevSelected.includes(id)
+                ? prevSelected.filter((studentId) => studentId !== id) // Remove if already selected
+                : [...prevSelected, id] // Add if not selected
+        );
+    };
 
-        ;  // No data in the dependency array
+
+    // const handleSelectAll = (event) => {
+    //     if (event.target.checked) {
+    //         setSelectedStudents(students.map((student) => student.randomId)); // Select all
+    //     } else {
+    //         setSelectedStudents([]); // Deselect all
+    //     }
+    // };
+    const handleBulkDelete = async () => {
+        try {
+            const confirmDelete = window.confirm(`Are you sure you want to delete ${selectedStudents.length} students `)
+            if (!confirmDelete) return;
+            setDeleteLoading(true)
+            const ids = selectedStudents.join(',');
+            console.log(ids)
+            const response = await axios.delete(`${API_URL}/student/delete/delete-many/?ids=${ids}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
+
+            });
+
+            setSelectedStudents([]);
+            setMessage(response.data.messaage)
+
+            console.log(response)
+            setDeleteLoading(false)
+            setTimeout(() => {
+                setMessage('')
+            }, 5000);
+            const updatedStudents = students
+                .map(student => {
+                    return {
+                        ...student,
+                        similarRecords: student.similarRecords.filter(
+                            similarStudent => !selectedStudents.includes(similarStudent.randomId)
+                        ),
+                    };
+                })
+                .filter(student => student.similarRecords.length > 0); // Remove students with no similarRecords
+
+            setStudents(updatedStudents);
+            //     return {
+            //         ...student,
+            //         similarRecords: student.similarRecords.filter(similarStudent => similarStudent.randomId !== id),
+            //     };
+            // }).filter(student => student.similarRecords.length > 0); // Remove students with no similarRecords    
+            // setStudents(updatedStudents);
+        } catch (err) {
+            setDeleteLoading(false)
+            console.log(err);
+            if (err.response.statusText === '"Unauthorized"' || err.status === 401) return navigate('/');
+            setMessage(err.response?.message || err.response?.data?.message || err?.message || 'an error occured, please try again')
+            setTimeout(() => {
+                setMessage('')
+            }, 5000);
+        }
+    };
 
 
     const handleDelete = async (id, surname, firstname) => {
         try {
-            setDeleteLoading(true)
             const confirmDelete = window.confirm(`Are you sure you want to delete ${surname} ${firstname} `)
             if (!confirmDelete) return;
+            setDeleteLoading(true)
             const response = await axios.delete(`${API_URL}/student/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -97,14 +165,18 @@ export const ManageDuplicateRecords = () => {
                 withCredentials: true,
             });
             setDeleteLoading(false)
-
-            const remainingStudents = students.filter(student => student.randomId !== id);
-            setMessage('Delete successful')
-            setStudents(remainingStudents);
             setTimeout(() => {
                 setMessage('')
             }, 5000);
+            const updatedStudents = students.map(student => {
+                return {
+                    ...student,
+                    similarRecords: student.similarRecords.filter(similarStudent => similarStudent.randomId !== id),
+                };
+            }).filter(student => student.similarRecords.length > 0); // Remove students with no similarRecords    
+            setStudents(updatedStudents);
         } catch (err) {
+            if (err.response.statusText === '"Unauthorized"' || err.status === 401) return navigate('/');
             setDeleteLoading(false)
             console.log(err);
             setMessage(err.response?.message || err.response?.data?.message || err?.message || 'an error occured, please try again')
@@ -114,25 +186,8 @@ export const ManageDuplicateRecords = () => {
         }
     }
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //        
-    //     };
-    //     fetchData();
-    // }, [handleToggle, handleDelete]);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-
-        setFilters((prev) => ({
-            ...prev,
-            [name]: value
-        }))
-    }
-
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const fetchDuplicate = async () => {
         try {
             setDataFetchLoading(true);
             const response = await axios.get(`${API_URL}/student/manage-duplicate-records`, {
@@ -144,48 +199,27 @@ export const ManageDuplicateRecords = () => {
                 withCredentials: true,
             });
 
-            console.log(response)
             setStudents(response.data.students);
             setDataFetchLoading(false);
-            if(response.data.students.length < 1) return setMessage("No Similar students Found")
-                setMessage('Request Successful')
+            if (response.data.students.length < 1) return setMessage("No Similar students Found")
         } catch (err) {
             console.log(err);
+            if (err.response.statusText === '"Unauthorized"' || err.status === 401) return navigate('/');
+            if (err.response?.code === "ERR_NETWORK" || err.code === "ERR_NETWORK") {
+                setMessage('Network Error, please try again');
+                setDataFetchLoading(false);
+                return;
+            }
             setMessage(err.response?.message || err.response.data.message || 'an error occured, please try again')
             setDataFetchLoading(false);
         }
     }
 
-    if (dashboardStatLoading) {
-        return <Box
-            sx={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%"
-            }}
-        ><SpinnerLoader /></Box>
-    }
-    if (dashboardStatError) {
-        return <Box
-            sx={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%"
-            }}
-        >Error: An error happened, please reload to try again</Box>
-    }
+    useEffect(() => {
+        fetchDuplicate();
+    }, [])
 
-    const uniqueSchools = dashboardData?.results?.[0]?.distinctSchoolsDetails || []
-
-
-    // ! Here handle filters 
-
-
-
+console.log(selectedStudents)
     return (
         <Box
 
@@ -193,9 +227,7 @@ export const ManageDuplicateRecords = () => {
                 padding: "20px"
             }}>
             <Box
-                component={'form'}
                 elevation={2}
-                onSubmit={handleSubmit}
                 sx={{
                     width: '100%', // Adjusts to parent width
                     // maxWidth: '600px', // Caps the width for compact design
@@ -214,203 +246,8 @@ export const ManageDuplicateRecords = () => {
                     gutterBottom
                     sx={{ fontWeight: 600 }}
                 >
-                    Filter Students
+                    MANAGE DUPLICATE STUDENTS
                 </Typography>
-
-                {/* <Grid
-                    container
-                    spacing={2}
-                >
-
-                    <Grid item xs={12} sm={6} md={4}>
-
-                        <TextField
-                            fullWidth
-                            label="surname"
-                            type="text"
-                            name='surname'
-                            InputLabelProps={{ shrink: true }}
-                            value={filters.surname}
-                            onChange={(e) => handleInputChange(e)}
-                            sx={{ flex: 1 }}
-                           inputProps={{
-                            height: "3opx"
-                           }}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={4}>
-
-                        <TextField
-                            fullWidth
-
-                            label="firstname"
-                            type="text"
-                            name='firstname'
-                            InputLabelProps={{ shrink: true }}
-                            value={filters.firstname}
-                            onChange={(e) => handleInputChange(e)}
-                            sx={{ flex: 1 }}
-                        />
-                    </Grid>
-
-
-                    <Grid item xs={12} sm={6} md={4}>
-
-                        <TextField
-
-                            fullWidth
-                            label="lastname"
-                            type="text"
-                            name='lastname'
-                            InputLabelProps={{ shrink: true }}
-                            value={filters.lastname}
-                            onChange={(e) => handleInputChange(e)}
-                            sx={{ flex: 1 }}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                        fullWidth
-                            label="lastname"
-                            type="text"
-                            name='lastname'
-                            InputLabelProps={{ shrink: true }}
-                            value={filters.lastname}
-                            onChange={(e) => handleInputChange(e)}
-                            sx={{ flex: 1 }}
-                        />
-                    </Grid>
-
-
-                    <Grid item xs={12} sm={6} md={4}>
-
-                    <Button
-                    fullWidth
-                        variant="contained"
-                        color="primary"
-                        sx={{ height: '56px', alignSelf: 'stretch' }} // Aligns with input height
-                    >
-                        Filter
-                    </Button>
-
-                    </Grid>
-                </Grid> */}
-
-                <Grid
-                    container
-                    spacing={2}
-                    sx={{
-                        '& .MuiTextField-root': {
-                            height: '40px', // Set consistent height
-                        },
-                        '& .MuiInputBase-root': {
-                            height: '40px', // Control input field height
-                        },
-                        '& .MuiOutlinedInput-root': {
-                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#196b57', // Custom focus outline color
-                            },
-                        },
-                    }}
-                >
-                    {[
-                        { label: 'Surname', name: 'surname', value: filters.surname },
-                        { label: 'Firstname', name: 'firstname', value: filters.firstname },
-                        { label: 'Middlename', name: 'middlename', value: filters.middlename },
-                        { label: 'Parent Phone', name: 'parentPhone', value: filters.parentPhone },
-                    ].map((field, index) => (
-                        <Grid key={index} item xs={12} sm={6} md={3}>
-                            {/* 4 columns on wide screens (md), fallback to smaller screens */}
-                            <TextField
-                                fullWidth
-                                label={field.label}
-                                type="text"
-                                name={field.name}
-                                InputLabelProps={{ shrink: true }}
-                                value={field.value}
-                                onChange={(e) => handleInputChange(e)}
-                                sx={{
-                                    '& .MuiInputBase-root': {
-                                        height: '40px', // Match with other inputs
-                                    },
-                                }}
-                            />
-                        </Grid>
-                    ))}
-
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Select
-                            name="schoolId"
-                            value={filters.schoolId}
-                            onChange={handleInputChange}
-                            displayEmpty
-                            fullWidth
-                            size="medium"
-                            labelId="schoolId-label"
-                            sx={{
-                                borderRadius: 2,
-                                '& .MuiOutlinedInput-root': {
-                                    '& fieldset': { borderColor: '#4caf50' },
-                                    '&:hover fieldset': { borderColor: '#2e7d32' },
-                                    '&.Mui-focused fieldset': { borderColor: '#1b5e20', borderWidth: 2 },
-                                },
-                            }}
-                        >
-                            <MenuItem value="">
-                                <em>All Schools</em>
-                            </MenuItem>
-                            {uniqueSchools.map((school, index) => (
-                                <MenuItem key={index} value={school.schoolId}>
-                                    {school.schoolName}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </Grid>
-
-
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Select
-                            name="presentClass"
-                            value={filters.presentClass}
-                            onChange={handleInputChange}
-                            displayEmpty
-                            fullWidth
-                            size="small"
-                            labelId="class-label"
-                        >
-                            <MenuItem value="">
-                                <em>All Class</em>
-                            </MenuItem>
-                            {classOptions?.map((option) => (
-                                <MenuItem key={option.id} value={option.class}>
-                                    {option.class}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={3}>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            type='submit'
-                            sx={{
-                                height: '40px', // Match input height for a clean look
-                                textTransform: 'none', // Modern look (optional)
-                                color: "white",
-                                backgroundColor: "#196b57",
-                                '&:hover': {
-                                    backgroundColor: "#145847", // Darker shade for hover
-                                },
-                            }}
-                        >
-                            Filter
-                        </Button>
-                    </Grid>
-
-                </Grid>
 
 
                 {deletedLoading ? <Typography color={'secondary'}
@@ -423,11 +260,11 @@ export const ManageDuplicateRecords = () => {
                 >Deleting...</Typography> : ''} {/* Replace with actual field */}
                 {<Typography color={'secondary'} sx={{
                     display: "flex",
-                    justifyContent: "center", 
+                    justifyContent: "center",
                     alignItems: "center",
                     padding: "50px"
                 }}>{message}</Typography>} {/* Replace with actual field */}
-           
+
 
 
                 {fetchDataLoading ? (<Box
@@ -438,38 +275,77 @@ export const ManageDuplicateRecords = () => {
                         alignItems: "center",
                         height: "100%"
                     }}
-                ><SpinnerLoader /></Box>)  : (
+                ><SpinnerLoader /></Box>) : (
                     <Box sx={{ overflowX: "scroll", maxHeight: "700px", width: "100%" }}>
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={handleBulkDelete}
+                                disabled={selectedStudents.length === 0}
+                            >
+                                Delete Selected
+                            </Button>
                         {students.length > 0 ? (
                             <Table sx={{ overflowX: "scroll", maxHeight: "700px" }} aria-label="student table">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>S/N</TableCell>
-                                        <TableCell>Surname</TableCell>
-                                        <TableCell>Firstname</TableCell>
-                                        <TableCell>Middlename</TableCell>
-                                        <TableCell>School Name</TableCell>
-                                        <TableCell>lga Of Enrollment</TableCell> {/* Replace with actual field */}
-                                        <TableCell>Present Class</TableCell> {/* Replace with actual field */}
-                                        <TableCell>parentPhone</TableCell> {/* Replace with actual field */}
-                                        <TableCell>Delete Student</TableCell> {/* Replace with actual field */}
-                                        {/* Add more headers as per your requirement */}
+                                          
+                                        <TableCell style={{ fontWeight: 'bold' }}>Select</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>S/N</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Surname</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Firstname</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Middlename</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>School Name</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>LGA of Enrollment</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Present Class</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Parent Phone</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Delete Student</TableCell>
                                     </TableRow>
+
+
                                 </TableHead>
                                 <TableBody>
                                     {students.map((student, index) => (
-                                        <TableRow key={student._id}>
-                                            <TableCell>{index + 1}</TableCell>
-                                            <TableCell>{student.surname}</TableCell>
-                                            <TableCell>{student.firstname}</TableCell>
-                                            <TableCell>{student.middlename}</TableCell> {/* Replace with actual field */}
-                                            <TableCell>{student.schoolId.schoolName}</TableCell> {/* Replace with actual field */}
-                                            <TableCell>{student.lgaOfEnrollment}</TableCell> {/* Replace with actual field */}
-                                            <TableCell>{student.presentClass}</TableCell> {/* Replace with actual field */}
-                                            <TableCell>{student.parentPhone}</TableCell> {/* Replace with actual field */}
-                                            <TableCell onClick={() => handleDelete(student.randomId, student.surname, student.firstname)}>{<DeleteIcon sx={{ color: "red", cursor: "pointer" }} />}</TableCell>
-                                            {/* Add more table cells based on your schema */}
-                                        </TableRow>
+                                        student?.similarRecords?.map((similarStudent, subIndex) => (
+                                            <TableRow key={similarStudent._id}>
+                                               
+                                                <TableCell>
+                                                    <Checkbox
+                                                        checked={selectedStudents.includes(similarStudent.randomId)}
+                                                        onChange={() => handleCheckboxChange(similarStudent.randomId)}
+                                                        sx={{
+                                                            // '& .MuiSvgIcon-root': {
+                                                            //     backgroundColor: '#196b57', // Default background
+                                                            //     borderRadius: '4px',       // Optional rounded corners
+                                                            // },
+                                                            '&.Mui-checked .MuiSvgIcon-root': {
+                                                                // backgroundColor: '#0e4d38', // Background when checked
+                                                                color: '#d32f2f',             // Checkmark color
+                                                            },
+                                                            '&:hover .MuiSvgIcon-root': {
+                                                                color: '#d32f2f', // Background on hover
+                                                            },
+                                                            color: "#196b57"
+                                                        }}
+                                                    />
+                                                </TableCell>
+ {/* Main index and sub-index */}
+                                                <TableCell>{index + 1}.{subIndex + 1}</TableCell> {/* Main index and sub-index */}
+                                                <TableCell>{similarStudent.surname}</TableCell>
+                                                <TableCell>{similarStudent.firstname}</TableCell>
+                                                <TableCell>{similarStudent.middlename}</TableCell>
+                                                <TableCell>{similarStudent.schoolName || 'N/A'}</TableCell> {/* Nested data check */}
+                                                <TableCell>{similarStudent.lgaOfEnrollment || 'N/A'}</TableCell>
+                                                <TableCell>{similarStudent.presentClass || 'N/A'}</TableCell>
+                                                <TableCell>{similarStudent.parentPhone || 'N/A'}</TableCell>
+                                                <TableCell
+                                                    onClick={() => handleDelete(similarStudent.randomId, similarStudent.surname, similarStudent.firstname)}
+                                                    style={{ cursor: 'pointer' }}
+                                                >
+                                                    <DeleteIcon sx={{ color: "red" }} />
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
                                     ))}
                                 </TableBody>
                             </Table>

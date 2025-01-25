@@ -13,7 +13,7 @@ export const ResponsiveBarChartForPayment = () => {
     const [apiData, setApiData] = useState([]);
     const API_URL = `${import.meta.env.VITE_API_URL}/api/v1`;
     const token = localStorage.getItem('token');
-  
+
     useEffect(() => {
         (async () => {
 
@@ -26,7 +26,7 @@ export const ResponsiveBarChartForPayment = () => {
                     },
                     withCredentials: true,
                 })
-              
+
                 setApiDataLoading(false)
                 setApiData(response.data.paymentByLGA)
             }
