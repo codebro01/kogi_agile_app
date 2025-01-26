@@ -10,17 +10,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import { tokens } from "../../theme";
 import { PersonLoader } from '../../components/personLoader';
 import lgasAndWards from '../../Lga&wards.json';
-import {fetchStudents, fetchStudentsFromComponent} from '../../components/studentsSlice'
+import { fetchStudents, fetchStudentsFromComponent } from '../../components/studentsSlice'
 import { useSelector, useDispatch } from 'react-redux';
-import {SpinnerLoader} from '../../components/spinnerLoader'
+import { SpinnerLoader } from '../../components/spinnerLoader'
 
 
 export const ViewAllStudentsData = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode)
   const dispatch = useDispatch();
- const studentsState = useSelector(state => state.students);
-  const { filteredStudents: studentsData, loading, error} = studentsState;
+  const studentsState = useSelector(state => state.students);
+  const { filteredStudents: studentsData, loading, error } = studentsState;
   const navigate = useNavigate();
 
 
@@ -76,7 +76,7 @@ export const ViewAllStudentsData = () => {
   const allWards = lgasAndWards.flatMap(ward => ward.wards).sort((a, b) => a.localeCompare(b));;
 
   useEffect(() => {
-    dispatch (fetchStudents({page: 1, limit: 3000}));
+    dispatch(fetchStudents({ page: 1, limit: 3000 }));
   }, [dispatch])
 
 
@@ -135,8 +135,8 @@ export const ViewAllStudentsData = () => {
   };
 
   const handleSubmit = (e) => {
-            e.preventDefault();
-            dispatch(fetchStudentsFromComponent({filteredParams, sortParam : {}}));
+    e.preventDefault();
+    dispatch(fetchStudentsFromComponent({ filteredParams, sortParam: {} }));
   };
 
 
@@ -171,6 +171,7 @@ export const ViewAllStudentsData = () => {
       }))
     )
   ).map(item => JSON.parse(item));
+
 
   return (
     <Container maxWidth="lg" sx={{ marginTop: 4, marginBottom: "50px" }}>
@@ -290,7 +291,7 @@ export const ViewAllStudentsData = () => {
             color="secondary"
             size="large"
             sx={{ textTransform: "none", width: '48%' }}
-            // onClick={clearFilters}
+          // onClick={clearFilters}
           >
             Reset Filters
           </Button>
@@ -332,10 +333,9 @@ export const ViewAllStudentsData = () => {
             {studentsData && studentsData.length > 0 ? (
               studentsData.map((student, index) => (
                 <TableRow key={index}>
-                  <TableCell>{index+1}</TableCell>
-                  <TableCell>
-                    <img src={`${student.passport}`} alt="Student Passport" />
-                  </TableCell>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell><Box sx={{ width: "70px", height: "70px" }}><img style={{ width: "100%" }} src={student.passport} /></Box></TableCell>
+
                   <TableCell>{student.surname}</TableCell>
                   <TableCell>{student.firstname}</TableCell>
                   <TableCell>{student.middlename}</TableCell>

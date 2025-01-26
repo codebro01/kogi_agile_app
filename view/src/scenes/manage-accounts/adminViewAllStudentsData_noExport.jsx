@@ -40,7 +40,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
     const schoolsState = useSelector((state) => state.schools);
     const studentsState = useSelector((state) => state.students);
     const { data: schoolsData, loading: schoolsLoading, error: schoolsError } = schoolsState;
-    const { currentPage, totalRows, rowsPerPage, data, filteredStudents: studentsData, loading: studentsLoading, error: studentsError, searchQuery  } = studentsState;
+    const { currentPage, totalRows, rowsPerPage, data, filteredStudents: studentsData, loading: studentsLoading, error: studentsError, searchQuery } = studentsState;
     useEffect(() => {
 
         dispatch(fetchSchools());
@@ -60,11 +60,11 @@ export const AdminViewAllStudentsDataNoExport = () => {
     const [statesData, setStatesData] = useState([]);
     const [lgasData, setLgasData] = useState([]);
     const [enumeratorsData, setEnumeratorsData] = useState([]);
-    const [fetchLoading, setFetchLoading] = useState(false)
     const [enumeratorsLoading, setEnumeratorsLoading] = useState(false);
+    const [fetchLoading, setFetchLoading] = useState(false)
     const [selectedItem, setSelectedItem] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filteredData, setFilteredData] = useState([]); // State for filtered data
+    const [filteredData, setFilteredData] = useState([]); // State for filtered data
     const [allStudentsData, setAllStudentsData] = useState([]); // State for filtered data
 
 
@@ -294,7 +294,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(fetchStudentsFromComponent({filteredParams, sortParam}));
+        dispatch(fetchStudentsFromComponent({ filteredParams, sortParam }));
 
     };
 
@@ -450,9 +450,14 @@ export const AdminViewAllStudentsDataNoExport = () => {
             selector: row => row.yearOfEnrollment,
             sortable: true,
         },
+        {
+            name: 'Src',
+            selector: row => row.src,
+            sortable: true,
+        },
 
 
-       
+
         (userPermissions.includes('handle_admins')) && {
             name: 'Delete',
             cell: (row) => (
@@ -485,11 +490,11 @@ export const AdminViewAllStudentsDataNoExport = () => {
         const query = event.target.value;
         dispatch(setSearchQuery(query));
     };
-    
 
 
 
-    
+
+
     return (
         <>
             {userPermissions.includes('handle_registrars') || userPermissions.includes('handle_payments') ? (
@@ -923,7 +928,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                         paginationServer
                         highlightOnHover
                         paginationPerPage={rowsPerPage} // Override default rows per page
-                        
+
                         paginationRowsPerPageOptions={[10, 100, 200, 500]} // Custom options
 
                         paginationTotalRows={totalRows} // Total rows from API
@@ -931,13 +936,13 @@ export const AdminViewAllStudentsDataNoExport = () => {
                         onChangePage={(page) => {
                             dispatch(setCurrentPage(page)); // Update Redux state for current page
                             dispatch(fetchStudents({ page, limit: rowsPerPage })); // Fetch data for the selected page
-                        }}                       
-                         onChangeRowsPerPage={(newLimit) => {
+                        }}
+                        onChangeRowsPerPage={(newLimit) => {
                             // Update rowsPerPage in Redux state and fetch new data
-                            
+
                             dispatch(setRowsPerPage(newLimit)); // Update rowsPerPage in Redux
                             dispatch(fetchStudents({ page: 1, limit: newLimit })); // Fetch new data with updated limit
-                        }}                        
+                        }}
                         customStyles={customStyles} // Applying the custom styles
 
 
@@ -979,7 +984,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                                 }}
                             >
                                 <h3>Student Details</h3>
-                                <div style={{alignSelf: "center"}}><img src={`${selectedItem.passport}`} alt="" /></div>
+                                <div style={{ alignSelf: "center" }}><img src={`${selectedItem.passport}`} alt="" /></div>
                                 <p><strong>Student ID:</strong> {selectedItem.randomId}</p>
                                 <p><strong>Name:</strong> {`${selectedItem.surname} ${selectedItem.firstname} ${selectedItem.fiddlename || ''}`}</p>
                                 <p><strong>School name:</strong> {selectedItem.schoolId.schoolName}</p>
@@ -988,7 +993,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                                 <p><strong>LGA of Enrollment:</strong> {selectedItem.lgaOfEnrollment}</p>
                                 <p><strong>Ward:</strong> {selectedItem.ward}</p>
                                 <p><strong>Present Class:</strong> {selectedItem.presentClass}</p>
-                            <p><strong>Year of Enrollment:</strong> {selectedItem.yearOfEnrollment}</p>
+                                <p><strong>Year of Enrollment:</strong> {selectedItem.yearOfEnrollment}</p>
                                 <button
                                     onClick={() => setIsModalOpen(false)}
                                     style={{
@@ -1004,7 +1009,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                                 </button>
                             </div>
                         </div>
-                        
+
                     )}
 
 

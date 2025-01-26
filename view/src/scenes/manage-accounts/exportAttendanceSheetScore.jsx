@@ -24,9 +24,9 @@ export const ExportAttendanceSheetPayroll = () => {
     // const { loading, studentsData } = useContext(StudentsContext);
     // const {schoolsData} = useContext(SchoolsContext);
     const schools = schoolsData;
-    
-    
-   
+
+
+
 
     const dispatch = useDispatch();
     const [schoolId, setSchoolId] = useState(''); // Correctly destructured
@@ -276,7 +276,7 @@ export const ExportAttendanceSheetPayroll = () => {
         >
             <Grid container spacing={4} sx={{ width: '100%' }}>
                 {/* Select School */}
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                     <Select
                         name="schoolId"
                         value={filters.schoolId}
@@ -303,7 +303,39 @@ export const ExportAttendanceSheetPayroll = () => {
                             </MenuItem>
                         ))}
                     </Select>
+                </Grid> */}
+                <Grid item xs={12} sm={6}>
+                    <Autocomplete
+                        id="schoolId-autocomplete"
+                        options={uniqueSchools} // Array of school objects
+                        getOptionLabel={(option) => option.schoolName} // Use schoolName as the label
+                        value={uniqueSchools.find((school) => school.schoolId === filters.schoolId) || null} // Set the current value
+                        onChange={(event, newValue) => {
+                            handleInputChange({
+                                target: { name: "schoolId", value: newValue ? newValue.schoolId : "" },
+                            });
+                        }}
+                        isOptionEqualToValue={(option, value) => option.schoolId === value.schoolId} // Ensure correct matching
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="All Schools"
+                                placeholder="Search Schools"
+                                fullWidth
+                                size="medium"
+                                sx={{
+                                    borderRadius: 2,
+                                    '& .MuiOutlinedInput-root': {
+                                        '& fieldset': { borderColor: '#4caf50' },
+                                        '&:hover fieldset': { borderColor: '#2e7d32' },
+                                        '&.Mui-focused fieldset': { borderColor: '#1b5e20', borderWidth: 2 },
+                                    },
+                                }}
+                            />
+                        )}
+                    />
                 </Grid>
+
 
                 {/* Select LGA */}
                 <Grid item xs={12} sm={6}>

@@ -33,6 +33,12 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import EditIcon from '@mui/icons-material/Edit';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+
+
+
+
 
 
 
@@ -60,6 +66,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
     </MenuItem>
   );
 };
+
 
 
 const Sidebar = ({ isSidebar }) => {
@@ -266,9 +273,17 @@ const Sidebar = ({ isSidebar }) => {
                   setSelected={setSelected}
                 /> */}
                 <Item
-                  title="Export Attendance"
-                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-export-attendance' : 'enumerator-dashboard/view-all-students-data'}
+                  title="Exp. Attendance Sheet"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-export-attendance-sheet' : 'enumerator-dashboard/view-all-students-data'}
                   icon={<EventNoteIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+
+                <Item
+                  title="Exp. Attendance record"
+                  to={userPermissions.includes('handle_registrars') ? '/admin-dashboard/admin-export-attendance' : 'enumerator-dashboard/view-all-students-data'}
+                  icon={<NoteAddIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />

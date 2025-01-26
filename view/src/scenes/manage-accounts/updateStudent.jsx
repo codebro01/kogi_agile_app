@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useFetcher } from 'react-router-dom';
 import { TextField, Button, Grid, Container, Autocomplete, Typography, Box, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 // import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
@@ -7,27 +7,49 @@ import { getNigeriaStates } from 'geo-ng';
 import { SchoolsContext } from "../../components/dataContext.jsx";
 import { SpinnerLoader } from '../../components/spinnerLoader.jsx';
 import lgasAndWards from '../../Lga&wards.json';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSchools } from '../../components/schoolsSlice.js';
 
 
 axios.defaults.withCredentials = true;
 
 export const UpdateStudent = () => {
 
-    const { loading, schoolsData } = useContext(SchoolsContext);
+    // const { loading, schoolsData } = useContext(SchoolsContext);
     const location = useLocation()
     const student = location.state;
+
+    const schoolsState = useSelector(state => state.schools)
+    const { data: schoolsData, loading, error: fetchSchoolError } = schoolsState
 
     const [occupations, setOccupation] = useState([
         'Farmer', 'Teacher', "Trader", 'Mechanic', 'Tailor', 'Bricklayer', 'Carpenter', 'Doctor', 'Lawyer', 'Butcher', 'Electrician', 'Clergyman', 'Barber', 'Hair Dresser', 'Others'
     ])
 
+    const dispatch = useDispatch();
 
 
 
-
-
+    useEffect(() => {
+        dispatch(fetchSchools());
+    }, [dispatch])
 
     const navigate = useNavigate();
+
+
+    const inputDate = student.dob; // Input in dd-mm-yy format
+    const [day, month, year] = inputDate.split("-");
+
+    // Add '20' to the year if it's a two-digit year
+    const fullYear = year.length === 2 ? `20${year}` : year;
+
+    // Format the date as yyyy-mm-dd (ISO format)
+    const formattedDate = `${fullYear}-${month}-${day}`;
+
+    // Convert to Date object
+
+    // Convert to timestamp (milliseconds since January 1, 1970)
+
 
 
     const [formData, setFormData] = useState({
@@ -37,7 +59,7 @@ export const UpdateStudent = () => {
         firstname: student.firstname,
         middlename: student.middlename,
         studentNin: student.studentNin,
-        dob: student.dob,
+        dob: `${formattedDate}`,
         nationality: student.nationality,
         stateOfOrigin: student.stateOfOrigin,
         lga: student.lga,
@@ -260,6 +282,24 @@ export const UpdateStudent = () => {
         </Box>
     );
 
+    if (fetchSchoolError) {
+        return (
+            <Box
+                sx={{
+                    display: "flex", // Corrected from 'dispflex'
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "80vh",
+                    width: "90vw",
+                    position: "relative",
+                }}
+            >
+                <Typography>An Error occurred fetching schools, please reload the page!!!</Typography>
+            </Box>
+        )
+    }
+
     setTimeout(() => {
         setError('')
         setSuccess('')
@@ -267,7 +307,6 @@ export const UpdateStudent = () => {
 
 
     const allWards = lgasAndWards.flatMap(ward => ward.wards).sort((a, b) => a.localeCompare(b));;
-
 
     return (
         <>

@@ -104,7 +104,6 @@ export const ManageDuplicateRecords = () => {
             if (!confirmDelete) return;
             setDeleteLoading(true)
             const ids = selectedStudents.join(',');
-            console.log(ids)
             const response = await axios.delete(`${API_URL}/student/delete/delete-many/?ids=${ids}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -290,6 +289,7 @@ export const ManageDuplicateRecords = () => {
                                           
                                         <TableCell style={{ fontWeight: 'bold' }}>Select</TableCell>
                                         <TableCell style={{ fontWeight: 'bold' }}>S/N</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Passport</TableCell>
                                         <TableCell style={{ fontWeight: 'bold' }}>Surname</TableCell>
                                         <TableCell style={{ fontWeight: 'bold' }}>Firstname</TableCell>
                                         <TableCell style={{ fontWeight: 'bold' }}>Middlename</TableCell>
@@ -329,6 +329,7 @@ export const ManageDuplicateRecords = () => {
                                                 </TableCell>
  {/* Main index and sub-index */}
                                                 <TableCell>{index + 1}.{subIndex + 1}</TableCell> {/* Main index and sub-index */}
+                                                <TableCell><Box sx={{ width: "70px", height: "70px" }}><img style={{ width: "100%" }} src={similarStudent.passport} /></Box></TableCell>
                                                 <TableCell>{similarStudent.surname}</TableCell>
                                                 <TableCell>{similarStudent.firstname}</TableCell>
                                                 <TableCell>{similarStudent.middlename}</TableCell>
