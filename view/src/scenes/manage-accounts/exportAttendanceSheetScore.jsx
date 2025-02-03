@@ -485,7 +485,7 @@ export const ExportAttendanceSheetPayroll = () => {
                 </Grid>
 
                 {/* Select payment type */}
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                     <Select
                         name="paymentType"
                         value={filters.paymentType}
@@ -513,7 +513,7 @@ export const ExportAttendanceSheetPayroll = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                </Grid>
+                </Grid> */}
 
                 <Grid item xs={12} sm={6}>
                     <TextField

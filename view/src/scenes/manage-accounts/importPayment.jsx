@@ -19,6 +19,7 @@ export const ImportPaymentSheet = () => {
         week: '',
         attendanceSheet: null,
         year: '',
+        paymentType: "",
     });
 
 
@@ -70,6 +71,13 @@ export const ImportPaymentSheet = () => {
         { name: 'December', value: 12 },
     ];
 
+    const paymentTypeOption = [
+        { name: "Registration", value: "Registration" },
+        { name: "Transition", value: "Transition" },
+        { name: "Registration + Transition", value: "Registration and Transition" },
+        { name: "Second Term", value: "Second Term" },
+        { name: "Third Term", value: "Third Term" },
+    ]
     const getCurrentYear = () => new Date().getFullYear();
 
 
@@ -102,7 +110,7 @@ export const ImportPaymentSheet = () => {
 
 
 
-
+console.log(formData);
 
 
 
@@ -128,6 +136,60 @@ export const ImportPaymentSheet = () => {
                     marginBottom: "20px"
                 }}
             >Import Payment Sheet</Typography>
+
+            {/* Select payment type */}
+             <Grid item xs={12} sm={6} md = {4}
+                sx={{
+                    width: {
+                        xs: '90%',
+                        sm: "70%",
+                        md: "40%"
+                    },
+                }}
+             
+             >
+             
+                    <Select
+                        name="paymentType"
+                        value={formData.paymentType}
+                        onChange={(e) => handleInputChange(e, { name: 'paymentType' })}
+                        displayEmpty
+                        fullWidth
+                        size="medium"
+                        required
+                        labelId="payment-type-label"
+                        // sx={{
+                        //     borderRadius: 2,
+                        //     '& .MuiOutlinedInput-root': {
+                        //         '& fieldset': { borderColor: '#4caf50', height: "40px" },
+                        //         '&:hover fieldset': { borderColor: '#2e7d32' },
+                        //         '&.Mui-focused fieldset': { borderColor: '#1b5e20', borderWidth: 2 },
+                        //     },
+                        // }}
+                    sx={{
+                        borderRadius: 2,
+                        '& .MuiOutlinedInput-root': {
+                            height: '45px', // Adjust height of the Select component
+                            '& fieldset': { borderColor: '#4caf50' },
+                            '&:hover fieldset': { borderColor: '#2e7d32' },
+                            '&.Mui-focused fieldset': { borderColor: '#1b5e20', borderWidth: 2 },
+                        },
+                        '& .MuiInputBase-input': {
+                            height: '100%', // Ensures input text aligns correctly
+                            padding: '12px', // Adjusts padding inside the select
+                        },
+                    }}
+                    >
+                        <MenuItem value="">
+                            <em>Select Payment Type</em>
+                        </MenuItem>
+                        {paymentTypeOption.map((paymentType, index) => (
+                            <MenuItem key={index} value={paymentType.value}>
+                                {paymentType.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </Grid> 
 
             <Grid item xs={12} sm={6} md={4}
                 sx={{

@@ -14,7 +14,7 @@ import { CreateStudent } from "./scenes/manage-accounts/createStudent";
 import { CreateAdmin } from "./scenes/manage-accounts/createAdmin";
 import { UpdateStudent } from './scenes/manage-accounts/updateStudent';
 import { DataProvider } from './components/dataContext.jsx';
-import { RoleSelector } from "./components/roleSelector.jsx";
+import { RoleSelector } from "./components/roleSelector.jsx"
 import { AdminViewAllStudentsData } from "./scenes/manage-accounts/adminViewAllStudentsData.jsx";
 import { ExportAttendanceSheet } from "./scenes/manage-accounts/exportAttendanceSheet.jsx";
 import { CreatePayrollSpecialist } from "./scenes/manage-accounts/createPayrollSpecialist.jsx";

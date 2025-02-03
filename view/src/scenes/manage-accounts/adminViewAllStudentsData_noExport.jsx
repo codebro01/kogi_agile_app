@@ -593,6 +593,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
 
                                 }
                             </Grid>
+                            
                             <Grid item xs={12} sm={6} md={4}>
                                 <InputLabel id="lga-label" sx={{ marginBottom: 1 }}>All LGA</InputLabel>
                                 <Select
@@ -984,12 +985,13 @@ export const AdminViewAllStudentsDataNoExport = () => {
                                 }}
                             >
                                 <h3>Student Details</h3>
+                    
                                 <div style={{ alignSelf: "center" }}><img src={`${selectedItem.passport}`} alt="" /></div>
                                 <p><strong>Student ID:</strong> {selectedItem.randomId}</p>
                                 <p><strong>Name:</strong> {`${selectedItem.surname} ${selectedItem.firstname} ${selectedItem.fiddlename || ''}`}</p>
                                 <p><strong>School name:</strong> {selectedItem.schoolId.schoolName}</p>
                                 <p><strong>Date of Birth:</strong> {selectedItem.dob}</p>
-                                <p><strong>stateOfOrigin:</strong> {selectedItem.schoolId.schoolName}</p>
+                                <p><strong>state Of Origin:</strong> {selectedItem.stateOfOrigin}</p>
                                 <p><strong>LGA of Enrollment:</strong> {selectedItem.lgaOfEnrollment}</p>
                                 <p><strong>Ward:</strong> {selectedItem.ward}</p>
                                 <p><strong>Present Class:</strong> {selectedItem.presentClass}</p>
@@ -997,6 +999,7 @@ export const AdminViewAllStudentsDataNoExport = () => {
                                 <button
                                     onClick={() => setIsModalOpen(false)}
                                     style={{
+                                        
                                         padding: '5px 10px',
                                         backgroundColor: '#dc3545',
                                         color: '#fff',
