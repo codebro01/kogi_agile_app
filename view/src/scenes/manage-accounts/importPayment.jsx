@@ -110,7 +110,6 @@ export const ImportPaymentSheet = () => {
 
 
 
-console.log(formData);
 
 
 

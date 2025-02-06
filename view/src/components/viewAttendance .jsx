@@ -17,6 +17,8 @@ import {
     TableRow,
     Paper,
     useMediaQuery,
+    Pagination, 
+    Stack
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -37,6 +39,10 @@ export const ViewAttendance = () => {
     const [fetchLoading, setFetchLoading] = useState(false)
     const [fetchError, setFetchError] = useState(false)
     const [filteredData, setFilteredData] = useState([]);
+    const [attendance, setAttendance] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [limit, setLimit] = useState(100); // Number of records per page
     const navigate = useNavigate();
     const [message, setMessage] = useState('')
 
@@ -50,6 +56,15 @@ export const ViewAttendance = () => {
         setFilter({ ...filter, [name]: value });
     };
     const token = localStorage.getItem('token');
+
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value);
+    };
+
+    const handleLimitChange = (event) => {
+        setLimit(event.target.value);
+        setCurrentPage(1); // Reset to first page when limit changes
+    };
 
 
 
@@ -102,6 +117,9 @@ export const ViewAttendance = () => {
         year: filter.year,
         month: filter.month,
         school: filter.school,
+        limit, 
+        page:currentPage,
+
 
     }
     const filteredParams = Object.entries(params)
@@ -124,21 +142,25 @@ export const ViewAttendance = () => {
                 params: { ...filteredParams },
                 withCredentials: true,
             })
-            console.log(response)
-            setFilteredData(response.data.attendance)
+            setFilteredData(response.data.attendance?.[0]?.data)
+            setTotal(response.data.attendance?.[0].total)
             setFetchLoading(false)
         }
         catch (err) {
             setFetchError(true)
+            console.log(err)
             setFetchLoading(false)
             if(err.response.status === 404 || err.status === 404 || err.response.statusText === 'Not Found') {
                 setMessage(err.response.message || "No Data found")
                 setFilteredData([]);
                 return;
             }
-            console.log(err)
         }
     };
+
+    useEffect(() => {
+        handleSubmit();
+    }, [limit, currentPage])
 
 
 
@@ -343,6 +365,7 @@ export const ViewAttendance = () => {
                     <Table>
                         <TableHead>
                             <TableRow>
+                                <TableCell>S/N</TableCell>
                                 <TableCell>Name</TableCell>
                                 {<TableCell>School</TableCell>} {/* Hide on mobile */}
                                 {<TableCell>Class</TableCell>}  {/* Hide on mobile */}
@@ -353,8 +376,10 @@ export const ViewAttendance = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredData.map((row, index) => (
-                                <TableRow key={index}>
+                            { filteredData.map((row, index) => {
+                                        const displayIndex = (currentPage - 1) * limit + index + 1; // Adjust index based on page and limit
+                               return  (<TableRow key={index}>
+                                   <TableCell>{displayIndex}</TableCell>
                                     <TableCell>{`${row?.studentDetails.surname} ${row?.studentDetails.firstname}`}</TableCell>
                                     {<TableCell>{row?.schoolDetails.schoolName}</TableCell>} {/* Hide on mobile */}
                                     {<TableCell>{row.class}</TableCell>}  {/* Hide on mobile */}
@@ -362,11 +387,106 @@ export const ViewAttendance = () => {
                                     <TableCell>{row.attdWeek}</TableCell>
                                     <TableCell>{getMonthName(row.month)}</TableCell>
                                     <TableCell>{row.year}</TableCell>
-                                </TableRow>
-                            ))}
+                                </TableRow>)
+                            })}
                         </TableBody>
                     </Table>
                 </TableContainer>
+                   
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginTop: '50px',
+                            padding: {
+                                xs: "20px 0",
+                                sm: "20px"
+                            },
+                            gap: "20px",
+                            borderRadius: '10px',
+                            backgroundColor: '#f4f9f4',
+                            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+                            flexDirection: {
+                                xs: "column", 
+                                sm: "row"
+                            }
+                        }}
+                    >
+                        <FormControl
+                            sx={{
+                                minWidth: 100,
+                                backgroundColor: '#ffffff',
+                                borderRadius: '6px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                                '& .MuiInputLabel-root': {
+                                    color: '#196b57',
+                                    fontWeight: 500,
+                                    fontSize: '14px',
+                                },
+                                '& .MuiSelect-root': {
+                                    padding: '6px 12px',
+                                    fontSize: '14px',
+                                    borderRadius: '6px',
+                                },
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    border: '1.5px solid #196b57',
+                                    borderRadius: '6px',
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: '#1ba375',
+                                },
+                                '& .MuiSelect-icon': {
+                                    color: '#196b57',
+                                },
+                            }}
+                        >
+                            <InputLabel id="limit-select-label">Limit</InputLabel>
+                            <Select
+                                labelId="limit-select-label"
+                                value={limit}
+                                onChange={handleLimitChange}
+                                MenuProps={{
+                                    PaperProps: {
+                                        sx: {
+                                            borderRadius: '6px',
+                                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                                        },
+                                    },
+                                }}
+                            >
+                                <MenuItem value={50}>50</MenuItem>
+                                <MenuItem value={100}>100</MenuItem>
+                                <MenuItem value={200}>200</MenuItem>
+                                <MenuItem value={500}>500</MenuItem>
+                            </Select>
+                        </FormControl>
+
+
+                        <Pagination
+                            count={Math.ceil(total / limit)}
+                            page={currentPage}
+                            onChange={handlePageChange}
+                            siblingCount={1}  // Show 1 page number before and after the current page
+                            boundaryCount={1}
+                            color="primary"
+                            sx={{
+                                '& .MuiPaginationItem-root': {
+                                    borderRadius: '50%',
+                                    color: '#196b57',
+                                    '&:hover': {
+                                        backgroundColor: '#196b57',
+                                        color: '#ffffff', // Text color on hover
+                                    },
+                                },
+                                '& .Mui-selected': {
+                                    backgroundColor: '#196b57',
+                                    color: '#ffffff',
+                                },
+                            }}
+                        />
+                    </Box>
+
             </Paper>}
 
         
